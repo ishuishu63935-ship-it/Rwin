@@ -191,3 +191,12 @@ signupBtn.addEventListener("click",()=>{
 loginStatus.innerText="📝 Signup feature coming next...";
 });
 }
+// Loading Screen Redirect
+if (
+  window.location.pathname.endsWith("/") ||
+  window.location.pathname.endsWith("index.html")
+) {
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 2500);
+}
