@@ -199,4 +199,157 @@ if (
   setTimeout(() => {
     window.location.href = "login.html";
   }, 2500);
+    
+}
+
+// ===============================
+// RWIN ENGINE V1 - PART 1
+// Timer + Selection Engine
+// ===============================
+
+// Timer
+const gameTimer = document.getElementById("timer");
+
+let roundTime = 30;
+
+if (gameTimer) {
+
+setInterval(() => {
+
+roundTime--;
+
+if (roundTime < 0) {
+
+roundTime = 30;
+
+startRound();
+
+}
+
+gameTimer.innerText = roundTime;
+
+},1000);
+
+}
+
+// Selected Values
+let selectedColor = "";
+let selectedNumber = null;
+let selectedSize = "";
+
+// ----------------
+// Color Buttons
+// ----------------
+
+const colorBtns=document.querySelectorAll(".colorGrid button");
+
+colorBtns.forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+colorBtns.forEach(b=>b.style.outline="none");
+
+btn.style.outline="3px solid #00E5FF";
+
+selectedColor=btn.innerText;
+
+console.log("Color :",selectedColor);
+
+});
+
+});
+
+// ----------------
+// Number Buttons
+// ----------------
+
+const numberBtns=document.querySelectorAll(".numberGrid button");
+
+numberBtns.forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+numberBtns.forEach(b=>b.style.outline="none");
+
+btn.style.outline="3px solid yellow";
+
+selectedNumber=parseInt(btn.innerText);
+
+console.log("Number :",selectedNumber);
+
+});
+
+});
+
+// ----------------
+// Big Small
+// ----------------
+
+const bigBtn=document.querySelector(".bigBtn");
+const smallBtn=document.querySelector(".smallBtn");
+
+if(bigBtn){
+
+bigBtn.addEventListener("click",()=>{
+
+selectedSize="BIG";
+
+bigBtn.style.outline="3px solid white";
+smallBtn.style.outline="none";
+
+console.log(selectedSize);
+
+});
+
+}
+
+if(smallBtn){
+
+smallBtn.addEventListener("click",()=>{
+
+selectedSize="SMALL";
+
+smallBtn.style.outline="3px solid white";
+bigBtn.style.outline="none";
+
+console.log(selectedSize);
+
+});
+
+}
+
+// ----------------
+// Round
+// ----------------
+
+function startRound(){
+
+const number=Math.floor(Math.random()*10);
+
+let color="";
+
+if(number==0 || number==5){
+
+color="VIOLET";
+
+}else if([1,3,7,9].includes(number)){
+
+color="GREEN";
+
+}else{
+
+color="RED";
+
+}
+
+let size=(number>=5)?"BIG":"SMALL";
+
+console.log("Result");
+
+console.log("Number :",number);
+
+console.log("Color :",color);
+
+console.log("Size :",size);
+
 }
