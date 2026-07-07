@@ -499,3 +499,136 @@ finishRound(number,color,size);
 
 // First Load
 updateGameUI();
+// ===============================
+// RWIN ENGINE V1 - PART 3
+// Level + Save Data + Popup
+// ===============================
+
+// Selected Values
+let selectedColor = "";
+let selectedNumber = null;
+let selectedSize = "";
+
+// Color Select
+document.querySelectorAll(".colorGrid button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    selectedColor = btn.innerText.trim().toUpperCase();
+  });
+});
+
+// Number Select
+document.querySelectorAll(".numberGrid button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    selectedNumber = parseInt(btn.innerText);
+  });
+});
+
+// Big Small
+const bigBtn = document.querySelector(".bigBtn");
+const smallBtn = document.querySelector(".smallBtn");
+
+if(bigBtn){
+bigBtn.onclick = () => {
+selectedSize = "BIG";
+};
+}
+
+if(smallBtn){
+smallBtn.onclick = () => {
+selectedSize = "SMALL";
+};
+}
+
+// Local Save
+function saveGame(){
+
+localStorage.setItem("rwin_balance",balance);
+localStorage.setItem("rwin_xp",xp);
+
+}
+
+// Load
+function loadGame(){
+
+const b = localStorage.getItem("rwin_balance");
+const x = localStorage.getItem("rwin_xp");
+
+if(b!==null) balance = Number(b);
+if(x!==null) xp = Number(x);
+
+updateGameUI();
+
+}
+
+loadGame();
+
+// Auto Save
+setInterval(saveGame,1000);
+
+// Level
+function updateLevel(){
+
+const levelText=document.querySelector(".levelPanel p");
+
+if(!levelText) return;
+
+if(xp>=300){
+
+levelText.innerHTML="Level 4 - Gold";
+
+}else if(xp>=200){
+
+levelText.innerHTML="Level 3 - Silver";
+
+}else if(xp>=100){
+
+levelText.innerHTML="Level 2 - Bronze";
+
+}else{
+
+levelText.innerHTML="Level 1 - Beginner";
+
+}
+
+}
+
+setInterval(updateLevel,500);
+
+// Popup
+function showPopup(text){
+
+const div=document.createElement("div");
+
+div.innerHTML=text;
+
+div.style.position="fixed";
+div.style.top="30px";
+div.style.left="50%";
+div.style.transform="translateX(-50%)";
+div.style.background="#00E5FF";
+div.style.color="#000";
+div.style.padding="15px 25px";
+div.style.borderRadius="12px";
+div.style.fontWeight="bold";
+div.style.zIndex="9999";
+
+document.body.appendChild(div);
+
+setTimeout(()=>{
+div.remove();
+},2000);
+
+}
+
+// Buttons
+document.querySelectorAll(
+".colorGrid button,.numberGrid button,.bigBtn,.smallBtn"
+).forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+showPopup("Prediction Saved");
+
+});
+
+});
