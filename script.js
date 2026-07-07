@@ -353,3 +353,149 @@ console.log("Color :",color);
 console.log("Size :",size);
 
 }
+// ===============================
+// RWIN ENGINE V1 - PART 2
+// Balance + XP + Result
+// ===============================
+
+// Virtual Balance
+let balance = 10000;
+
+// XP
+let xp = 0;
+
+// Result History
+let history = [];
+
+// Update UI
+function updateGameUI() {
+
+const balanceCard = document.querySelector(".balanceCard h1");
+
+if(balanceCard){
+balanceCard.innerHTML = "₹" + balance;
+}
+
+const xpText = document.querySelector(".levelPanel p:last-child");
+
+if(xpText){
+xpText.innerHTML = "XP : " + xp + " / 100";
+}
+
+const xpFill = document.querySelector(".xpFill");
+
+if(xpFill){
+xpFill.style.width = xp + "%";
+}
+
+}
+
+// Round Result
+function finishRound(number,color,size){
+
+let win=false;
+
+// Color Check
+if(selectedColor!="" && selectedColor==color){
+
+balance+=100;
+
+xp+=10;
+
+win=true;
+
+}
+
+// Number Check
+if(selectedNumber!==null && selectedNumber==number){
+
+balance+=200;
+
+xp+=20;
+
+win=true;
+
+}
+
+// Big Small Check
+if(selectedSize!="" && selectedSize==size){
+
+balance+=100;
+
+xp+=10;
+
+win=true;
+
+}
+
+if(!win){
+
+balance-=100;
+
+if(balance<0){
+balance=0;
+}
+
+}
+
+history.unshift(
+
+"Result : "+number+
+" | "+color+
+" | "+size
+
+);
+
+if(history.length>5){
+
+history.pop();
+
+}
+
+const recent=document.querySelector(".recentCard");
+
+if(recent){
+
+recent.innerHTML="";
+
+history.forEach(item=>{
+
+recent.innerHTML+="<p>"+item+"</p>";
+
+});
+
+}
+
+updateGameUI();
+
+}
+
+// Replace startRound()
+function startRound(){
+
+const number=Math.floor(Math.random()*10);
+
+let color="";
+
+if(number==0 || number==5){
+
+color="VIOLET";
+
+}else if([1,3,7,9].includes(number)){
+
+color="GREEN";
+
+}else{
+
+color="RED";
+
+}
+
+let size=(number>=5)?"BIG":"SMALL";
+
+finishRound(number,color,size);
+
+}
+
+// First Load
+updateGameUI();
