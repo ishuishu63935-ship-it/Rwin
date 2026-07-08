@@ -1,3 +1,51 @@
+// ================================
+// RWIN V1 ENGINE - PART 1
+// ================================
+
+// Game Variables
+let balance = 10000;
+let xp = 0;
+
+let selectedColor = "";
+let selectedNumber = null;
+let selectedSize = "";
+
+let roundTime = 30;
+
+// Elements
+const timer = document.getElementById("timer");
+const balanceText = document.querySelector(".balanceCard h1");
+
+// Update Balance
+function updateBalance(){
+
+if(balanceText){
+
+balanceText.innerHTML = "₹" + balance;
+
+}
+
+}
+
+// Countdown
+if(timer){
+
+setInterval(()=>{
+
+roundTime--;
+
+if(roundTime < 0){
+
+roundTime = 30;
+
+}
+
+timer.innerHTML = roundTime;
+
+},1000);
+
+}
+
 // ==========================
 // RWIN V3 - Day 11
 // ==========================
@@ -16,7 +64,6 @@ const timer = document.querySelector(".membershipCard h1");
 
 if(timer){
 
-let time = 30;
 
 setInterval(()=>{
 
@@ -135,9 +182,8 @@ item.classList.add("active");
 });
 
 });
-let time = 30;
 
-const timer = document.getElementById("timer");
+
 
 if(timer){
 
@@ -632,3 +678,168 @@ showPopup("Prediction Saved");
 });
 
 });
+// ================================
+// RWIN V1 ENGINE - PART 2
+// ================================
+
+// Color Buttons
+document.querySelectorAll(".colorGrid button").forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+selectedColor=btn.innerText.trim().toUpperCase();
+
+document.querySelectorAll(".colorGrid button").forEach(b=>{
+b.style.outline="none";
+});
+
+btn.style.outline="3px solid #00E5FF";
+
+console.log("Color :",selectedColor);
+
+});
+
+});
+
+// Number Buttons
+document.querySelectorAll(".numberGrid button").forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+selectedNumber=parseInt(btn.innerText);
+
+document.querySelectorAll(".numberGrid button").forEach(b=>{
+b.style.outline="none";
+});
+
+btn.style.outline="3px solid yellow";
+
+console.log("Number :",selectedNumber);
+
+});
+
+});
+
+// Big Small
+const big=document.querySelector(".bigBtn");
+const small=document.querySelector(".smallBtn");
+
+if(big){
+
+big.onclick=()=>{
+
+selectedSize="BIG";
+
+big.style.outline="3px solid #00E5FF";
+small.style.outline="none";
+
+console.log(selectedSize);
+
+};
+
+}
+
+if(small){
+
+small.onclick=()=>{
+
+selectedSize="SMALL";
+
+small.style.outline="3px solid #00E5FF";
+big.style.outline="none";
+
+console.log(selectedSize);
+
+};
+
+    }
+// ================================
+// RWIN V1 ENGINE - PART 3
+// Result Engine
+// ================================
+
+// Result Box
+const recentCard = document.querySelector(".recentCard");
+
+// Random Result
+function generateResult(){
+
+const number = Math.floor(Math.random()*10);
+
+let color="";
+
+if(number==0 || number==5){
+
+color="VIOLET";
+
+}else if([1,3,7,9].includes(number)){
+
+color="GREEN";
+
+}else{
+
+color="RED";
+
+}
+
+const size = number>=5 ? "BIG" : "SMALL";
+
+// Check Win
+let win=false;
+
+if(selectedColor===color) win=true;
+
+if(selectedNumber===number) win=true;
+
+if(selectedSize===size) win=true;
+
+// Balance
+if(win){
+
+balance+=100;
+xp+=10;
+
+}else{
+
+balance-=100;
+
+if(balance<0){
+balance=0;
+}
+
+}
+
+// Update Balance
+updateBalance();
+
+// Show Result
+if(recentCard){
+
+recentCard.innerHTML=
+`
+<p>🎯 Number : ${number}</p>
+<p>🎨 Color : ${color}</p>
+<p>📏 Size : ${size}</p>
+<p>${win?"✅ YOU WIN":"❌ YOU LOSE"}</p>
+`;
+
+}
+
+console.log(number,color,size);
+
+}
+
+// Every 30 Seconds
+if(timer){
+
+setInterval(()=>{
+
+if(roundTime===0){
+
+generateResult();
+
+}
+
+},1000);
+
+    }
