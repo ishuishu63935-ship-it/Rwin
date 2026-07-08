@@ -811,7 +811,9 @@ balance=0;
 
 // Update Balance
 updateBalance();
+updateXP();
 
+addHistory("🎯 "+number+" | "+color+" | "+size);
 // Show Result
 if(recentCard){
 
@@ -837,9 +839,199 @@ setInterval(()=>{
 if(roundTime===0){
 
 generateResult();
+    
 
 }
 
 },1000);
 
     }
+// ================================
+// RWIN V1 ENGINE - PART 4
+// Save + XP + Level + History
+// ================================
+
+// Save Game
+function saveGame(){
+
+localStorage.setItem("rwin_balance",balance);
+localStorage.setItem("rwin_xp",xp);
+
+}
+
+// Load Game
+function loadGame(){
+
+const b=localStorage.getItem("rwin_balance");
+const x=localStorage.getItem("rwin_xp");
+
+if(b!==null){
+balance=Number(b);
+}
+
+if(x!==null){
+xp=Number(x);
+}
+
+updateBalance();
+updateXP();
+
+}
+
+loadGame();
+
+// XP Update
+function updateXP(){
+
+const xpFill=document.querySelector(".xpFill");
+
+const xpText=document.querySelector(".levelPanel p:last-child");
+
+if(xpFill){
+
+let width=xp;
+
+if(width>100){
+width=100;
+}
+
+xpFill.style.width=width+"%";
+
+}
+
+if(xpText){
+
+xpText.innerHTML="XP : "+xp+" / 100";
+
+}
+
+updateLevel();
+
+saveGame();
+
+}
+
+// Level Update
+function updateLevel(){
+
+const level=document.querySelector(".levelPanel p");
+
+if(!level) return;
+
+if(xp>=300){
+
+level.innerHTML="🏆 Level 4 - Gold";
+
+}else if(xp>=200){
+
+level.innerHTML="🥈 Level 3 - Silver";
+
+}else if(xp>=100){
+
+level.innerHTML="🥉 Level 2 - Bronze";
+
+}else{
+
+level.innerHTML="⭐ Level 1 - Beginner";
+
+}
+
+}
+
+// History
+function addHistory(text){
+
+const recent=document.querySelector(".recentCard");
+
+if(!recent) return;
+
+const p=document.createElement("p");
+
+p.innerHTML=text;
+
+recent.prepend(p);
+
+while(recent.children.length>5){
+
+recent.removeChild(recent.lastChild);
+
+}
+
+}
+
+// Auto Save
+setInterval(saveGame,2000);
+// ================================
+// RWIN V1 ENGINE - PART 5
+// Final Polish
+// ================================
+
+// Popup
+function showPopup(message,color){
+
+const popup=document.createElement("div");
+
+popup.innerHTML=message;
+
+popup.style.position="fixed";
+popup.style.top="20px";
+popup.style.left="50%";
+popup.style.transform="translateX(-50%)";
+popup.style.padding="15px 25px";
+popup.style.borderRadius="12px";
+popup.style.background=color;
+popup.style.color="#fff";
+popup.style.fontWeight="bold";
+popup.style.zIndex="9999";
+popup.style.boxShadow="0 0 20px rgba(0,0,0,.3)";
+
+document.body.appendChild(popup);
+
+setTimeout(()=>{
+popup.remove();
+},2000);
+
+}
+
+// Win / Lose Popup
+const oldGenerateResult=generateResult;
+
+generateResult=function(){
+
+oldGenerateResult();
+
+if(balance>0){
+
+showPopup("🎉 Round Completed","#00C853");
+
+}else{
+
+showPopup("⚠ Low Balance","#D50000");
+
+}
+
+};
+
+// Button Animation
+document.querySelectorAll("button").forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+btn.style.transform="scale(.95)";
+
+setTimeout(()=>{
+
+btn.style.transform="scale(1)";
+
+},150);
+
+});
+
+});
+
+// Welcome
+window.addEventListener("load",()=>{
+
+console.log("✅ RWIN Beta V1 Ready");
+
+});
