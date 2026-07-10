@@ -296,3 +296,60 @@ if (isGamePage) {
   }, 1000);
 
                             }
+// =====================================
+// RWIN V1 - SCRIPT ENGINE
+// Part 5 - Membership + Save
+// =====================================
+
+// Membership (Demo)
+game.membership = true;
+
+// Reset Practice Coins
+function resetPracticeCoins(){
+
+  if(!game.membership){
+    alert("Membership Expired");
+    return;
+  }
+
+  game.balance = 10000;
+  updateBalance();
+  saveGame();
+
+  alert("✅ Practice Coins Reset to ₹10,000");
+
+}
+
+// Save
+function saveGame(){
+
+  localStorage.setItem("rwin_game",JSON.stringify(game));
+
+}
+
+// Load
+function loadGame(){
+
+  const data = localStorage.getItem("rwin_game");
+
+  if(data){
+
+    const saved = JSON.parse(data);
+
+    game.balance = saved.balance ?? 10000;
+    game.xp = saved.xp ?? 0;
+    game.level = saved.level ?? 1;
+    game.history = saved.history ?? [];
+
+    updateBalance();
+
+  }
+
+}
+
+loadGame();
+
+// Auto Save
+setInterval(saveGame,3000);
+
+console.log("✅ Membership Engine Ready");
