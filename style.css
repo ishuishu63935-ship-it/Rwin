@@ -1109,3 +1109,136 @@ transform:scale(1.04);
 }
 
 }
+/* ==========================
+LOGIN PAGE
+========================== */
+
+.loginContainer{
+
+width:100%;
+min-height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+padding:20px;
+
+}
+
+.loginCard{
+
+width:100%;
+max-width:380px;
+
+background:rgba(16,24,42,.92);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:25px;
+
+padding:35px 25px;
+
+backdrop-filter:blur(12px);
+
+box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+}
+
+.loginLogo{
+
+text-align:center;
+
+font-size:42px;
+
+color:#00E5FF;
+
+text-shadow:0 0 20px #00E5FF;
+
+}
+
+.loginSub{
+
+text-align:center;
+
+margin:12px 0 30px;
+
+color:#B8C5D6;
+
+}
+
+.loginCard input{
+
+width:100%;
+
+height:55px;
+
+margin-bottom:18px;
+
+padding:0 18px;
+
+border:none;
+
+border-radius:15px;
+
+background:#1B2438;
+
+color:white;
+
+font-size:16px;
+
+outline:none;
+
+}
+
+.loginCard button{
+
+width:100%;
+
+height:55px;
+
+margin-top:10px;
+
+border:none;
+
+border-radius:15px;
+
+font-size:16px;
+
+font-weight:700;
+
+background:#00E5FF;
+
+color:#050816;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.loginCard button:hover{
+
+transform:translateY(-2px);
+
+}
+
+.signupBtn{
+
+background:#7C3AED !important;
+
+color:white !important;
+
+}
+
+.loginFooter{
+
+margin-top:25px;
+
+text-align:center;
+
+font-size:13px;
+
+color:#7C8CA3;
+
+}
