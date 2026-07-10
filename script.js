@@ -212,3 +212,87 @@ if (isGamePage) {
   }
 
                          }
+// =====================================
+// RWIN V1 - SCRIPT ENGINE
+// Part 4 - Result Engine
+// =====================================
+
+function playRound() {
+
+  if (!isGamePage) return;
+
+  // Random Number
+  const number = Math.floor(Math.random() * 10);
+
+  // Color Logic
+  let color = "";
+
+  if (number === 0 || number === 5) {
+
+    color = "VIOLET";
+
+  } else if ([1,3,7,9].includes(number)) {
+
+    color = "GREEN";
+
+  } else {
+
+    color = "RED";
+
+  }
+
+  // Size Logic
+  const size = number >= 5 ? "BIG" : "SMALL";
+
+  // Save History
+  game.history.unshift({
+    number,
+    color,
+    size
+  });
+
+  if (game.history.length > 10) {
+    game.history.pop();
+  }
+
+  // Update Recent Activity
+  const recent = document.querySelector(".recentCard");
+
+  if (recent) {
+
+    recent.innerHTML = "";
+
+    game.history.forEach(item => {
+
+      recent.innerHTML += `
+      <p>
+      🎯 ${item.number}
+      |
+      ${item.color}
+      |
+      ${item.size}
+      </p>
+      `;
+
+    });
+
+  }
+
+  console.log("Result:", number, color, size);
+
+}
+
+// Auto Play Every 30 Seconds
+if (isGamePage) {
+
+  setInterval(() => {
+
+    if (game.timer === 0) {
+
+      playRound();
+
+    }
+
+  }, 1000);
+
+                            }
