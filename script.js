@@ -52,3 +52,64 @@ function updateBalance(){
       "₹" + game.balance;
 
  
+// =====================================
+// RWIN V1 - SCRIPT ENGINE
+// Part 2 - Login + Home
+// =====================================
+
+// ---------- LOGIN PAGE ----------
+if (isLoginPage) {
+
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const status = document.getElementById("loginStatus");
+
+  if (loginBtn) {
+
+    loginBtn.addEventListener("click", () => {
+
+      if (status) {
+        status.innerHTML = "⏳ Logging in...";
+      }
+
+    });
+
+  }
+
+  if (signupBtn) {
+
+    signupBtn.addEventListener("click", () => {
+
+      if (status) {
+        status.innerHTML = "📝 Creating Account...";
+      }
+
+    });
+
+  }
+
+}
+
+// ---------- HOME PAGE ----------
+if (isHomePage) {
+
+  updateBalance();
+
+  const cards = $all(".menuBox");
+
+  cards.forEach((card, index) => {
+
+    card.style.opacity = "0";
+    card.style.transform = "translateY(25px)";
+
+    setTimeout(() => {
+
+      card.style.transition = ".4s";
+      card.style.opacity = "1";
+      card.style.transform = "translateY(0)";
+
+    }, index * 120);
+
+  });
+
+}
