@@ -426,3 +426,53 @@ playStatus.innerText="⏳ Waiting For Next Round...";
 });
 
 }
+    // =====================================
+// RWIN GAME ENGINE - PART 3
+// Random Result Engine
+// =====================================
+
+const resultText = document.getElementById("resultText");
+const statusText = document.getElementById("statusText");
+
+function generateResult(){
+
+    const result = Math.floor(Math.random() * 10);
+
+    let color = "";
+
+    if(result == 0 || result == 5){
+
+        color = "VIOLET";
+
+    }else if(result % 2 == 0){
+
+        color = "RED";
+
+    }else{
+
+        color = "GREEN";
+
+    }
+
+    if(resultText){
+
+        resultText.innerHTML =
+        `${result} (${color})`;
+
+    }
+
+    if(statusText){
+
+        statusText.innerHTML =
+        "Round Completed";
+
+    }
+
+    return {
+
+        number:result,
+        color:color
+
+    };
+
+}
