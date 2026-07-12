@@ -103,3 +103,135 @@ function resetPracticeCoins(){
 updateBalance();
 
 console.log("✅ RWIN Engine V2 Loaded");
+/* ===================================
+   RWIN OFFICIAL ENGINE V2
+   Part 2 - Timer & Selection
+=================================== */
+
+if(isGamePage){
+
+    // -------- Timer --------
+
+    const timerText = $("#timer");
+
+    setInterval(()=>{
+
+        game.timer--;
+
+        if(game.timer < 0){
+
+            game.timer = 30;
+
+        }
+
+        if(timerText){
+
+            timerText.innerText = game.timer;
+
+        }
+
+    },1000);
+
+    // -------- Bet Buttons --------
+
+    const betStatus = $("#betStatus");
+
+    $$(".betBtn").forEach(btn=>{
+
+        btn.addEventListener("click",()=>{
+
+            $$(".betBtn").forEach(b=>{
+
+                b.style.outline="none";
+
+            });
+
+            btn.style.outline="3px solid #00E5FF";
+
+            game.selectedBet = Number(btn.innerText);
+
+            if(betStatus){
+
+                betStatus.innerText =
+                "Selected : ₹" + game.selectedBet;
+
+            }
+
+        });
+
+    });
+
+    // -------- Color --------
+
+    $$(".colorGrid button").forEach(btn=>{
+
+        btn.addEventListener("click",()=>{
+
+            $$(".colorGrid button").forEach(b=>{
+
+                b.style.outline="none";
+
+            });
+
+            btn.style.outline="3px solid #00E5FF";
+
+            game.selectedColor =
+            btn.innerText.trim();
+
+        });
+
+    });
+
+    // -------- Number --------
+
+    $$(".numberGrid button").forEach(btn=>{
+
+        btn.addEventListener("click",()=>{
+
+            $$(".numberGrid button").forEach(b=>{
+
+                b.style.outline="none";
+
+            });
+
+            btn.style.outline="3px solid yellow";
+
+            game.selectedNumber =
+            Number(btn.innerText);
+
+        });
+
+    });
+
+    // -------- BIG / SMALL --------
+
+    const bigBtn = $(".bigBtn");
+    const smallBtn = $(".smallBtn");
+
+    if(bigBtn){
+
+        bigBtn.onclick=()=>{
+
+            game.selectedSize="BIG";
+
+            bigBtn.style.outline="3px solid #00E5FF";
+            smallBtn.style.outline="none";
+
+        };
+
+    }
+
+    if(smallBtn){
+
+        smallBtn.onclick=()=>{
+
+            game.selectedSize="SMALL";
+
+            smallBtn.style.outline="3px solid #00E5FF";
+            bigBtn.style.outline="none";
+
+        };
+
+    }
+
+                                    }
