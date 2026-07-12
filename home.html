@@ -1,4 +1,10 @@
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>RWIN Home</title>
@@ -6,132 +12,69 @@
 <link rel="stylesheet" href="style.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-<div class="home">
+<div class="container">
 
-<header class="header">
+<!-- Header -->
+
+<header class="topBar">
 
 <div>
-<h2>RWIN</h2>
+
+<h1>RWIN</h1>
+
 <p>Welcome Back 👋</p>
+
 </div>
 
-<div class="avatar">
+<div class="profileIcon">
+
 👤
+
 </div>
 
 </header>
 
-<div class="balanceCard">
+<!-- Balance Card -->
 
-<p>Virtual Balance</p>
+<section class="balanceCard">
 
-<h1>10,000</h1>
+<p>Virtual Practice Balance</p>
 
-<span>Practice Coins</span>
+<h1 id="balanceText">₹10,000</h1>
 
-</div>
-
-<div class="membershipCard">
-
-<h3>Premium Membership</h3>
-
-<p>Valid : 21 Days</p>
-
-<button>View Plans</button>
-
-</div>
-
-<div class="menuGrid">
-
-<a href="game.html" class="menuBox">
-🎮
-<span>Practice</span>
-</a>
-
-<a href="wallet.html" class="menuBox">
-💰
-<span>Wallet</span>
-</a>
-
-<a href="leaderboard.html" class="menuBox">
-🏆
-<span>Leaderboard</span>
-</a>
-
-<a href="profile.html" class="menuBox">
-👤
-<span>Profile</span>
-</a>
-
-</div>
-
-<footer>
-
-For Entertainment & Practice Only
-
-</footer>
-
-</div>
-
-<script src="script.js"></script>
-<section class="statsCard">
-
-<h3>📊 Your Stats</h3>
-
-<div class="statRow">
-<span>Level</span>
-<b>Beginner</b>
-</div>
-
-<div class="statRow">
-<span>XP</span>
-<b>0</b>
-</div>
-
-<div class="statRow">
-<span>Practice Sessions</span>
-<b>0</b>
-<nav class="bottomNav">
-
-<a href="home.html" class="navItem active">
-🏠
-<span>Home</span>
-</a>
-
-<a href="game.html" class="navItem">
-🎮
-<span>Game</span>
-</a>
-
-<a href="wallet.html" class="navItem">
-💰
-<span>Wallet</span>
-</a>
-
-<a href="profile.html" class="navItem">
-👤
-<span>Profile</span>
-</a>
-
-</nav>
-</div>
+<span>Membership Active</span>
 
 </section>
 
-<section class="memberStatus">
-<section class="welcomeBanner">
+<!-- Membership Card -->
 
-<h2>🔥 Welcome to RWIN V3</h2>
+<section class="membershipCard">
 
-<p>
-Practice • Learn • Improve
-</p>
-
-</section>
 <h3>👑 Membership</h3>
 
-<p>Current Plan: <b>Starter (21 Da</b></p>
+<p>
+
+Plan :
+<b>Starter</b>
+
+</p>
+
+<p>
+
+Validity :
+<b>21 Days</b>
+
+</p>
+
+<button id="resetCoinsBtn">
+
+🔄 New Practice
+
+</button>
+
+</section>
