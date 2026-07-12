@@ -388,3 +388,41 @@ betStatus.innerText =
 
 });
     
+// =====================================
+// RWIN GAME ENGINE - PART 2
+// Start Practice
+// =====================================
+
+const playBtn = document.getElementById("playBtn");
+const playStatus = document.getElementById("playStatus");
+
+if(playBtn){
+
+playBtn.addEventListener("click",()=>{
+
+// Bet Check
+if(selectedBet===0){
+
+playStatus.innerText="❌ Select Practice Coins";
+return;
+
+}
+
+// Color / Number / Big-Small Check
+
+if(
+!game.selectedColor &&
+game.selectedNumber===null &&
+!game.selectedSize
+){
+
+playStatus.innerText="❌ Select Color, Number or BIG/SMALL";
+return;
+
+}
+
+playStatus.innerText="⏳ Waiting For Next Round...";
+
+});
+
+}
