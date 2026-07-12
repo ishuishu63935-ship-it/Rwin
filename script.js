@@ -353,3 +353,38 @@ loadGame();
 setInterval(saveGame,3000);
 
 console.log("✅ Membership Engine Ready");
+    // =====================================
+// RWIN GAME ENGINE - PART 1
+// Bet Engine
+// =====================================
+
+let selectedBet = 0;
+
+const betButtons = document.querySelectorAll(".betBtn");
+const betStatus = document.getElementById("betStatus");
+
+betButtons.forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+betButtons.forEach(b=>{
+
+b.style.outline="none";
+
+});
+
+btn.style.outline="3px solid #00E5FF";
+
+selectedBet = Number(btn.innerText);
+
+if(betStatus){
+
+betStatus.innerText =
+"Selected : ₹"+selectedBet;
+
+}
+
+});
+
+});
+    
