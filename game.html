@@ -1,127 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>RWIN Practice</title>
 
 <link rel="stylesheet" href="style.css">
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 </head>
+
 <body>
 
 <div class="gameContainer">
 
-<h1>🎮 RWIN Practice Arena</h1>
+<!-- Header -->
+
+<header class="topBar">
+
+<div>
+
+<h1>🎮 Practice Arena</h1>
+
+<p>Virtual Practice Mode</p>
+
+</div>
+
+<div class="profileIcon">
+
+👤
+
+</div>
+
+</header>
+
+<!-- Live -->
+
 <div class="liveStatus">
 
 <span class="liveDot"></span>
 
-LIVE PRACTICE MODE
+LIVE PRACTICE
 
 </div>
-<div class="balanceCard">
-<h2>Virtual Balance</h2>
-<h1>₹10,000</h1>
-</div>
 
-<div class="timerCard">
-<h2>Next Round</h2>
+<!-- Balance -->
+
+<section class="balanceCard">
+
+<p>Virtual Practice Coins</p>
+
+<h1 id="balanceText">₹10,000</h1>
+
+<span>Unlimited Reset During Membership</span>
+
+</section>
+
+<!-- Timer -->
+
+<section class="timerCard">
+
+<h2>⏱ Next Round</h2>
+
 <h1 id="timer">30</h1>
-</div>
-
-<div class="predictionBox">
-<section class="colorPanel">
-
-<h2>🎨 Color Panel</h2>
-
-<div class="colorGrid">
-
-<button class="green">GREEN</button>
-
-<button class="red">RED</button>
-
-<button class="violet">VIOLET</button>
-
-</div>
 
 </section>
 
-<section class="numberPanel">
-  
-  <section class="levelPanel">
+<!-- Bet Amount -->
 
-<h2>🏆 Your Progress</h2>
+<section class="membershipCard">
 
-<p>Level 1 - Beginner</p>
-
-<div class="xpBar">
-
-<div class="xpFill"></div>
-
-</div>
-
-<p>XP : 0 / 100</p>
-
-</section>
-<section class="historyPanel">
-
-<h2>📊 Practice Stats</h2>
-
-<div class="historyCard">
-<p>🏆 Level : Beginner</p>
-<p>⭐ XP : 0</p>
-<p>🔥 Daily Streak : 0</p>
-</div>
-
-</section>
-
-<section class="recentPanel">
-
-<h2>📝 Recent Activity</h2>
-
-<div class="recentCard">
-<p>No practice yet.</p>
-</div>
-
-</section>
-<h2>🔢 Number Panel</h2>
+<h3>💰 Select Practice Coins</h3>
 
 <div class="numberGrid">
 
-<button>0</button>
-<button>1</button>
-<button>2</button>
-<button>3</button>
-<button>4</button>
-<button>5</button>
-<button>6</button>
-<button>7</button>
-<button>8</button>
-<button>9</button>
+<button class="betBtn">100</button>
+
+<button class="betBtn">500</button>
+
+<button class="betBtn">1000</button>
+
+<button class="betBtn">5000</button>
+
+<button class="betBtn">10000</button>
 
 </div>
+
+<p id="betStatus">
+
+No Coins Selected
+
+</p>
 
 </section>
-<h2>Select Practice Mode</h2>
-
-<div class="bigSmall">
-
-<button class="bigBtn">BIG</button>
-
-<button class="smallBtn">SMALL</button>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-
-<script src="script.js"></script>
-
-</body>
-</html>
