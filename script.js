@@ -476,3 +476,14 @@ function generateResult(){
     };
 
 }
+    // Run Result when Timer Ends
+
+setInterval(()=>{
+
+    if(game.timer===0){
+
+        generateResult();
+
+    }
+
+},1000);
