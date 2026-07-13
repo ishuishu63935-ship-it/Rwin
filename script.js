@@ -375,3 +375,36 @@ setInterval(()=>{
     }
 
 },1000);
+/* ===================================
+   RWIN OFFICIAL ENGINE V2
+   Part 5 - Reset Practice Coins
+=================================== */
+
+const resetBtn = $("#resetCoinsBtn");
+
+if(resetBtn){
+
+    resetBtn.addEventListener("click",()=>{
+
+        if(!game.membership){
+
+            alert("Membership Expired");
+
+            return;
+
+        }
+
+        game.balance = 10000;
+
+        updateBalance();
+
+        saveGame();
+
+        $("#statusText").innerText =
+        "♻ Practice Coins Reset";
+
+        alert("✅ Practice Coins Reset Successfully");
+
+    });
+
+}
