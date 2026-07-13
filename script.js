@@ -281,3 +281,97 @@ if (playBtn) {
     });
 
 }
+/* ===================================
+   RWIN OFFICIAL ENGINE V2
+   Part 4 - Result Engine
+=================================== */
+
+function generateResult(){
+
+    const number = Math.floor(Math.random() * 10);
+
+    let color = "";
+
+    if(number === 0 || number === 5){
+
+        color = "VIOLET";
+
+    }else if(number % 2 === 0){
+
+        color = "RED";
+
+    }else{
+
+        color = "GREEN";
+
+    }
+
+    const size = number >= 5 ? "BIG" : "SMALL";
+
+    $("#resultText").innerText =
+    number + " (" + color + ")";
+
+    return {
+        number,
+        color,
+        size
+    };
+
+}
+
+function finishRound(){
+
+    const result = generateResult();
+
+    let win = false;
+
+    if(game.selectedColor === result.color){
+
+        win = true;
+
+    }
+
+    if(game.selectedNumber === result.number){
+
+        win = true;
+
+    }
+
+    if(game.selectedSize === result.size){
+
+        win = true;
+
+    }
+
+    if(win){
+
+        game.balance += game.selectedBet * 2;
+
+        $("#statusText").innerText = "🎉 WIN";
+
+    }else{
+
+        $("#statusText").innerText = "❌ LOSE";
+
+    }
+
+    updateBalance();
+
+    saveGame();
+
+    game.selectedBet = 0;
+    game.selectedColor = null;
+    game.selectedNumber = null;
+    game.selectedSize = null;
+
+}
+
+setInterval(()=>{
+
+    if(game.timer === 0){
+
+        finishRound();
+
+    }
+
+},1000);
