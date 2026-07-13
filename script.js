@@ -408,3 +408,37 @@ if(resetBtn){
     });
 
 }
+/* ===================================
+   RWIN OFFICIAL ENGINE V2
+   Part 6 - Recent Activity
+=================================== */
+
+function updateRecentActivity(result){
+
+    game.history.unshift(result);
+
+    if(game.history.length > 10){
+        game.history.pop();
+    }
+
+    const recent = document.getElementById("recentCard");
+
+    if(!recent) return;
+
+    recent.innerHTML = "";
+
+    game.history.forEach(item=>{
+
+        recent.innerHTML += `
+        <p>
+        🎯 ${item.number}
+        | ${item.color}
+        | ${item.size}
+        </p>
+        `;
+
+    });
+   updateRecentActivity(result);
+    saveGame();
+
+}
