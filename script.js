@@ -439,6 +439,9 @@ function updateRecentActivity(result){
 
     });
    updateRecentActivity(result);
+   
+   updateRecentActivity(result);
+   
     saveGame();
 
 }
