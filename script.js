@@ -358,7 +358,7 @@ function finishRound(){
     updateBalance();
 
     saveGame();
-
+   
     game.selectedBet = 0;
     game.selectedColor = null;
     game.selectedNumber = null;
