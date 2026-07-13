@@ -408,11 +408,6 @@ if(resetBtn){
     });
 
 }
-/* ===================================
-   RWIN OFFICIAL ENGINE V2
-   Part 6 - Recent Activity
-=================================== */
-
 function updateRecentActivity(result){
 
     game.history.unshift(result);
@@ -438,10 +433,8 @@ function updateRecentActivity(result){
         `;
 
     });
-   updateRecentActivity(result);
-   
-   updateRecentActivity(result);
-   
+
     saveGame();
 
-}
+        }
+
