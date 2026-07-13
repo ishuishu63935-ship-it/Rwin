@@ -1,5 +1,5 @@
 "use strict";
-
+alert("Script Loaded");
 /* ===================================
    RWIN OFFICIAL ENGINE V2
    Part 1 - Core Engine
