@@ -1,5 +1,8 @@
 "use strict";
-alert("Script Loaded");
+"use strict";
+
+alert("RWIN Script Loaded");
+console.log("RWIN Script Loaded");
 /* ===================================
    RWIN OFFICIAL ENGINE V2
    Part 1 - Core Engine
