@@ -409,7 +409,9 @@ if(resetBtn){
 
 }
 function updateRecentActivity(result){
-
+   
+console.log("Recent Activity Function Called");
+   
     game.history.unshift(result);
 
     if(game.history.length > 10){
