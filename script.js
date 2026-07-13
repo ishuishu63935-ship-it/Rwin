@@ -238,3 +238,46 @@ if(isGamePage){
     }
 
                                     }
+/* ===================================
+   RWIN OFFICIAL ENGINE V2
+   Part 3 - Play Engine
+=================================== */
+
+const playBtn = $("#playBtn");
+const playStatus = $("#playStatus");
+
+if (playBtn) {
+
+    playBtn.addEventListener("click", () => {
+
+        if (game.selectedBet <= 0) {
+            playStatus.innerText = "❌ Select Practice Coins";
+            return;
+        }
+
+        if (
+            !game.selectedColor &&
+            game.selectedNumber === null &&
+            !game.selectedSize
+        ) {
+            playStatus.innerText = "❌ Select Color / Number / BIG-SMALL";
+            return;
+        }
+
+        if (game.balance < game.selectedBet) {
+            playStatus.innerText = "❌ Not Enough Practice Coins";
+            return;
+        }
+
+        game.balance -= game.selectedBet;
+
+        updateBalance();
+
+        saveGame();
+
+        playStatus.innerText =
+        "✅ Bet Accepted : ₹" + game.selectedBet;
+
+    });
+
+}
