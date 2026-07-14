@@ -443,6 +443,7 @@ game.history.unshift(result);
         `;
 
     });
+   renderHistory();
 
     saveGame();
 
