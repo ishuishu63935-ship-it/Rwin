@@ -33,47 +33,49 @@ const signupBtn = document.getElementById("signupBtn");
 const loginBtn = document.getElementById("loginBtn");
 const status = document.getElementById("loginStatus");
 
+
+
 // Signup
 if (signupBtn) {
-  signupBtn.addEventListener("click", () => {
-    createUserWithEmailAndPassword(auth, email.value, password.value)
-      .then(() => {
-        status.innerHTML = "✅ Account Created";
-        alert("Account Created Successfully");
-      })
-      .catch((error) => {
-        status.innerHTML = error.message;
+
+  signupBtn.addEventListener("click", async () => {
+
+    try {
+
+      const userCredential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email.value,
+          password.value
+        );
+
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+
+        email: user.email,
+        balance: 10000,
+        xp: 0,
+        level: 1,
+        membership: false,
+        membershipPlan: "None",
+        history: [],
+        createdAt: new Date().toISOString()
+
       });
-  
-.then(async (userCredential) => {
 
-    const user = userCredential.user;
+      status.innerHTML = "✅ Account Created";
+      alert("Account Created Successfully");
 
-    await setDoc(doc(db,"users",user.uid),{
+    } catch (error) {
 
-        email:user.email,
+      status.innerHTML = error.message;
 
-        balance:10000,
+    }
 
-        xp:0,
+  });
 
-        level:1,
-
-        membership:false,
-
-        membershipPlan:"None",
-
-        history:[],
-
-        createdAt:new Date().toISOString()
-
-    });
-
-    status.innerHTML="✅ Account Created";
-
-    alert("Account Created Successfully");
-
-})
+}
 
 // Login
 if (loginBtn) {
