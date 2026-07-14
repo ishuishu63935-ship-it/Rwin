@@ -365,7 +365,82 @@ function finishRound(){
     updateBalance();
 
     updateXP();
+   
+updateRecentActivity(result);
+   
+    saveGame();
+
+}
+/* ========= PART 5 - HISTORY ========= */
+
+function updateRecentActivity(result){
+
+    game.history.unshift({
+
+        number: result.number,
+
+        color: result.color,
+
+        size: result.size
+
+    });
+
+    if(game.history.length > 10){
+
+        game.history.pop();
+
+    }
+
+    const recent = $("#recentCard");
+
+    if(!recent) return;
+
+    recent.innerHTML = "";
+
+    game.history.forEach(item=>{
+
+        recent.innerHTML += `
+        <p>
+        🎯 ${item.number}
+        | ${item.color}
+        | ${item.size}
+        </p>
+        `;
+
+    });
 
     saveGame();
 
 }
+
+function loadHistory(){
+
+    const recent = $("#recentCard");
+
+    if(!recent) return;
+
+    if(game.history.length===0){
+
+        recent.innerHTML="<p>No Practice Yet.</p>";
+
+        return;
+
+    }
+
+    recent.innerHTML="";
+
+    game.history.forEach(item=>{
+
+        recent.innerHTML += `
+        <p>
+        🎯 ${item.number}
+        | ${item.color}
+        | ${item.size}
+        </p>
+        `;
+
+    });
+
+}
+
+loadHistory();
