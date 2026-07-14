@@ -354,7 +354,8 @@ function finishRound(){
         $("#statusText").innerText = "❌ LOSE";
 
     }
-
+updateRecentActivity(result);
+   
     updateBalance();
 
     saveGame();
