@@ -53,19 +53,7 @@ function saveGame(){
 
 }
 
-function loadGame(){
 
-    const data = localStorage.getItem("rwinGame");
-
-    if(data){
-
-        Object.assign(game, JSON.parse(data));
-
-    }
-
-}
-
-loadGame();
 
 // ---------- Balance ----------
 
@@ -78,8 +66,23 @@ function updateBalance(){
         balance.innerText = "₹" + game.balance;
 
     }
+   function loadGame(){
 
-}
+    const data = localStorage.getItem("rwinGame");
+
+    if(data){
+
+        Object.assign(game, JSON.parse(data));
+
+    }
+
+    updateBalance();
+    renderHistory();
+
+   }
+
+
+
 
 // ---------- Membership ----------
 
