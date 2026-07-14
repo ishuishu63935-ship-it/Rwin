@@ -163,3 +163,127 @@ if(isGamePage){
     },1000);
 
 }
+/* ========= PART 3 - BET ENGINE ========= */
+
+if(isGamePage){
+
+    const betStatus = $("#betStatus");
+
+    // Bet Amount
+    $$(".betBtn").forEach(btn=>{
+
+        btn.onclick=()=>{
+
+            $$(".betBtn").forEach(b=>{
+                b.style.outline="none";
+            });
+
+            btn.style.outline="3px solid #00E5FF";
+
+            game.selectedBet = Number(btn.innerText);
+
+            if(betStatus){
+                betStatus.innerText =
+                "Selected : ₹" + game.selectedBet;
+            }
+
+        };
+
+    });
+
+    // Color
+    $$(".colorGrid button").forEach(btn=>{
+
+        btn.onclick=()=>{
+
+            $$(".colorGrid button").forEach(b=>{
+                b.style.outline="none";
+            });
+
+            btn.style.outline="3px solid #00E5FF";
+
+            game.selectedColor =
+            btn.innerText.trim();
+
+        };
+
+    });
+
+    // Number
+    document.querySelectorAll(".numberPanel .numberGrid button").forEach(btn=>{
+
+        btn.onclick=()=>{
+
+            document.querySelectorAll(".numberPanel .numberGrid button").forEach(b=>{
+                b.style.outline="none";
+            });
+
+            btn.style.outline="3px solid yellow";
+
+            game.selectedNumber =
+            Number(btn.innerText);
+
+        };
+
+    });
+
+    // BIG
+    $(".bigBtn").onclick=()=>{
+
+        game.selectedSize="BIG";
+
+        $(".bigBtn").style.outline="3px solid #00E5FF";
+        $(".smallBtn").style.outline="none";
+
+    };
+
+    // SMALL
+    $(".smallBtn").onclick=()=>{
+
+        game.selectedSize="SMALL";
+
+        $(".smallBtn").style.outline="3px solid #00E5FF";
+        $(".bigBtn").style.outline="none";
+
+    };
+
+    // Start Practice
+    $("#playBtn").onclick=()=>{
+
+        if(game.selectedBet<=0){
+
+            $("#playStatus").innerText="❌ Select Practice Coins";
+            return;
+
+        }
+
+        if(
+            !game.selectedColor &&
+            game.selectedNumber===null &&
+            !game.selectedSize
+        ){
+
+            $("#playStatus").innerText="❌ Select Color / Number / BIG-SMALL";
+            return;
+
+        }
+
+        if(game.balance<game.selectedBet){
+
+            $("#playStatus").innerText="❌ Not Enough Coins";
+            return;
+
+        }
+
+        game.balance-=game.selectedBet;
+
+        updateBalance();
+
+        saveGame();
+
+        $("#playStatus").innerText=
+        "✅ Bet Accepted";
+
+    };
+
+    }
