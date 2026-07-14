@@ -371,7 +371,8 @@ updateRecentActivity(result);
    checkLevelUp();
    
     saveGame();
-
+   
+clearSelection();
 }
 /* ========= PART 5 - HISTORY ========= */
 
@@ -500,3 +501,63 @@ function membershipActive(){
     return game.membership === true;
 
 }
+/* ========= PART 7 - AUTO SAVE ========= */
+
+// Auto Save Every 5 Seconds
+
+setInterval(()=>{
+
+    saveGame();
+
+},5000);
+
+// Restore UI
+
+function restoreGame(){
+
+    updateBalance();
+
+    updateXP();
+
+    loadHistory();
+
+}
+
+restoreGame();
+
+// Clear Selection
+
+function clearSelection(){
+
+    game.selectedBet = 0;
+
+    game.selectedColor = null;
+
+    game.selectedNumber = null;
+
+    game.selectedSize = null;
+
+    $("#playStatus").innerText =
+    "Choose Coins + Color / Number / BIG-SMALL";
+
+    $$(".betBtn").forEach(btn=>{
+        btn.style.outline="none";
+    });
+
+    $$(".colorGrid button").forEach(btn=>{
+        btn.style.outline="none";
+    });
+
+    document.querySelectorAll(".numberPanel .numberGrid button").forEach(btn=>{
+        btn.style.outline="none";
+    });
+
+    if($(".bigBtn")){
+        $(".bigBtn").style.outline="none";
+    }
+
+    if($(".smallBtn")){
+        $(".smallBtn").style.outline="none";
+    }
+
+           }
