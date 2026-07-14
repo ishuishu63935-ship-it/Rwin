@@ -287,3 +287,85 @@ if(isGamePage){
     };
 
     }
+/* ========= PART 4 - RESULT ENGINE ========= */
+
+function generateResult(){
+
+    const number = Math.floor(Math.random() * 10);
+
+    let color = "";
+
+    if(number===0 || number===5){
+
+        color="VIOLET";
+
+    }else if(number%2===0){
+
+        color="RED";
+
+    }else{
+
+        color="GREEN";
+
+    }
+
+    const size = number>=5 ? "BIG" : "SMALL";
+
+    return{
+
+        number,
+        color,
+        size
+
+    };
+
+}
+
+function finishRound(){
+
+    const result = generateResult();
+
+    let win = false;
+
+    if(game.selectedColor===result.color){
+        win=true;
+    }
+
+    if(game.selectedNumber===result.number){
+        win=true;
+    }
+
+    if(game.selectedSize===result.size){
+        win=true;
+    }
+
+    if(win){
+
+        game.balance += game.selectedBet * 2;
+
+        $("#statusText").innerText="🎉 WIN";
+
+        game.xp += 10;
+
+    }else{
+
+        $("#statusText").innerText="❌ LOSE";
+
+        if(game.xp>0){
+            game.xp -= 2;
+        }
+
+    }
+
+    $("#resultText").innerText =
+    result.number + " | " +
+    result.color + " | " +
+    result.size;
+
+    updateBalance();
+
+    updateXP();
+
+    saveGame();
+
+}
