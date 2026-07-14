@@ -448,3 +448,29 @@ game.history.unshift(result);
 
         }
 
+function renderHistory(){
+
+    const recent = document.getElementById("recentCard");
+
+    if(!recent) return;
+
+    if(game.history.length === 0){
+
+        recent.innerHTML = "<p>No Practice Yet.</p>";
+        return;
+
+    }
+
+    recent.innerHTML = "";
+
+    game.history.forEach(item=>{
+
+        recent.innerHTML += `
+        <p>
+        🎯 ${item.number} | ${item.color} | ${item.size}
+        </p>
+        `;
+
+    });
+
+}
