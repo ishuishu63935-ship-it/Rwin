@@ -354,6 +354,9 @@ function finishRound(){
         $("#statusText").innerText = "❌ LOSE";
 
     }
+   
+   alert("Recent Activity Called");
+   
 updateRecentActivity(result);
    
     updateBalance();
