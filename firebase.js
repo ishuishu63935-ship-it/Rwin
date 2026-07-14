@@ -44,8 +44,36 @@ if (signupBtn) {
       .catch((error) => {
         status.innerHTML = error.message;
       });
-  });
-}
+  
+.then(async (userCredential) => {
+
+    const user = userCredential.user;
+
+    await setDoc(doc(db,"users",user.uid),{
+
+        email:user.email,
+
+        balance:10000,
+
+        xp:0,
+
+        level:1,
+
+        membership:false,
+
+        membershipPlan:"None",
+
+        history:[],
+
+        createdAt:new Date().toISOString()
+
+    });
+
+    status.innerHTML="✅ Account Created";
+
+    alert("Account Created Successfully");
+
+})
 
 // Login
 if (loginBtn) {
