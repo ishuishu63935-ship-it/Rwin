@@ -368,6 +368,8 @@ function finishRound(){
    
 updateRecentActivity(result);
    
+   checkLevelUp();
+   
     saveGame();
 
 }
@@ -444,3 +446,57 @@ function loadHistory(){
 }
 
 loadHistory();
+/* ========= PART 6 - MEMBERSHIP ========= */
+
+// Reset Coins
+
+const resetBtn = $("#resetCoinsBtn");
+
+if(resetBtn){
+
+    resetBtn.onclick=()=>{
+
+        if(!game.membership){
+
+            alert("Membership Expired");
+
+            return;
+
+        }
+
+        game.balance = 10000;
+
+        updateBalance();
+
+        saveGame();
+
+        $("#statusText").innerText =
+        "♻ Coins Reset Successful";
+
+    };
+
+}
+
+// XP Level System
+
+function checkLevelUp(){
+
+    while(game.xp >= 100){
+
+        game.xp -= 100;
+
+        game.level++;
+
+    }
+
+    updateXP();
+
+}
+
+// Membership Status
+
+function membershipActive(){
+
+    return game.membership === true;
+
+}
