@@ -1,5 +1,5 @@
 "use strict";
-"use strict";
+
 
 alert("RWIN Script Loaded");
 console.log("RWIN Script Loaded");
@@ -412,8 +412,9 @@ function updateRecentActivity(result){
    
 console.log("Recent Activity Function Called");
    
-    game.history.unshift(result);
-
+    
+game.history.unshift(result);
+   
     if(game.history.length > 10){
         game.history.pop();
     }
