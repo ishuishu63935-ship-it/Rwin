@@ -128,3 +128,38 @@ updateBalance();
 updateXP();
 
 console.log("✅ PART 1 READY");
+/* ========= PART 2 - TIMER ========= */
+
+if(isGamePage){
+
+    const timerText = $("#timer");
+
+    function updateTimer(){
+
+        if(timerText){
+            timerText.innerText = game.timer;
+        }
+
+    }
+
+    updateTimer();
+
+    setInterval(()=>{
+
+        game.timer--;
+
+        if(game.timer < 0){
+            game.timer = 30;
+        }
+
+        updateTimer();
+
+        if(game.timer === 0){
+
+            finishRound();
+
+        }
+
+    },1000);
+
+}
