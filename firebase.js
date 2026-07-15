@@ -24,19 +24,15 @@ import {
 // ================================
 
 const firebaseConfig = {
+apiKey: "AIzaSyAedMCjwyX8yB-zK4hc0RgQ0LaziUj_4io",
 
+storageBucket: "rwin-e6021.firebasestorage.app",
+
+messagingSenderId: "677090984731",
+
+appId: "1:677090984731:web:f35ddadf5cc931ee17c9be"
  
-  apiKey: "YAHA_APNI_API_KEY",
-
-  authDomain: "rwin-e6021.firebaseapp.com",
-
-  projectId: "rwin-e6021",
-
-  storageBucket: "rwin-e6021.appspot.com",
-
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-
-  appId: "YOUR_APP_ID"
+  
 
 };
 
