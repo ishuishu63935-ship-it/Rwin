@@ -24,17 +24,17 @@ import {
 // ================================
 
 const firebaseConfig = {
-apiKey: "AIzaSyAedMCjwyX8yB-zK4hc0RgQ0LaziUj_4io",
 
-storageBucket: "rwin-e6021.firebasestorage.app",
-
-messagingSenderId: "677090984731",
-
-appId: "1:677090984731:web:f35ddadf5cc931ee17c9be"
- 
-  
-
+const firebaseConfig = {
+  apiKey: "AIzaSyAedMCjwyX8yB-zK4hc0RgQ0LaziUj_4io",
+  authDomain: "rwin-e6021.firebaseapp.com",
+  projectId: "rwin-e6021",
+  storageBucket: "rwin-e6021.firebasestorage.app",
+  messagingSenderId: "677090984731",
+  appId: "1:677090984731:web:f35ddadf5cc931ee17c9be"
 };
+
+
 
 // ================================
 // PART 3 - INITIALIZE
