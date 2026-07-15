@@ -81,13 +81,26 @@ if (signupBtn) {
 if (loginBtn) {
   loginBtn.addEventListener("click", () => {
     signInWithEmailAndPassword(auth, email.value, password.value)
-      .then(() => {
-        status.innerHTML = "✅ Login Success";
-        alert("Login Successful");
-        window.location.href = "home.html";
-      })
-      .catch((error) => {
-        status.innerHTML = error.message;
-      });
-  });
-}
+      
+.then(async (userCredential) => {
+
+    const user = userCredential.user;
+
+    const userDoc = await getDoc(doc(db,"users",user.uid));
+
+    if(userDoc.exists()){
+
+        localStorage.setItem(
+            "rwinCloud",
+            JSON.stringify(userDoc.data())
+        );
+
+    }
+
+    status.innerHTML="✅ Login Success";
+
+    alert("Login Successful");
+
+    window.location.href="home.html";
+
+})
