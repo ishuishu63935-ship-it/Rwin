@@ -76,31 +76,40 @@ if (signupBtn) {
   });
 
 }
-
 // Login
 if (loginBtn) {
+
   loginBtn.addEventListener("click", () => {
+
     signInWithEmailAndPassword(auth, email.value, password.value)
-      
-.then(async (userCredential) => {
 
-    const user = userCredential.user;
+      .then(async (userCredential) => {
 
-    const userDoc = await getDoc(doc(db,"users",user.uid));
+        const user = userCredential.user;
 
-    if(userDoc.exists()){
+        const userDoc = await getDoc(doc(db, "users", user.uid));
 
-        localStorage.setItem(
+        if (userDoc.exists()) {
+          localStorage.setItem(
             "rwinCloud",
             JSON.stringify(userDoc.data())
-        );
+          );
+        }
 
-    }
+        status.innerHTML = "✅ Login Success";
+        alert("Login Successful");
 
-    status.innerHTML="✅ Login Success";
+        window.location.href = "home.html";
 
-    alert("Login Successful");
+      })
 
-    window.location.href="home.html";
+      .catch((error) => {
 
-})
+        status.innerHTML = error.message;
+        alert(error.message);
+
+      });
+
+  });
+
+}
