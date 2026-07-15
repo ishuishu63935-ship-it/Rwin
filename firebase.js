@@ -65,3 +65,59 @@ const signupBtn = document.getElementById("signupBtn");
 const status = document.getElementById("loginStatus");
 
 console.log("✅ Firebase Ready");
+// ================================
+// PART 5 - SIGNUP
+// ================================
+
+if (signupBtn) {
+
+  signupBtn.addEventListener("click", async () => {
+
+    try {
+
+      const userCredential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email.value.trim(),
+          password.value
+        );
+
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+
+        email: user.email,
+
+        balance: 10000,
+
+        xp: 0,
+
+        level: 1,
+
+        membership: false,
+
+        membershipPlan: "None",
+
+        history: [],
+
+        createdAt: new Date().toISOString()
+
+      });
+
+      status.innerHTML = "✅ Account Created Successfully";
+
+      alert("Welcome to RWIN 🎉");
+
+    } catch (error) {
+
+      console.error(error);
+
+      status.innerHTML = error.message;
+
+      alert(error.message);
+
+    }
+
+  });
+
+}
