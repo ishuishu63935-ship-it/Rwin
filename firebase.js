@@ -121,3 +121,53 @@ if (signupBtn) {
   });
 
 }
+// ================================
+// PART 6 - LOGIN
+// ================================
+
+if (loginBtn) {
+
+  loginBtn.addEventListener("click", async () => {
+
+    try {
+
+      const userCredential =
+        await signInWithEmailAndPassword(
+          auth,
+          email.value.trim(),
+          password.value
+        );
+
+      const user = userCredential.user;
+
+      const userDoc =
+        await getDoc(doc(db, "users", user.uid));
+
+      if (userDoc.exists()) {
+
+        localStorage.setItem(
+          "rwinCloud",
+          JSON.stringify(userDoc.data())
+        );
+
+      }
+
+      status.innerHTML = "✅ Login Successful";
+
+      alert("Welcome Back 😎");
+
+      window.location.href = "home.html";
+
+    } catch (error) {
+
+      console.error(error);
+
+      status.innerHTML = error.message;
+
+      alert(error.message);
+
+    }
+
+  });
+
+}
