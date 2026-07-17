@@ -628,3 +628,20 @@ function clearSelection(){
     }
 
            }
+function updateMembershipStatus(){
+
+    const status = document.getElementById("membershipStatus");
+
+    if(!status) return;
+
+    if(game.membership){
+
+        status.innerText = "👑 " + game.membershipPlan;
+
+    }else{
+
+        status.innerText = "🆓 Free Plan";
+
+    }
+
+}
