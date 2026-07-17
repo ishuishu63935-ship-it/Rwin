@@ -94,8 +94,9 @@ if (signupBtn) {
         level: 1,
 
         membership: false,
+membershipPlan: "Free",
 
-        membershipPlan: "None",
+membershipExpiry: null,
 
         history: [],
 
