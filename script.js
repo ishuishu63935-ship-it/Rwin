@@ -397,3 +397,130 @@ if (isGamePage) {
 }
 
 console.log("✅ PART 2 COMPLETE");
+/* ==========================================
+        RESULT ENGINE
+========================================== */
+
+function generateResult() {
+
+    const number = Math.floor(Math.random() * 10);
+
+    let color = "";
+
+    if (number === 0 || number === 5) {
+
+        color = "VIOLET";
+
+    } else if (number % 2 === 0) {
+
+        color = "RED";
+
+    } else {
+
+        color = "GREEN";
+
+    }
+
+    const size = number >= 5 ? "BIG" : "SMALL";
+
+    return {
+
+        number,
+        color,
+        size
+
+    };
+
+}
+
+/* ==========================================
+        FINISH ROUND
+========================================== */
+
+function finishRound() {
+
+    const result = generateResult();
+
+    let win = false;
+
+    if (game.selectedColor === result.color) {
+        win = true;
+    }
+
+    if (game.selectedNumber === result.number) {
+        win = true;
+    }
+
+    if (game.selectedSize === result.size) {
+        win = true;
+    }
+
+    const statusText = $("#statusText");
+    const resultText = $("#resultText");
+
+    if (win) {
+
+        game.balance += game.selectedBet * 2;
+
+        game.xp += 10;
+
+        if (statusText) {
+            statusText.innerText = "🎉 WIN";
+        }
+
+    } else {
+
+        if (game.xp > 0) {
+            game.xp -= 2;
+        }
+
+        if (statusText) {
+            statusText.innerText = "❌ LOSE";
+        }
+
+    }
+
+    if (resultText) {
+
+        resultText.innerText =
+            result.number +
+            " | " +
+            result.color +
+            " | " +
+            result.size;
+
+    }
+
+    updateBalance();
+
+    updateXP();
+
+    updateHistory(result);
+
+    checkLevelUp();
+
+    clearSelection();
+
+    saveGame();
+
+}
+
+/* ==========================================
+        LEVEL SYSTEM
+========================================== */
+
+function checkLevelUp() {
+
+    while (game.xp >= 100) {
+
+        game.xp -= 100;
+
+        game.level++;
+
+    }
+
+    updateXP();
+
+}
+
+console.log("✅ PART 3 COMPLETE");
