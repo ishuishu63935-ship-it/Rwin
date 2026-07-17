@@ -484,90 +484,72 @@ function loadHistory(){
 }
 
 loadHistory();
+
+
 /* ========= PART 6 - MEMBERSHIP ========= */
 
 // Reset Coins
-
 const resetBtn = $("#resetCoinsBtn");
 
-if(resetBtn){
-
-    resetBtn.onclick=()=>{
-if(!membershipActive()){
-
-    alert("Membership Expired");
-
-    return;
-
-           }
-        
-
+if (resetBtn) {
+    resetBtn.onclick = () => {
+        if (!membershipActive()) {
+            alert("Membership Expired");
+            return;
         }
 
         game.balance = 10000;
-
         updateBalance();
-
         saveGame();
-
-        $("#statusText").innerText =
-        "♻ Coins Reset Successful";
-
+        $("#statusText").innerText = "♻ Coins Reset Successful";
     };
-
 }
 
 // XP Level System
-
-function checkLevelUp(){
-
-    while(game.xp >= 100){
-
+function checkLevelUp() {
+    while (game.xp >= 100) {
         game.xp -= 100;
-
         game.level++;
-
     }
-
     updateXP();
-
 }
 
 // Membership Status
-function membershipActive(){
+function membershipActive() {
+    if (!game.membership) return false;
 
-    if(!game.membership){
-        return false;
-    }
-
-    if(game.membershipExpiry===null){
-        return false;
-    }
+    if (!game.membershipExpiry) return true;
 
     const today = new Date();
-
     const expiry = new Date(game.membershipExpiry);
 
-    if(today > expiry){
-
+    if (today > expiry) {
         game.membership = false;
-
         game.membershipPlan = "Free";
-
         game.membershipExpiry = null;
-
         saveGame();
-
         return false;
-
     }
 
     return true;
+}
 
+// Update Membership Status
+function updateMembershipStatus() {
+    const el = document.getElementById("membershipStatus");
+    if (!el) return;
+
+    if (membershipActive()) {
+        el.innerText = "👑 " + game.membershipPlan;
+    } else {
+        el.innerText = "🆓 Free Plan";
+    }
 }
 
 
-}
+
+/* ========= PART 6 - MEMBERSHIP ========= */
+
 /* ========= PART 7 - AUTO SAVE ========= */
 
 // Auto Save Every 5 Seconds
