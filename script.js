@@ -587,7 +587,7 @@ function restoreGame(){
     updateXP();
 
     loadHistory();
-
+updateMembershipStatus();
 }
 
 restoreGame();
