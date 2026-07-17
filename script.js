@@ -493,12 +493,14 @@ const resetBtn = $("#resetCoinsBtn");
 if(resetBtn){
 
     resetBtn.onclick=()=>{
+if(!membershipActive()){
 
-        if(!game.membership){
+    alert("Membership Expired");
 
-            alert("Membership Expired");
+    return;
 
-            return;
+           }
+        
 
         }
 
@@ -532,10 +534,38 @@ function checkLevelUp(){
 }
 
 // Membership Status
-
 function membershipActive(){
 
-    return game.membership === true;
+    if(!game.membership){
+        return false;
+    }
+
+    if(game.membershipExpiry===null){
+        return false;
+    }
+
+    const today = new Date();
+
+    const expiry = new Date(game.membershipExpiry);
+
+    if(today > expiry){
+
+        game.membership = false;
+
+        game.membershipPlan = "Free";
+
+        game.membershipExpiry = null;
+
+        saveGame();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
 
 }
 /* ========= PART 7 - AUTO SAVE ========= */
