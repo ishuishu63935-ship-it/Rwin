@@ -74,7 +74,16 @@ function saveGame(){
         JSON.stringify(game)
     );
 
+    localStorage.setItem(
+        "rwinCloud",
+        JSON.stringify(game)
+    );
+
 }
+
+
+
+
 
 // ---------- Load ----------
 function loadGame(){
