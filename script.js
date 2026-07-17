@@ -147,7 +147,7 @@ function updateXP(){
 
 // ---------- Start ----------
 loadGame();
-
+loadCloudGame();
 updateBalance();
 
 updateXP();
