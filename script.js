@@ -524,3 +524,126 @@ function checkLevelUp() {
 }
 
 console.log("✅ PART 3 COMPLETE");
+/* ==========================================
+        HISTORY ENGINE
+========================================== */
+
+function updateHistory(result) {
+
+    game.history.unshift({
+
+        number: result.number,
+        color: result.color,
+        size: result.size
+
+    });
+
+    if (game.history.length > 10) {
+
+        game.history.pop();
+
+    }
+
+    const recent = $("#recentCard");
+
+    if (!recent) return;
+
+    recent.innerHTML = "";
+
+    game.history.forEach(item => {
+
+        recent.innerHTML += `
+        <p>
+        🎯 ${item.number} | ${item.color} | ${item.size}
+        </p>
+        `;
+
+    });
+
+}
+
+/* ==========================================
+        LOAD HISTORY
+========================================== */
+
+function loadHistory() {
+
+    const recent = $("#recentCard");
+
+    if (!recent) return;
+
+    recent.innerHTML = "";
+
+    if (game.history.length === 0) {
+
+        recent.innerHTML = "<p>No History</p>";
+
+        return;
+
+    }
+
+    game.history.forEach(item => {
+
+        recent.innerHTML += `
+        <p>
+        🎯 ${item.number} | ${item.color} | ${item.size}
+        </p>
+        `;
+
+    });
+
+}
+
+/* ==========================================
+        CLEAR SELECTION
+========================================== */
+
+function clearSelection() {
+
+    game.selectedBet = 0;
+    game.selectedColor = null;
+    game.selectedNumber = null;
+    game.selectedSize = null;
+
+    $$(".betBtn").forEach(btn => {
+
+        btn.style.outline = "none";
+
+    });
+
+    $$(".colorGrid button").forEach(btn => {
+
+        btn.style.outline = "none";
+
+    });
+
+    document.querySelectorAll(".numberPanel .numberGrid button").forEach(btn => {
+
+        btn.style.outline = "none";
+
+    });
+
+    const big = $(".bigBtn");
+    const small = $(".smallBtn");
+
+    if (big) big.style.outline = "none";
+    if (small) small.style.outline = "none";
+
+    const playStatus = $("#playStatus");
+
+    if (playStatus) {
+
+        playStatus.innerText =
+        "Choose Coins + Color / Number / BIG-SMALL";
+
+    }
+
+}
+
+/* ==========================================
+        RESTORE UI
+========================================== */
+
+loadHistory();
+
+console.log("✅ PART 4 COMPLETE");
