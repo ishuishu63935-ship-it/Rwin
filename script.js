@@ -35,7 +35,32 @@ const game = {
     history: []
 
 };
+function loadCloudGame(){
 
+    const cloud =
+    localStorage.getItem("rwinCloud");
+
+    if(!cloud) return;
+
+    const data =
+    JSON.parse(cloud);
+
+    game.balance =
+    data.balance || 10000;
+
+    game.level =
+    data.level || 1;
+
+    game.xp =
+    data.xp || 0;
+
+    game.membership =
+    data.membership || false;
+
+    game.history =
+    data.history || [];
+
+}
 // ---------- Detect Pages ----------
 const isGamePage = document.getElementById("timer") !== null;
 const isHomePage = document.querySelector(".home") !== null;
