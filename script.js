@@ -609,4 +609,4 @@ function clearSelection(){
         $(".smallBtn").style.outline="none";
     }
 
-           }
+           
