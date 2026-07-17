@@ -645,3 +645,42 @@ function updateMembershipStatus(){
     }
 
 }
+const buy21 = document.getElementById("buy21");
+const buy60 = document.getElementById("buy60");
+const buy365 = document.getElementById("buy365");
+
+if(buy21){
+
+    buy21.onclick = ()=>{
+
+        localStorage.setItem("selectedPlan","21");
+
+        window.location.href="payment.html";
+
+    };
+
+}
+
+if(buy60){
+
+    buy60.onclick = ()=>{
+
+        localStorage.setItem("selectedPlan","60");
+
+        window.location.href="payment.html";
+
+    };
+
+}
+
+if(buy365){
+
+    buy365.onclick = ()=>{
+
+        localStorage.setItem("selectedPlan","365");
+
+        window.location.href="payment.html";
+
+    };
+
+}
