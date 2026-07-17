@@ -83,7 +83,6 @@ function saveGame(){
 
 }
 
-saveCloud(game);
 
 
 
