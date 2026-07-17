@@ -167,3 +167,38 @@ if (loginBtn) {
   });
 
 }
+const user = userCredential.user;
+
+const userRef = doc(db, "users", user.uid);
+
+const userSnap = await getDoc(userRef);
+
+let data;
+
+if (userSnap.exists()) {
+
+    data = userSnap.data();
+
+} else {
+
+    data = {
+        email: user.email,
+        balance: 10000,
+        xp: 0,
+        level: 1,
+        membership: false,
+        membershipPlan: "None",
+        history: [],
+        createdAt: new Date().toISOString()
+    };
+
+    await setDoc(userRef, data);
+
+}
+
+localStorage.setItem(
+    "rwinCloud",
+    JSON.stringify(data)
+);
+
+window.location.href = "home.html";
