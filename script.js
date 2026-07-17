@@ -84,7 +84,7 @@ function saveGame(){
 
 }
 
-
+saveCloud(game);
 
 
 
