@@ -203,7 +203,10 @@ localStorage.setItem(
     "rwinCloud",
     JSON.stringify(data)
 );
-
+localStorage.setItem(
+    "rwinGame",
+    JSON.stringify(data)
+);
 window.location.href = "home.html";
 export async function saveCloud(game){
 
