@@ -647,3 +647,100 @@ function clearSelection() {
 loadHistory();
 
 console.log("✅ PART 4 COMPLETE");
+/* ==========================================
+        AUTO SAVE
+========================================== */
+
+setInterval(() => {
+
+    saveGame();
+
+}, 5000);
+
+/* ==========================================
+        MEMBERSHIP CHECK
+========================================== */
+
+function membershipActive() {
+
+    if (!game.membership) {
+
+        return false;
+
+    }
+
+    if (!game.membershipExpiry) {
+
+        return true;
+
+    }
+
+    const today = new Date();
+
+    const expiry = new Date(game.membershipExpiry);
+
+    if (today > expiry) {
+
+        game.membership = false;
+
+        game.membershipPlan = "Free";
+
+        game.membershipExpiry = null;
+
+        saveGame();
+
+        updateMembership();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+/* ==========================================
+        RESET COINS
+========================================== */
+
+const resetBtn = $("#resetCoinsBtn");
+
+if (resetBtn) {
+
+    resetBtn.onclick = () => {
+
+        if (!membershipActive()) {
+
+            alert("Membership Expired");
+
+            return;
+
+        }
+
+        game.balance = 10000;
+
+        updateBalance();
+
+        saveGame();
+
+        alert("Coins Reset Successful");
+
+    };
+
+}
+
+/* ==========================================
+        RESTORE
+========================================== */
+
+updateBalance();
+
+updateXP();
+
+updateMembership();
+
+loadHistory();
+
+saveGame();
+
+console.log("🎉 RWIN ENGINE V4 READY");
