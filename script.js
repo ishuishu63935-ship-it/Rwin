@@ -21,7 +21,9 @@ const game = {
     timer: 30,
 
     membership: true,
+membershipPlan: "Free",
 
+membershipExpiry: null,
     level: 1,
 
     xp: 0,
