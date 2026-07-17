@@ -205,3 +205,24 @@ localStorage.setItem(
 );
 
 window.location.href = "home.html";
+export async function saveCloud(game){
+
+    const user = auth.currentUser;
+
+    if(!user) return;
+
+    await updateDoc(doc(db,"users",user.uid),{
+
+        balance: game.balance,
+
+        xp: game.xp,
+
+        level: game.level,
+
+        membership: game.membership,
+
+        history: game.history
+
+    });
+
+}
