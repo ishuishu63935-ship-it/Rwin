@@ -1,3 +1,6 @@
+
+alert("membership.js loaded");
+
 "use strict";
 
 const starterBtn = document.getElementById("buy21");
