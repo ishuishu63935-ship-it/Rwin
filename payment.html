@@ -1,32 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>RWIN Payment</title>
-
 <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
 <div class="home">
 
-<h2 style="text-align:center;color:#00E5FF;">
-💳 Complete Membership
-</h2>
+<h2>💳 Complete Payment</h2>
 
 <div class="membershipCard">
 
-<h3>Selected Plan</h3>
+<h3 id="planName">Loading...</h3>
 
-<p id="planName">Loading...</p>
-
-<p id="planPrice"></p>
+<p id="planPrice">₹0</p>
 
 <button id="payNowBtn">
 Pay Now
@@ -34,57 +25,9 @@ Pay Now
 
 </div>
 
-<div style="margin-top:20px;text-align:center;">
-
-<a href="membership.html" class="menuBox">
-
-⬅ Back
-
-</a>
-
 </div>
 
-</div>
-
-<script>
-
-const plan = localStorage.getItem("selectedPlan");
-
-const planName = document.getElementById("planName");
-
-const planPrice = document.getElementById("planPrice");
-
-if(plan==="21"){
-
-planName.innerHTML="👑 21 Days Membership";
-
-planPrice.innerHTML="₹49";
-
-}
-
-if(plan==="60"){
-
-planName.innerHTML="👑 2 Months Membership";
-
-planPrice.innerHTML="₹399";
-
-}
-
-if(plan==="365"){
-
-planName.innerHTML="👑 1 Year Membership";
-
-planPrice.innerHTML="₹3999";
-
-}
-
-document.getElementById("payNowBtn").onclick=()=>{
-
-alert("Payment Gateway Coming Next 🚀");
-
-};
-
-</script>
+<script src="payment.js"></script>
 
 </body>
 </html>
