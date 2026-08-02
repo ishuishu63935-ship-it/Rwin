@@ -1,57 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>RWIN | Loading</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RWIN - Practice & Gaming Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .landing-hero { text-align: center; padding: 50px 20px; }
+        .hero-title { color: #00E5FF; font-size: 2.5rem; margin-bottom: 10px; }
+        .hero-desc { color: #ccc; max-width: 600px; margin: 0 auto 25px; }
+        .action-btns { margin-top: 20px; }
+        .action-btns a {
+            display: inline-block;
+            background: #00E5FF;
+            color: #000;
+            padding: 12px 25px;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            margin: 5px;
+        }
+        .action-btns a.secondary {
+            background: transparent;
+            color: #00E5FF;
+            border: 2px solid #00E5FF;
+        }
+        footer {
+            margin-top: 80px;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid #222;
+        }
+        .footer-links a {
+            color: #aaa;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .footer-links a:hover { color: #00E5FF; }
+    </style>
 </head>
-
 <body>
 
-<div class="loader">
-
-<div class="loaderContent">
-
-<h1 class="logo">
-RWIN
-</h1>
-
-<p class="loadingText">
-Preparing Your Practice Experience...
-</p>
-
-<div class="loadingBar">
-
-<div class="progress"></div>
-
+<div class="landing-hero">
+    <h1 class="hero-title">RWIN</h1>
+    <p class="hero-desc">Welcome to RWIN - Your ultimate practice gaming platform. Analyze trends, hone your skills, and level up your experience.</p>
+    
+    <div class="action-btns">
+        <a href="login.html">Login to Play</a>
+        <a href="login.html" class="secondary">Create Account</a>
+    </div>
 </div>
 
-<p class="version">
-Beta V1
-</p>
-
-</div>
-
-</div>
-
-<script>
-
-setTimeout(()=>{
-
-window.location.href="login.html";
-
-},2500);
-
-</script>
+<footer>
+    <div class="footer-links">
+        <a href="terms.html">Terms & Conditions</a> |
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="refund.html">Refund Policy</a> |
+        <a href="contact.html">Contact Us</a>
+    </div>
+    <p style="color:#666; font-size:0.8rem; margin-top:10px;">&copy; 2026 RWIN. All rights reserved.</p>
+</footer>
 
 </body>
-
 </html>
