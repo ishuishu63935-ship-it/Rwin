@@ -58,6 +58,10 @@ document.getElementById("loginBtn")!==null;
 const isMembershipPage =
 document.getElementById("membershipStatus")!==null;
 
+// Landing Page safety check
+const isLandingPage = 
+window.location.pathname === "/" || window.location.pathname.endsWith("index.html");
+
 /* ==========================================
         LOAD LOCAL
 ========================================== */
