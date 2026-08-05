@@ -20,9 +20,9 @@
 👤
 </div>
 
-<h2>Guest User</h2>
 
-<p>Practice Player</p>
+<h1 id="userDisplayName">Guest User</h1>
+  <p id="userEmailDisplay">Practice Player</p>
 
 </div>
 
@@ -73,6 +73,45 @@ Logout
 </div>
 
 <script src="script.js"></script>
+<script type="module">
+  import { auth } from "./firebase.js";
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+  // Check Auth State
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is logged in - display email or name
+      const nameHeading = document.getElementById("userDisplayName");
+      const emailParagraph = document.getElementById("userEmailDisplay");
+      
+      if (nameHeading) {
+        nameHeading.innerText = user.displayName || user.email.split('@')[0];
+      }
+      if (emailParagraph) {
+        emailParagraph.innerText = user.email;
+      }
+    } else {
+      // If not logged in, send to login page
+      window.location.href = "login.html";
+    }
+  });
+
+  // Logout Functionality
+  const logoutBtn = document.querySelector(".logoutBtn") || document.querySelector("button:contains('Logout')") || document.querySelectorAll("button")[0];
+  
+  // Tag your Logout button with id="logoutBtn" in HTML for clean selection
+  const btn = document.getElementById("logoutBtn");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }).catch((error) => {
+        console.error("Logout Error:", error);
+      });
+    });
+  }
+</script>
+  
 </body>
 </html>
