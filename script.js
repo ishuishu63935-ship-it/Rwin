@@ -63,40 +63,26 @@ const isLandingPage =
 window.location.pathname === "/" || window.location.pathname.endsWith("index.html");
 
 /* ==========================================
-        LOAD LOCAL
+        LOAD LOCAL & CLOUD
 ========================================== */
 
 function loadGame(){
-
-    const data =
-    localStorage.getItem("rwinGame");
-
+    const data = localStorage.getItem("rwinGame") || localStorage.getItem("rwinCloud");
     if(!data) return;
 
-    Object.assign(
-        game,
-        JSON.parse(data)
-    );
-
+    try {
+        const parsedData = JSON.parse(data);
+        Object.assign(game, parsedData);
+    } catch(e) {
+        console.error("Data load error", e);
+    }
 }
 
-/* ==========================================
-        LOAD CLOUD
-========================================== */
-
-function loadCloud(){
-
-    const data =
-    localStorage.getItem("rwinCloud");
-
-    if(!data) return;
-
-    Object.assign(
-        game,
-        JSON.parse(data)
-    );
-
+function saveGame(){
+    localStorage.setItem("rwinGame", JSON.stringify(game));
+    localStorage.setItem("rwinCloud", JSON.stringify(game));
 }
+
 
 /* ==========================================
         SAVE
