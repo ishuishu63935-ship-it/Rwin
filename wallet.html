@@ -33,7 +33,12 @@
     .plan-title { font-weight: bold; font-size: 15px; color: #fff; }
     .plan-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
     .plan-price { font-size: 18px; font-weight: 800; color: #00e5ff; }
-
+<!-- यह वाला हिस्सा जोड़ना है -->
+<div style="margin-bottom: 15px;">
+  <label style="color: #94a3b8; font-size: 12px; margin-bottom: 5px; display: block;">Enter Your Registered Email:</label>
+  <input type="email" id="userEmail" placeholder="yourname@gmail.com" style="width: 100%; padding: 12px; background: #1a2232; border: 1px solid #2d3748; border-radius: 8px; color: #fff; outline: none;">
+</div>
+   
     /* QR Box */
     .qr-container { text-align: center; padding: 10px 0; }
     .qr-box { background: #fff; padding: 10px; border-radius: 12px; display: inline-block; }
@@ -132,10 +137,20 @@
     selectedPlanText = planName;
   }
 
-  function sendToWhatsApp() {
-    const message = `Hello Admin, Maine RWIN Membership (${selectedPlanText}) ke liye payment kar diya hai. Screenshot attached. Please check & activate!`;
-    const whatsappURL = `https://wa.me/917415325460?text=${encodeURIComponent(message)}`;
-    window.open(whatsappURL, '_blank');
+ function sendToWhatsApp() {
+  const email = document.getElementById('userEmail').value;
+  
+  if (!email) {
+    alert("❌ Please enter your Registered Email first!");
+    return;
+  }
+
+  const message = `Hello Admin, Maine RWIN Membership (${selectedPlanText}) ke liye payment kar diya hai. \n\nUser Email: ${email} \n\nScreenshot attached. Please check & activate!`;
+  
+  const whatsappURL = `https://wa.me/917415325460?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, '_blank');
+ }
+ 
   }
 </script>
 
