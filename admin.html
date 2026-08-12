@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RWIN - Admin Approval Panel</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+    body { background: #0b0f17; color: #fff; padding: 15px; }
+    .app-container { max-width: 480px; margin: 0 auto; }
+    
+    h2 { text-align: center; color: #00e5ff; margin-bottom: 20px; font-size: 20px; }
+    
+    .card {
+      background: #141a26; border: 1px solid #1e293b;
+      border-radius: 16px; padding: 18px; margin-bottom: 16px;
+    }
+    
+    label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 5px; }
+    
+    input, select {
+      width: 100%; padding: 12px; background: #1a2232; border: 1px solid #2d3748;
+      border-radius: 8px; color: #fff; margin-bottom: 15px; font-size: 14px; outline: none;
+    }
+    
+    .btn-approve {
+      width: 100%; padding: 14px; background: linear-gradient(90deg, #10b981, #059669);
+      color: #fff; font-weight: bold; font-size: 15px; border: none; border-radius: 10px; cursor: pointer;
+    }
+
+    .btn-approve:active { transform: scale(0.98); }
+    #statusMsg { margin-top: 15px; font-size: 13px; text-align: center; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <h2>⚡ RWIN Admin Quick Approve</h2>
+
+  <div class="card">
+    <label>User's Registered Email ID:</label>
+    <input type="email" id="userEmail" placeholder="e.g. user@gmail.com" required>
+
+    <label>Select Membership Plan:</label>
+    <select id="planType">
+      <option value="2 Weeks">₹49 - 2 Weeks Plan</option>
+      <option value="2 Months">₹399 - 2 Months Plan</option>
+      <option value="1 Year">₹3,999 - 1 Year Pass</option>
+    </select>
+
+    <button class="btn-approve" onclick="approveUser()">✅ Activate Membership</button>
+
+    <div id="statusMsg"></div>
+  </div>
+</div>
+
+<!-- FIREBASE INTEGRATION -->
+<script type="module">
+  import { db } from "./firebase.js";
+  import { collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  window.approveUser = async function() {
+    const email = document.getElementById("userEmail").value.trim();
+    const plan = document.getElementById("planType").value;
+    const msg = document.getElementById("statusMsg");
+
+    if (!email) {
+      msg.style.color = "#ef4444";
+      msg.innerText = "❌ Please enter User Email!";
+      return;
+    }
+
+    msg.style.color = "#FFC107";
+    msg.innerText = "⏳ Searching user & activating...";
+
+    try {
+      const q = query(collection(db, "users"), where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        msg.style.color = "#ef4444";
+        msg.innerText = "❌ User not found with this Email!";
+        return;
+      }
+
+      querySnapshot.forEach(async (documentSnapshot) => {
+        const userRef = doc(db, "users", documentSnapshot.id);
+        await updateDoc(userRef, {
+          membership: "ACTIVE",
+          plan: plan,
+          status: "ACTIVE"
+        });
+
+        msg.style.color = "#10b981";
+        msg.innerText = `🎉 Success! ${plan} Activated for ${email}`;
+        document.getElementById("userEmail").value = "";
+      });
+
+    } catch (error) {
+      console.error(error);
+      msg.style.color = "#ef4444";
+      msg.innerText = "❌ Error: " + error.message;
+    }
+  };
+</script>
+
+</body>
+</html>
 
