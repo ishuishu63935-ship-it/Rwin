@@ -1,3 +1,16 @@
+<script>
+  // ये रहा आपका सीक्रेट पासवर्ड
+  const adminPassword = "h0rh0rmahadev"; 
+
+  const enteredPassword = prompt("🔐 Admin Access Required! Enter Password:");
+
+  if (enteredPassword !== adminPassword) {
+    alert("❌ Access Denied! Bye bye!");
+    window.location.href = "home.html"; // गलत पासवर्ड होने पर वापस होम पेज भेज देगा
+  }
+</script>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
