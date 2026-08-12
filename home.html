@@ -150,6 +150,30 @@
     font-weight: 700;
   }
 
+  /* BUY/UPGRADE BUTTON */
+  .btn-upgrade {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background: linear-gradient(90deg, #FFD700, #FF8C00);
+    color: #000;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-upgrade:active {
+    transform: scale(0.98);
+  }
+
   /* FOOTER */
   .footer-text {
     text-align: center;
@@ -257,6 +281,11 @@
       <span class="label">Days Left</span>
       <span class="value" id="homeDaysLeft">0 Days</span>
     </div>
+
+    <!-- UPGRADE / BUY BUTTON -->
+    <button class="btn-upgrade" onclick="window.location.href='wallet.html'">
+      ⚡ Upgrade / Buy Membership
+    </button>
   </div>
 
   <!-- FOOTER -->
@@ -345,5 +374,5 @@
 </script>
 
 </body>
-</html>
-
+ </html>
+ 
