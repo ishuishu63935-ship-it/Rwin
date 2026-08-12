@@ -1,64 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RWIN Wallet</title>
+<!-- PAYEMENT CARD START -->
+<div class="card">
+    <div class="card-header">💰 Add Coins / Membership</div>
+    
+    <!-- UPI Details -->
+    <div style="text-align:center; padding: 15px;">
+        <p style="color:#94a3b8; font-size:14px; margin-bottom:10px;">Scan & Pay to:</p>
+        <div style="background:#fff; padding:10px; border-radius:10px; display:inline-block;">
+            <!-- UPI QR CODE GENERATOR -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=7415325460-2@ibl&pn=RWIN_GAMING" alt="QR Code" width="200">
+        </div>
+        <p style="margin-top:10px; font-weight:bold; color:#00e5ff;">UPI ID: 7415325460-2@ibl</p>
+    </div>
 
-<link rel="stylesheet" href="style.css">
+    <!-- Instructions -->
+    <div style="background:rgba(255,193,7,0.1); border:1px dashed #FFC107; padding:10px; border-radius:8px; margin: 15px 0;">
+        <p style="font-size:12px; color:#FFC107;">⚡ Note: Payment ke baad Screenshot & Payment ID WhatsApp par bheje. Membership activation me 10 min se 2 ghante lag sakte hain.</p>
+    </div>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-
-<body>
-
-<div class="home">
-
-<h2 style="text-align:center;color:#00E5FF;">
-💰 Virtual Wallet
-</h2>
-
-<div class="balanceCard">
-
-<p>Current Balance</p>
-
-<h1>10,000</h1>
-
-<span>Practice Coins</span>
-
+    <!-- Submit Button -->
+    <button class="btn-upgrade" onclick="sendToWhatsApp()">
+        ✅ I have paid - Notify Admin
+    </button>
 </div>
 
-<div class="membershipCard">
-
-<h3>Today's Reward</h3>
-
-<p>🎁 Claim your daily virtual reward.</p>
-
-<button>Claim Reward</button>
-
-</div>
-
-<div class="membershipCard">
-
-<h3>Balance Reset</h3>
-
-<p>Your balance resets to <b>10,000 Practice Coins</b> when applicable according to the platform rules.</p>
-
-<button>Refresh Balance</button>
-
-</div>
-
-<div style="margin-top:25px;text-align:center;">
-
-<a href="home.html" class="menuBox">
-🏠<br>Back Home
-</a>
-
-</div>
-
-</div>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+<!-- SCRIPT FOR WHATSAPP -->
+<script>
+function sendToWhatsApp() {
+    // Ye tumhare number par message bhejega
+    const message = "Hello, Maine RWIN Membership ke liye payment kar diya hai. Please check and activate.";
+    const whatsappURL = `https://wa.me/917415325460?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, '_blank');
+}
+</script>
+<!-- PAYEMENT CARD END -->
