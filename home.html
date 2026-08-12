@@ -7,56 +7,191 @@
 
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    background-color: #0b0e14;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 15px;
+  }
+  .home-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding-bottom: 70px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+    margin-bottom: 15px;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #00E5FF;
+    letter-spacing: 1px;
+  }
+  .profileIcon {
+    font-size: 22px;
+    background: #1e2638;
+    padding: 8px 12px;
+    border-radius: 50%;
+  }
+  .welcomeCard {
+    background: linear-gradient(135deg, #00E5FF, #7B2CBF);
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2);
+  }
+  .welcomeCard h2 {
+    margin: 0 0 5px 0;
+    font-size: 20px;
+  }
+  .welcomeCard p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+  }
+  .card-box {
+    background: #161b26;
+    border: 1px solid #232b3e;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 15px;
+  }
+  .card-box h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #00E5FF;
+    border-bottom: 1px solid #232b3e;
+    padding-bottom: 8px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .info-row:last-child {
+    margin-bottom: 0;
+  }
+  .info-label {
+    color: #a0aec0;
+  }
+  .info-value {
+    font-weight: 600;
+  }
+  .status-active {
+    color: #00FF66 !important;
+  }
+  .status-inactive {
+    color: #FF3333 !important;
+  }
+  .navigationMenu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #161b26;
+    border-top: 1px solid #232b3e;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .menuBox {
+    text-decoration: none;
+    color: #a0aec0;
+    font-size: 12px;
+    text-align: center;
+  }
+  .menuBox.active {
+    color: #00E5FF;
+    font-weight: 600;
+  }
+</style>
 </head>
 
 <body>
 
-<div class="home">
+<div class="home-container">
 
-<div class="header">
-  <div class="logo">RWIN</div>
-  <div class="profileIcon" onclick="window.location.href='profile.html'" style="cursor:pointer;">👤</div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">RWIN</div>
+    <div class="profileIcon" onclick="window.location.href='profile.html'" style="cursor:pointer;">👤</div>
+  </div>
+
+  <!-- WELCOME BANNER -->
+  <div class="welcomeCard">
+    <h2>🔥 Welcome to RWIN</h2>
+    <p>Practice • Learn • Improve</p>
+  </div>
+
+  <!-- PROGRESS CARD -->
+  <div class="card-box">
+    <h3>📊 Your Progress</h3>
+    <div class="info-row">
+      <span class="info-label">Level</span>
+      <span class="info-value" id="homeLevel">Level 1</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">XP</span>
+      <span class="info-value" id="homeXP">0 / 100</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Practice Sessions</span>
+      <span class="info-value" id="homeSessions">0</span>
+    </div>
+  </div>
+
+  <!-- MEMBERSHIP STATUS CARD -->
+  <div class="card-box">
+    <h3>👑 Membership Status</h3>
+    <div class="info-row">
+      <span class="info-label">Current Plan</span>
+      <span class="info-value" id="homePlanName">Starter</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Status</span>
+      <span class="info-value status-active" id="homePlanStatus">ACTIVE</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Practice Coins</span>
+      <span class="info-value" id="homeBalance">₹10,000</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Days Left</span>
+      <span class="info-value" id="homeDaysLeft">21 Days</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:20px; text-align:center; font-size:11px; color:#a0aec0;">
+    <p>© 2026 RWIN Practice Platform</p>
+  </footer>
+
+  <!-- BOTTOM NAVBAR -->
+  <div class="navigationMenu">
+    <a href="home.html" class="menuBox active">🏠<br>Home</a>
+    <a href="game.html" class="menuBox">🎮<br>Practice</a>
+    <a href="wallet.html" class="menuBox">💰<br>Wallet</a>
+    <a href="profile.html" class="menuBox">👤<br>Profile</a>
+  </div>
+
 </div>
 
-<div class="membershipCard">
-  <h3>👑 Your Progress</h3>
-  <p>Level: <span id="homeLevel">Level 1</span></p>
-  <p>XP: <span id="homeXP">0 / 100</span></p>
-  <p>Practice Sessions: <span id="homeSessions">0</span></p>
-  <p>Membership: <strong id="homeTopMembership" style="color:#FFD700;">Checking...</strong></p>
-</div>
-
-<div class="welcomeCard" style="background: linear-gradient(135deg, #00E5FF, #7B2CBF); padding: 20px; border-radius: 12px; text-align: center; margin: 15px 0;">
-  <h2>🔥 Welcome to RWIN</h2>
-  <p>Practice • Learn • Improve</p>
-</div>
-
-<div class="membershipCard">
-  <h3>👑 Membership Status</h3>
-  <p>Current Plan : <strong id="homePlanName">Free Plan</strong></p>
-  <p>Status : <strong id="homePlanStatus" style="color:#FF3333;">INACTIVE</strong></p>
-  <p>Practice Coins : <strong id="homeBalance">₹10,000</strong></p>
-  <p>Days Left : <span id="homeDaysLeft">0 Days</span></p>
-</div>
-
-<!-- Navigation Bar / Menu -->
-<div class="navigationMenu" style="display: flex; justify-content: space-around; margin-top: 25px; text-align: center;">
-  <a href="home.html" class="menuBox" style="text-decoration:none; color:white;">🏠<br>Home</a>
-  <a href="game.html" class="menuBox" style="text-decoration:none; color:white;">🎮<br>Practice</a>
-  <a href="wallet.html" class="menuBox" style="text-decoration:none; color:white;">💰<br>Wallet</a>
-  <a href="profile.html" class="menuBox" style="text-decoration:none; color:white;">👤<br>Profile</a>
-</div>
-
-<footer style="margin-top:30px; text-align:center; font-size:12px; opacity:0.7;">
-  <p>© 2026 RWIN Practice Platform</p>
-  <p>Practice • Learn • Improve</p>
-</footer>
-
-</div>
-
+<!-- LOCAL ENGINE SCRIPT -->
 <script src="script.js"></script>
 
-<!-- Firebase Auth & Real-Time Membership Check -->
+<!-- FIREBASE AUTO-UPDATE SCRIPT -->
 <script type="module">
   import { auth, db } from "./firebase.js";
   import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -65,53 +200,45 @@
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       try {
-        // Fetch User Data from Firestore Database
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
-
-        const topMem = document.getElementById("homeTopMembership");
-        const planName = document.getElementById("homePlanName");
-        const planStatus = document.getElementById("homePlanStatus");
-        const daysLeft = document.getElementById("homeDaysLeft");
 
         if (userSnap.exists()) {
           const userData = userSnap.data();
 
-          // Check if Membership is actually true in DB
+          // Sync Values to UI
+          const planName = document.getElementById("homePlanName");
+          const planStatus = document.getElementById("homePlanStatus");
+          const daysLeft = document.getElementById("homeDaysLeft");
+          const levelText = document.getElementById("homeLevel");
+          const xpText = document.getElementById("homeXP");
+
           if (userData.membership === true) {
-            if (topMem) {
-              topMem.innerText = "ACTIVE";
-              topMem.style.color = "#00FF66";
-            }
             if (planName) planName.innerText = userData.membershipPlan || "Starter";
             if (planStatus) {
               planStatus.innerText = "ACTIVE";
-              planStatus.style.color = "#00FF66";
+              planStatus.className = "info-value status-active";
             }
-            if (daysLeft) daysLeft.innerText = "Active";
+            if (daysLeft) daysLeft.innerText = userData.daysLeft ? userData.daysLeft + " Days" : "Active";
           } else {
-            // Free / Inactive User
-            if (topMem) {
-              topMem.innerText = "FREE";
-              topMem.style.color = "#FFD700";
-            }
             if (planName) planName.innerText = "Free Plan";
             if (planStatus) {
               planStatus.innerText = "INACTIVE";
-              planStatus.style.color = "#FF3333";
+              planStatus.className = "info-value status-inactive";
             }
             if (daysLeft) daysLeft.innerText = "0 Days";
           }
+
+          if (userData.level && levelText) levelText.innerText = "Level " + userData.level;
+          if (userData.xp !== undefined && xpText) xpText.innerText = userData.xp + " / 100";
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+      } catch (e) {
+        console.log("Firebase sync fallback to local engine", e);
       }
-    } else {
-      // Redirect to login if unauthenticated
-      window.location.href = "login.html";
     }
   });
 </script>
 
 </body>
-</html>
+  </html>
+  
