@@ -1,3 +1,13 @@
+// LocalStorage से Device ID निकालो या नई बनाओ
+function getOrCreateDeviceId() {
+    let deviceId = localStorage.getItem('rwin_device_id');
+    if (!deviceId) {
+        deviceId = 'DEV_' + Math.random().toString(36).substr(2, 9) + Date.now();
+        localStorage.setItem('rwin_device_id', deviceId);
+    }
+    return deviceId;
+}
+
 "use strict";
 
 /* ==========================================
