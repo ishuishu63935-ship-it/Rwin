@@ -22,7 +22,7 @@
     }
     
     /* Plans Grid */
-    .plans-grid { display: grid; gap: 12px; margin-bottom: 20px; }
+    .plans-grid { display: grid; gap: 12px; margin-bottom: 10px; }
     .plan-box {
       background: #1a2232; border: 1px solid #2d3748; border-radius: 12px;
       padding: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
@@ -36,6 +36,20 @@
     /* QR Box */
     .qr-container { text-align: center; padding: 10px 0; }
     .qr-box { background: #fff; padding: 10px; border-radius: 12px; display: inline-block; }
+
+    /* UTR Input Styling */
+    .utr-section { text-align: center; margin-top: 15px; }
+    .utr-input {
+      width: 100%; padding: 12px; font-size: 15px; text-align: center;
+      border-radius: 8px; border: 1px solid #00e5ff; background: #0f172a;
+      color: #fff; outline: none; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;
+    }
+    .verify-btn {
+      width: 100%; padding: 12px; font-size: 15px; font-weight: bold;
+      background: #00e5ff; color: #000; border: none; border-radius: 8px;
+      cursor: pointer; transition: 0.2s;
+    }
+    .verify-btn:disabled { background: #475569; cursor: not-allowed; }
 
     /* Bottom Navbar */
     .navbar {
@@ -56,7 +70,7 @@
     <div class="card-header">👑 Select Membership Plan</div>
     <div class="plans-grid">
       
-      <div class="plan-box selected" onclick="selectPlan('₹49 - 2 Weeks', 49, this)">
+      <div class="plan-box selected" onclick="selectPlan('Starter', 49, this)">
         <div>
           <div class="plan-title">2 Weeks Plan</div>
           <div class="plan-sub">Starter Practice Access</div>
@@ -64,7 +78,7 @@
         <div class="plan-price">₹49</div>
       </div>
 
-      <div class="plan-box" onclick="selectPlan('₹399 - 2 Months', 399, this)">
+      <div class="plan-box" onclick="selectPlan('Pro', 399, this)">
         <div>
           <div class="plan-title">2 Months Plan</div>
           <div class="plan-sub">Pro Gamer Package</div>
@@ -72,7 +86,7 @@
         <div class="plan-price">₹399</div>
       </div>
 
-      <div class="plan-box" onclick="selectPlan('₹3,999 - 1 Year', 3999, this)">
+      <div class="plan-box" onclick="selectPlan('Elite', 3999, this)">
         <div>
           <div class="plan-title">1 Year VIP Pass</div>
           <div class="plan-sub">Unlimited Access + Premium Support</div>
@@ -88,17 +102,34 @@
     <div class="card-header">💰 Pay via UPI</div>
     
     <div class="qr-container">
-      <p style="color:#94a3b8; font-size:12px; margin-bottom:10px;">Scan QR to pay for selected plan:</p>
+      <p style="color:#94a3b8; font-size:12px; margin-bottom:10px;">
+        Selected Plan: <b id="displayPlanName" style="color:#00e5ff;">Starter (₹49)</b>
+      </p>
+      
+      <!-- Dynamic QR Image -->
       <div class="qr-box">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl&pn=RWIN_GAMING" alt="UPI QR Code">
+        <img id="upiQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl%26pn=RWIN_GAMING%26am=49%26cu=INR" alt="UPI QR Code" style="width:180px; height:180px;">
       </div>
+      
       <p style="margin-top:10px; font-weight:bold; color:#00e5ff; font-size:14px;">UPI ID: 7415325460-2@ibl</p>
     </div>
 
-    <!-- INSTANT AUTO-ACTIVATION NOTICE -->
-    <div style="background: rgba(0, 229, 255, 0.1); border: 1px solid #00e5ff; padding: 12px; border-radius: 8px; margin: 15px 0;">
-      <p style="font-size: 12px; color: #00e5ff; text-align: center; font-weight: bold; line-height: 1.5;">
-        ⚡ Payment karte samay UPI Note me apni User Email/ID zaroor daalen.<br>Payment hote hi Membership Auto-Activate ho jayegi!
+    <!-- UTR INPUT & VERIFY SECTION -->
+    <div class="utr-section">
+      <input 
+        type="text" 
+        id="utrInput" 
+        placeholder="Enter 12-Digit UTR Number" 
+        maxlength="12" 
+        class="utr-input"
+      >
+      <button id="payNowBtn" class="verify-btn">Verify & Activate</button>
+    </div>
+
+    <!-- NOTICE -->
+    <div style="background: rgba(0, 229, 255, 0.1); border: 1px solid #00e5ff; padding: 10px; border-radius: 8px; margin-top: 15px;">
+      <p style="font-size: 11px; color: #00e5ff; text-align: center; line-height: 1.4;">
+        ⚡ UPI app par payment karke 12-Digit UTR/Ref No. yahan daalein. Automated verification dwara Instant Active hoga!
       </p>
     </div>
   </div>
@@ -113,16 +144,35 @@
   <a href="profile.html" class="nav-item"><span>👤</span><span>Profile</span></a>
 </div>
 
+<!-- Dynamic Logic Script -->
 <script>
-  let selectedPlanText = "₹49 - 2 Weeks";
+  const upiId = "7415325460-2@ibl";
 
+  // Select Plan & Change QR Code Automatically
   function selectPlan(planName, amount, element) {
     document.querySelectorAll('.plan-box').forEach(box => box.classList.remove('selected'));
     element.classList.add('selected');
-    selectedPlanText = planName;
+
+    // Save choice
+    localStorage.setItem("selectedPlan", planName);
+    localStorage.setItem("selectedPrice", amount);
+
+    // Update UI Text
+    document.getElementById('displayPlanName').innerText = `${planName} (₹${amount})`;
+
+    // Generate Fixed Amount QR Code
+    const upiString = `upi://pay?pa=${upiId}&pn=RWIN_GAMING&am=${amount}&cu=INR`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiString)}`;
+    document.getElementById('upiQrCode').src = qrUrl;
   }
+
+  // Set default selection on load
+  localStorage.setItem("selectedPlan", "Starter");
+  localStorage.setItem("selectedPrice", "49");
 </script>
+
+<!-- Firebase Verification Script -->
+<script type="module" src="payment.js"></script>
 
 </body>
 </html>
-
