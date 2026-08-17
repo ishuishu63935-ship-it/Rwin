@@ -1,6 +1,7 @@
 
+    
 // ================================
-// RWIN OFFICIAL FIREBASE V3 - FIXED
+// RWIN OFFICIAL FIREBASE V3 - FIXED & SECURED
 // ================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -35,12 +36,32 @@ const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const status = document.getElementById("loginStatus");
 
-console.log("✅ Firebase Ready");
+function getDeviceId() {
+    let deviceId = localStorage.getItem('rwin_device_id');
+    if (!deviceId) {
+        deviceId = 'DEV_' + Math.random().toString(36).substr(2, 9) + Date.now();
+        localStorage.setItem('rwin_device_id', deviceId);
+    }
+    return deviceId;
+}
 
 // SIGNUP
 if (signupBtn) {
   signupBtn.addEventListener("click", async () => {
     try {
+      const deviceId = getDeviceId();
+      const deviceRef = doc(db, "device_registry", deviceId);
+      const deviceDoc = await getDoc(deviceRef);
+
+      let initialBalance = 10000;
+      let claimedCoins = true;
+
+      if (deviceDoc.exists()) {
+        alert("⚠️ इस डिवाइस पर फ्री 10,000 कॉइन्स पहले ही लिए जा चुके हैं! आपका अकाउंट 0 कॉइन्स से शुरू होगा।");
+        initialBalance = 0;
+        claimedCoins = false;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email.value.trim(),
@@ -50,19 +71,27 @@ if (signupBtn) {
 
       const initialData = {
         email: user.email,
-        balance: 10000,
+        balance: initialBalance,
         xp: 0,
         level: 1,
         membership: false,
         membershipPlan: "Free",
         membershipExpiry: null,
+        hasClaimedFreeCoins: claimedCoins,
         history: [],
         createdAt: new Date().toISOString()
       };
 
       await setDoc(doc(db, "users", user.uid), initialData);
 
-      // Synchronize LocalStorage
+      if (!deviceDoc.exists()) {
+        await setDoc(deviceRef, {
+          claimed: true,
+          claimedByEmail: user.email,
+          createdAt: new Date().toISOString()
+        });
+      }
+
       localStorage.setItem("rwinGame", JSON.stringify(initialData));
       localStorage.setItem("rwinCloud", JSON.stringify(initialData));
 
@@ -94,18 +123,6 @@ if (loginBtn) {
         const cloudData = userDoc.data();
         localStorage.setItem("rwinGame", JSON.stringify(cloudData));
         localStorage.setItem("rwinCloud", JSON.stringify(cloudData));
-      } else {
-        const defaultData = {
-          email: user.email,
-          balance: 10000,
-          xp: 0,
-          level: 1,
-          membership: false,
-          membershipPlan: "Free",
-          membershipExpiry: null,
-          history: []
-        };
-        localStorage.setItem("rwinGame", JSON.stringify(defaultData));
       }
 
       if(status) status.innerHTML = "✅ Login Successful";
@@ -117,5 +134,4 @@ if (loginBtn) {
       alert(error.message);
     }
   });
-  }
-    
+}
