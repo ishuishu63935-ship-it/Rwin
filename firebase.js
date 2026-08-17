@@ -1,5 +1,3 @@
-
-    
 // ================================
 // RWIN OFFICIAL FIREBASE V3 - FIXED & SECURED
 // ================================
@@ -14,8 +12,14 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc
+  getDoc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import {
+  getDatabase,
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAedMCjwyX8yB-zK4hc0RgQ0LaziUj_4io",
@@ -23,12 +27,14 @@ const firebaseConfig = {
   projectId: "rwin-e6021",
   storageBucket: "rwin-e6021.firebasestorage.app",
   messagingSenderId: "677090984731",
-  appId: "1:677090984731:web:f35ddadf5cc931ee17c9be"
+  appId: "1:677090984731:web:f35ddadf5cc931ee17c9be",
+  databaseURL: "https://rwin-e6021-default-rtdb.firebaseio.com"
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const rtdb = getDatabase(app);
 
 const email = document.getElementById("email");
 const password = document.getElementById("password");
