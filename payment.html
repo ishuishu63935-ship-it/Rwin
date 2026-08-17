@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,26 +14,34 @@
 
   <h2>💳 Complete Payment</h2>
 
-  <div class="membershipCard">
+  <div class="membershipCard" style="text-align: center;">
 
-    <h3 id="planName">Loading...</h3>
+    <h3 id="planName">Starter Plan</h3>
+    <h2 id="planPrice" style="color: #00E5FF; margin: 10px 0;">₹49</h2>
 
-    <p id="planPrice">₹0</p>
+    <!-- Dynamic Fix QR Code Display -->
+    <div style="margin: 15px 0;">
+      <img id="upiQrCode" src="" alt="Scan QR to Pay" style="width: 220px; height: 220px; border-radius: 12px; border: 2px solid #00E5FF; padding: 5px; background: white;">
+      <p style="font-size: 13px; color: #00E5FF; margin-top: 8px; font-weight: bold;">
+        UPI ID: <span id="upiIdText">7415325460-2@ibl</span>
+      </p>
+    </div>
 
     <!-- UTR Enter karne ka box -->
-    <div style="margin: 15px 0;">
-      <p style="font-size: 13px; color: #bbb; margin-bottom: 8px;">
-        UPI app par payment karke 12-Digit UTR / Ref No. yahan dalein:
+    <div style="margin: 20px 0 10px 0;">
+      <p style="font-size: 12px; color: #bbb; margin-bottom: 8px;">
+        QR स्कैन करके पेमेंट करें और 12-Digit UTR / Ref No. यहाँ डालें:
       </p>
       <input 
         type="text" 
         id="utrInput" 
-        placeholder="Enter UTR Number" 
-        style="width: 90%; padding: 10px; font-size: 15px; text-align: center; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;"
+        placeholder="Enter 12-Digit UTR Number" 
+        maxlength="12"
+        style="width: 85%; padding: 12px; font-size: 15px; text-align: center; border-radius: 8px; border: 1px solid #444; background: #111; color: #fff; outline: none;"
       >
     </div>
 
-    <button id="payNowBtn" style="width: 95%; padding: 12px; font-size: 16px; font-weight: bold; cursor: pointer;">
+    <button id="payNowBtn" style="width: 90%; padding: 12px; font-size: 16px; font-weight: bold; cursor: pointer; background: #00E5FF; color: #000; border: none; border-radius: 8px; margin-top: 10px;">
       Verify & Activate
     </button>
 
@@ -40,7 +49,6 @@
 
 </div>
 
-<!-- type="module" zaroori hai Firebase ES Modules ke liye -->
 <script type="module" src="payment.js"></script>
 
 </body>
