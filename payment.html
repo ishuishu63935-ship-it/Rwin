@@ -11,23 +11,37 @@
 
 <div class="home">
 
-<h2>💳 Complete Payment</h2>
+  <h2>💳 Complete Payment</h2>
 
-<div class="membershipCard">
+  <div class="membershipCard">
 
-<h3 id="planName">Loading...</h3>
+    <h3 id="planName">Loading...</h3>
 
-<p id="planPrice">₹0</p>
+    <p id="planPrice">₹0</p>
 
-<button id="payNowBtn">
-Pay Now
-</button>
+    <!-- UTR Enter karne ka box -->
+    <div style="margin: 15px 0;">
+      <p style="font-size: 13px; color: #bbb; margin-bottom: 8px;">
+        UPI app par payment karke 12-Digit UTR / Ref No. yahan dalein:
+      </p>
+      <input 
+        type="text" 
+        id="utrInput" 
+        placeholder="Enter UTR Number" 
+        style="width: 90%; padding: 10px; font-size: 15px; text-align: center; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;"
+      >
+    </div>
+
+    <button id="payNowBtn" style="width: 95%; padding: 12px; font-size: 16px; font-weight: bold; cursor: pointer;">
+      Verify & Activate
+    </button>
+
+  </div>
 
 </div>
 
-</div>
-
-<script src="payment.js"></script>
+<!-- type="module" zaroori hai Firebase ES Modules ke liye -->
+<script type="module" src="payment.js"></script>
 
 </body>
 </html>
