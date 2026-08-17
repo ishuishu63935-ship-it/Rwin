@@ -1,9 +1,11 @@
-
-"use strict";
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const starterBtn = document.getElementById("buy21");
 const proBtn = document.getElementById("buy60");
 const eliteBtn = document.getElementById("buy365");
+const statusBox = document.getElementById("membershipStatus");
 
 function openPayment(plan, price) {
     localStorage.setItem("selectedPlan", plan);
@@ -29,17 +31,53 @@ if (eliteBtn) {
     };
 }
 
-// Update Membership Status Display
-const statusBox = document.getElementById("membershipStatus");
-if (statusBox) {
-    const gameData = JSON.parse(localStorage.getItem("rwinGame")) || {};
-    if (gameData.membership === true) {
-        statusBox.innerText = "👑 " + (gameData.membershipPlan || "Active");
-        statusBox.style.color = "#00FF66";
+// Live Membership Status Checker
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        try {
+            const userDocRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userDocRef);
+
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+                
+                // LocalStorage ko update kar do
+                const localData = JSON.parse(localStorage.getItem("rwinGame") || "{}");
+                Object.assign(localData, userData);
+                localStorage.setItem("rwinGame", JSON.stringify(localData));
+                localStorage.setItem("rwinCloud", JSON.stringify(localData));
+
+                // UI update karo
+                updateStatusUI(userData);
+            } else {
+                updateStatusUIFromLocal();
+            }
+        } catch (error) {
+            console.error("Status fetch error:", error);
+            updateStatusUIFromLocal();
+        }
     } else {
-        statusBox.innerText = "🆓 Free Plan";
-        statusBox.style.color = "#FFD700";
+        updateStatusUIFromLocal();
+    }
+});
+
+function updateStatusUI(data) {
+    if (statusBox) {
+        if (data && data.membership === true) {
+            statusBox.innerText = "👑 " + (data.membershipPlan || "Active VIP");
+            statusBox.style.color = "#00FF66";
+        } else {
+            statusBox.innerText = "🆓 Free Plan";
+            statusBox.style.color = "#FFD700";
+        }
     }
 }
 
-console.log("✅ Membership Ready");
+function updateStatusUIFromLocal() {
+    if (statusBox) {
+        const gameData = JSON.parse(localStorage.getItem("rwinGame")) || {};
+        updateStatusUI(gameData);
+    }
+}
+
+console.log("✅ Membership Script Connected");
