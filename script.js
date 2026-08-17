@@ -1,4 +1,10 @@
-// LocalStorage से Device ID निकालो या नई बनाओ
+
+            
+"use strict";
+
+/* ==========================================
+        DEVICE FINGERPRINT ENGINE
+========================================== */
 function getOrCreateDeviceId() {
     let deviceId = localStorage.getItem('rwin_device_id');
     if (!deviceId) {
@@ -8,25 +14,17 @@ function getOrCreateDeviceId() {
     return deviceId;
 }
 
-"use strict";
-
-/* ==========================================
-        RWIN OFFICIAL ENGINE V4 (FIXED)
-========================================== */
-
-console.log("🚀 RWIN Engine V4 Started");
+console.log("🚀 RWIN Engine V4 Started | Device ID:", getOrCreateDeviceId());
 
 /* ==========================================
         HELPERS
 ========================================== */
-
 const $ = (e) => document.querySelector(e);
 const $$ = (e) => document.querySelectorAll(e);
 
 /* ==========================================
         GAME DATA
 ========================================== */
-
 const game = {
     balance: 10000,
     xp: 0,
@@ -34,6 +32,7 @@ const game = {
     membership: false,
     membershipPlan: "Free",
     membershipExpiry: null,
+    hasClaimedFreeCoins: false,
     history: [],
     timer: 30,
     selectedBet: 0,
@@ -43,18 +42,8 @@ const game = {
 };
 
 /* ==========================================
-        PAGE DETECT
-========================================== */
-
-const isGamePage = document.getElementById("timer") !== null;
-const isLoginPage = document.getElementById("loginBtn") !== null;
-const isMembershipPage = document.getElementById("membershipStatus") !== null;
-const isLandingPage = window.location.pathname === "/" || window.location.pathname.endsWith("index.html");
-
-/* ==========================================
         LOAD & SAVE
 ========================================== */
-
 function loadGame() {
     const data = localStorage.getItem("rwinGame") || localStorage.getItem("rwinCloud");
     if (!data) return;
@@ -75,7 +64,6 @@ function saveGame() {
 /* ==========================================
         BALANCE & UI UPDATES
 ========================================== */
-
 function updateBalance() {
     const a = document.getElementById("balanceText");
     const b = document.getElementById("gameBalance");
@@ -96,29 +84,42 @@ function updateMembership() {
     const box = document.getElementById("membershipStatus");
     if (!box) return;
 
-    if (game.membership) {
+    if (membershipActive()) {
         box.innerHTML = "👑 " + game.membershipPlan;
     } else {
         box.innerHTML = "🆓 Free Plan";
     }
 }
 
+function membershipActive() {
+    if (!game.membership) return false;
+    if (!game.membershipExpiry) return true;
+
+    const today = new Date();
+    const expiry = new Date(game.membershipExpiry);
+
+    if (today > expiry) {
+        game.membership = false;
+        game.membershipPlan = "Free";
+        game.membershipExpiry = null;
+        saveGame();
+        return false;
+    }
+    return true;
+}
+
 /* ==========================================
         INITIALIZE
 ========================================== */
-
 loadGame();
 updateBalance();
 updateXP();
 updateMembership();
 
-console.log("✅ PART 1 COMPLETE");
-
 /* ==========================================
         TIMER ENGINE
 ========================================== */
-
-if (isGamePage) {
+if (document.getElementById("timer") !== null) {
     const timerText = $("#timer");
 
     function updateTimer() {
@@ -147,12 +148,10 @@ if (isGamePage) {
 /* ==========================================
         BET ENGINE
 ========================================== */
-
-if (isGamePage) {
+if (document.getElementById("timer") !== null) {
     const playBtn = $("#playBtn");
     const playStatus = $("#playStatus");
 
-    // Bet Amount
     $$(".betBtn").forEach(btn => {
         btn.onclick = () => {
             $$(".betBtn").forEach(b => { b.style.outline = "none"; });
@@ -161,7 +160,6 @@ if (isGamePage) {
         };
     });
 
-    // Color
     $$(".colorGrid button").forEach(btn => {
         btn.onclick = () => {
             $$(".colorGrid button").forEach(b => { b.style.outline = "none"; });
@@ -170,7 +168,6 @@ if (isGamePage) {
         };
     });
 
-    // Number
     document.querySelectorAll(".numberPanel .numberGrid button").forEach(btn => {
         btn.onclick = () => {
             document.querySelectorAll(".numberPanel .numberGrid button").forEach(b => { b.style.outline = "none"; });
@@ -179,18 +176,12 @@ if (isGamePage) {
         };
     });
 
-    // BIG / SMALL
     const bigBtn = $(".bigBtn");
-    if (bigBtn) {
-        bigBtn.onclick = () => { game.selectedSize = "BIG"; };
-    }
+    if (bigBtn) bigBtn.onclick = () => { game.selectedSize = "BIG"; };
 
     const smallBtn = $(".smallBtn");
-    if (smallBtn) {
-        smallBtn.onclick = () => { game.selectedSize = "SMALL"; };
-    }
+    if (smallBtn) smallBtn.onclick = () => { game.selectedSize = "SMALL"; };
 
-    // PLAY
     if (playBtn) {
         playBtn.onclick = () => {
             if (game.selectedBet <= 0) {
@@ -216,24 +207,12 @@ if (isGamePage) {
     }
 }
 
-console.log("✅ PART 2 COMPLETE");
-
 /* ==========================================
-        RESULT & LEVEL ENGINE
+        RESULT ENGINE
 ========================================== */
-
 function generateResult() {
     const number = Math.floor(Math.random() * 10);
-    let color = "";
-
-    if (number === 0 || number === 5) {
-        color = "VIOLET";
-    } else if (number % 2 === 0) {
-        color = "RED";
-    } else {
-        color = "GREEN";
-    }
-
+    let color = (number === 0 || number === 5) ? "VIOLET" : (number % 2 === 0 ? "RED" : "GREEN");
     const size = number >= 5 ? "BIG" : "SMALL";
     return { number, color, size };
 }
@@ -278,37 +257,16 @@ function checkLevelUp() {
     updateXP();
 }
 
-console.log("✅ PART 3 COMPLETE");
-
-/* ==========================================
-        HISTORY ENGINE
-========================================== */
-
 function updateHistory(result) {
-    game.history.unshift({
-        number: result.number,
-        color: result.color,
-        size: result.size
-    });
-
-    if (game.history.length > 10) {
-        game.history.pop();
-    }
-
+    game.history.unshift({ number: result.number, color: result.color, size: result.size });
+    if (game.history.length > 10) game.history.pop();
     loadHistory();
 }
 
 function loadHistory() {
     const recent = $("#recentCard");
     if (!recent) return;
-
-    recent.innerHTML = "";
-
-    if (game.history.length === 0) {
-        recent.innerHTML = "<p>No History</p>";
-        return;
-    }
-
+    recent.innerHTML = game.history.length === 0 ? "<p>No History</p>" : "";
     game.history.forEach(item => {
         recent.innerHTML += `<p>🎯 ${item.number} | ${item.color} | ${item.size}</p>`;
     });
@@ -324,62 +282,30 @@ function clearSelection() {
     $$(".colorGrid button").forEach(btn => { btn.style.outline = "none"; });
     document.querySelectorAll(".numberPanel .numberGrid button").forEach(btn => { btn.style.outline = "none"; });
 
-    const big = $(".bigBtn");
-    const small = $(".smallBtn");
-    if (big) big.style.outline = "none";
-    if (small) small.style.outline = "none";
-
     const playStatus = $("#playStatus");
-    if (playStatus) {
-        playStatus.innerText = "Choose Coins + Color / Number / BIG-SMALL";
-    }
+    if (playStatus) playStatus.innerText = "Choose Coins + Color / Number / BIG-SMALL";
 }
-
-console.log("✅ PART 4 COMPLETE");
 
 /* ==========================================
-        AUTO SAVE & RESET
+        STRICT RESET & COIN LOCK
 ========================================== */
-
-setInterval(() => {
-    saveGame();
-}, 5000);
-
-function membershipActive() {
-    if (!game.membership) return false;
-    if (!game.membershipExpiry) return true;
-
-    const today = new Date();
-    const expiry = new Date(game.membershipExpiry);
-
-    if (today > expiry) {
-        game.membership = false;
-        game.membershipPlan = "Free";
-        game.membershipExpiry = null;
-        saveGame();
-        updateMembership();
-        return false;
-    }
-    return true;
-}
-
 const resetBtn = $("#resetCoinsBtn");
 if (resetBtn) {
     resetBtn.onclick = () => {
         if (!membershipActive()) {
-            alert("Membership Expired");
+            alert("🔒 कॉइन्स खत्म! Unlimited Reset करने के लिए VIP Membership लें।");
+            window.location.href = "wallet.html";
             return;
         }
         game.balance = 10000;
         updateBalance();
         saveGame();
-        alert("Coins Reset Successful");
+        alert("🔄 Coins Reset Successful!");
     };
 }
 
-/* RESTORE ON LOAD */
+setInterval(() => { saveGame(); }, 5000);
 loadHistory();
 saveGame();
-
-console.log("🎉 RWIN ENGINE V4 READY & WORKING");
-            
+console.log("🎉 RWIN ENGINE V4 LOCKED & READY");
+    
