@@ -1,18 +1,19 @@
 "use strict";
 
 /* ==========================================
-        DEVICE FINGERPRINT ENGINE
+        HARDWARE DEVICE FINGERPRINT ENGINE
 ========================================== */
 function getOrCreateDeviceId() {
-    let deviceId = localStorage.getItem('rwin_device_id');
-    if (!deviceId) {
-        deviceId = 'DEV_' + Math.random().toString(36).substr(2, 9) + Date.now();
-        localStorage.setItem('rwin_device_id', deviceId);
+    const raw = navigator.userAgent + screen.width + "x" + screen.height + navigator.language;
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) {
+        hash = (hash << 5) - hash + raw.charCodeAt(i);
+        hash |= 0;
     }
-    return deviceId;
+    return 'DEV_HW_' + Math.abs(hash);
 }
 
-console.log("🚀 RWIN Engine V4 Started | Device ID:", getOrCreateDeviceId());
+console.log("🚀 RWIN Engine V5 Active | Hardware Device ID:", getOrCreateDeviceId());
 
 /* ==========================================
         HELPERS
@@ -24,7 +25,7 @@ const $$ = (e) => document.querySelectorAll(e);
         GAME DATA
 ========================================== */
 const game = {
-    balance: 10000,
+    balance: 0, // Initialized to 0 to prevent 10,000 auto-overwrite bug
     xp: 0,
     level: 1,
     membership: false,
@@ -49,16 +50,27 @@ function loadGame() {
     try {
         const parsedData = JSON.parse(data);
         Object.assign(game, parsedData);
+        updateBalance();
+        updateXP();
+        updateMembership();
     } catch (e) {
         console.error("Data load error", e);
     }
 }
 
+window.loadRwinFromCloud = (cloudData) => {
+    if (cloudData) {
+        Object.assign(game, cloudData);
+        updateBalance();
+        updateXP();
+        updateMembership();
+    }
+};
+
 function saveGame() {
     localStorage.setItem("rwinGame", JSON.stringify(game));
     localStorage.setItem("rwinCloud", JSON.stringify(game));
 
-    // 🚀 FIREBASE CLOUD SYNC: Updates Firestore Database in Real-Time
     if (window.syncRwinToCloud && typeof window.syncRwinToCloud === 'function') {
         window.syncRwinToCloud(game);
     }
@@ -115,9 +127,6 @@ function membershipActive() {
         INITIALIZE
 ========================================== */
 loadGame();
-updateBalance();
-updateXP();
-updateMembership();
 
 /* ==========================================
         TIMER ENGINE
@@ -307,7 +316,5 @@ if (resetBtn) {
     };
 }
 
-setInterval(() => { saveGame(); }, 5000);
 loadHistory();
-saveGame();
-console.log("🎉 RWIN ENGINE V4 LOCKED & READY");
+console.log("🎉 RWIN ENGINE V5 LOCKED & READY");
