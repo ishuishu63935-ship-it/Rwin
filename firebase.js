@@ -6,19 +6,17 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore,
   doc,
   setDoc,
-  getDoc,
-  updateDoc
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import {
-  getDatabase,
-  ref,
-  get
+  getDatabase
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
@@ -51,10 +49,48 @@ function getDeviceId() {
     return deviceId;
 }
 
+// 🔄 CLOUD SYNC FUNCTION (Called by script.js whenever game state changes)
+window.syncRwinToCloud = async (gameData) => {
+  const user = auth.currentUser;
+  if (user) {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        balance: gameData.balance,
+        xp: gameData.xp,
+        level: gameData.level,
+        membership: gameData.membership,
+        membershipPlan: gameData.membershipPlan,
+        membershipExpiry: gameData.membershipExpiry,
+        history: gameData.history || []
+      }, { merge: true });
+    } catch (err) {
+      console.error("Cloud sync failed:", err);
+    }
+  }
+};
+
+// AUTO-FETCH LATEST CLOUD DATA ON AUTH STATE CHANGE
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+      const cloudData = userDoc.data();
+      localStorage.setItem("rwinGame", JSON.stringify(cloudData));
+      localStorage.setItem("rwinCloud", JSON.stringify(cloudData));
+    }
+  }
+});
+
 // SIGNUP
 if (signupBtn) {
   signupBtn.addEventListener("click", async () => {
     try {
+      if (!email.value || !password.value) {
+        alert("Please enter email and password");
+        return;
+      }
+
       const deviceId = getDeviceId();
       const deviceRef = doc(db, "device_registry", deviceId);
       const deviceDoc = await getDoc(deviceRef);
@@ -63,7 +99,7 @@ if (signupBtn) {
       let claimedCoins = true;
 
       if (deviceDoc.exists()) {
-        alert("⚠️ इस डिवाइस पर फ्री 10,000 कॉइन्स पहले ही लिए जा चुके हैं! आपका अकाउंट 0 कॉइन्स से शुरू होगा।");
+        alert("⚠️ Is device par FREE 10,000 coins pehle hi liye ja chuke hain! Aapka account 0 coins se start hoga.");
         initialBalance = 0;
         claimedCoins = false;
       }
@@ -116,6 +152,11 @@ if (signupBtn) {
 if (loginBtn) {
   loginBtn.addEventListener("click", async () => {
     try {
+      if (!email.value || !password.value) {
+        alert("Please enter email and password");
+        return;
+      }
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email.value.trim(),
