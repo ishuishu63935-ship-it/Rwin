@@ -1,5 +1,5 @@
 // ================================
-// RWIN OFFICIAL FIREBASE V3 - FIXED & SECURED
+// RWIN OFFICIAL FIREBASE V4 - HARDWARE FINGERPRINT & REALTIME FIX
 // ================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -40,16 +40,18 @@ const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const status = document.getElementById("loginStatus");
 
+// 🔒 HARDWARE FINGERPRINT (Storage clear karne par bhi ID badlegi nahi)
 function getDeviceId() {
-    let deviceId = localStorage.getItem('rwin_device_id');
-    if (!deviceId) {
-        deviceId = 'DEV_' + Math.random().toString(36).substr(2, 9) + Date.now();
-        localStorage.setItem('rwin_device_id', deviceId);
+    const raw = navigator.userAgent + screen.width + "x" + screen.height + navigator.language;
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) {
+        hash = (hash << 5) - hash + raw.charCodeAt(i);
+        hash |= 0;
     }
-    return deviceId;
+    return 'DEV_HW_' + Math.abs(hash);
 }
 
-// 🔄 CLOUD SYNC FUNCTION (Called by script.js whenever game state changes)
+// 🔄 CLOUD SYNC FUNCTION
 window.syncRwinToCloud = async (gameData) => {
   const user = auth.currentUser;
   if (user) {
@@ -78,6 +80,11 @@ onAuthStateChanged(auth, async (user) => {
       const cloudData = userDoc.data();
       localStorage.setItem("rwinGame", JSON.stringify(cloudData));
       localStorage.setItem("rwinCloud", JSON.stringify(cloudData));
+      
+      // Update script memory if game script is active
+      if (window.loadRwinFromCloud && typeof window.loadRwinFromCloud === 'function') {
+        window.loadRwinFromCloud(cloudData);
+      }
     }
   }
 });
