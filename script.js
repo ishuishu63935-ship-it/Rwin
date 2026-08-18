@@ -1,5 +1,3 @@
-
-            
 "use strict";
 
 /* ==========================================
@@ -42,7 +40,7 @@ const game = {
 };
 
 /* ==========================================
-        LOAD & SAVE
+        LOAD & SAVE WITH CLOUD SYNC
 ========================================== */
 function loadGame() {
     const data = localStorage.getItem("rwinGame") || localStorage.getItem("rwinCloud");
@@ -59,6 +57,11 @@ function loadGame() {
 function saveGame() {
     localStorage.setItem("rwinGame", JSON.stringify(game));
     localStorage.setItem("rwinCloud", JSON.stringify(game));
+
+    // 🚀 FIREBASE CLOUD SYNC: Updates Firestore Database in Real-Time
+    if (window.syncRwinToCloud && typeof window.syncRwinToCloud === 'function') {
+        window.syncRwinToCloud(game);
+    }
 }
 
 /* ==========================================
@@ -308,4 +311,3 @@ setInterval(() => { saveGame(); }, 5000);
 loadHistory();
 saveGame();
 console.log("🎉 RWIN ENGINE V4 LOCKED & READY");
-    
