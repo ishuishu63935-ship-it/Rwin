@@ -54,7 +54,7 @@
 <header class="topBar">
 <div>
 <h1>🎮 RWIN Arena</h1>
-<p>Device HW Fingerprint Protected</p>
+<p>Cloud Balance Protected</p>
 </div>
 <div class="profileIcon">👤</div>
 </header>
@@ -238,7 +238,7 @@ function openGame(gameId, title) {
     document.getElementById('game-' + gameId).classList.add('active');
     document.getElementById('backBar').style.display = 'flex';
     document.getElementById('activeGameTitle').innerText = title;
-    if(gameId === 'wheel') drawWheel();
+    if(gameId === 'wheel' && window.drawWheel) window.drawWheel();
 }
 
 function exitToArena() {
@@ -248,7 +248,8 @@ function exitToArena() {
 }
 </script>
 
-<script src="script.js"></script>
+<!-- MODULE SCRIPT IMPORT -->
+<script type="module" src="script.js"></script>
 </body>
     </html>
     
