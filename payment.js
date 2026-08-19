@@ -11,10 +11,9 @@ const utrInput = document.getElementById("utrInput");
 const upiQrCode = document.getElementById("upiQrCode");
 
 const plan = localStorage.getItem("selectedPlan") || "Starter";
-const price = localStorage.getItem("selectedPrice") || "49";
+const price = localStorage.getItem("selectedPrice") || "9"; // Default set to 9
 const upiId = "7415325460-2@ibl";
 
-// 1. Fixed Amount UPI QR Generator URL
 const upiString = `upi://pay?pa=${upiId}&pn=RWIN&am=${price}&cu=INR`;
 const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
 
@@ -24,7 +23,6 @@ if (upiQrCode) upiQrCode.src = qrApiUrl;
 
 let currentUser = null;
 
-// Auth Check
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
@@ -34,7 +32,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// UTR Verification
 payBtn.addEventListener("click", async () => {
   const utr = utrInput.value.trim();
 
@@ -63,7 +60,6 @@ payBtn.addEventListener("click", async () => {
       Object.values(smsData).forEach((smsObj) => {
         const fullText = typeof smsObj === 'object' ? JSON.stringify(smsObj) : String(smsObj);
         
-        // Match both UTR and ensure SMS received
         if (fullText.includes(utr)) {
           isMatched = true;
         }
@@ -72,11 +68,23 @@ payBtn.addEventListener("click", async () => {
 
     if (isMatched) {
       const userRef = doc(db, "users", currentUser.uid);
+      
+      // Get exact fresh plan & price from storage in case user clicked a different box
+      const finalPlan = localStorage.getItem("selectedPlan") || "Starter";
+      const finalPrice = localStorage.getItem("selectedPrice") || "9";
+
+      // Calculate Expiry Date based on new plans
+      let daysToAdd = 16; // Default Starter ₹9
+      if (finalPrice === "49") {
+          daysToAdd = 60; // Pro ₹49 (2 Months)
+      } else if (finalPrice === "99") {
+          daysToAdd = 180; // Elite ₹99 (6 Months)
+      }
 
       const updatedFields = {
         membership: true,
-        membershipPlan: plan,
-        membershipExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        membershipPlan: finalPlan,
+        membershipExpiry: new Date(Date.now() + daysToAdd * 24 * 60 * 60 * 1000).toISOString(),
         paymentStatus: "SUCCESS",
         lastUtr: utr
       };
