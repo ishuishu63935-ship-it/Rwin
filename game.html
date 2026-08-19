@@ -3,27 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RWIN - 5-in-1 Game Arena</title>
+<title>RWIN - Gaming Arena</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-.game-tabs { display: flex; overflow-x: auto; gap: 8px; margin: 12px 0; padding-bottom: 5px; }
-.tab-btn { background: #1a2232; color: #94a3b8; border: 1px solid #2d3748; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; font-size: 12px; }
-.tab-btn.active { background: #00E5FF; color: #000; border-color: #00E5FF; }
-.game-section { display: none; }
-.game-section.active { display: block; }
+/* Game Selection Cards */
+.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px 0; }
+.game-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 14px; padding: 18px; text-align: center; cursor: pointer; transition: 0.2s; position: relative; }
+.game-card:active { transform: scale(0.97); border-color: #00E5FF; }
+.game-card h3 { font-size: 15px; color: #fff; margin-top: 8px; }
+.game-card p { font-size: 10px; color: #94a3b8; }
+.game-icon { font-size: 32px; }
 
-/* Mines Grid */
+/* Dedicated Game Screen View */
+.game-screen { display: none; }
+.game-screen.active { display: block; }
+.back-bar { display: none; align-items: center; justify-content: space-between; background: #1e293b; padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; }
+.back-btn { background: #00E5FF; color: #000; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+/* Mines & Aviator UI */
 .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 15px 0; }
 .mine-card { background: #1f293d; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; font-weight: bold; border: 1px solid #334155; }
-
-/* Aviator Container */
-.aviator-box { background: #0f172a; border: 2px solid #ef4444; border-radius: 12px; padding: 25px; text-align: center; margin: 15px 0; position: relative; }
+.aviator-box { background: #0f172a; border: 2px solid #ef4444; border-radius: 12px; padding: 25px; text-align: center; margin: 15px 0; }
 .multiplier-text { font-size: 38px; font-weight: 800; color: #10b981; }
-
-/* Dice & Wheel */
 .action-box { background: #1e293b; padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0; }
 </style>
 </head>
@@ -33,29 +37,64 @@
 
 <header class="topBar">
 <div>
-<h1>🎮 RWIN Multi-Arena</h1>
-<p>5-in-1 Virtual Simulator</p>
+<h1>🎮 RWIN Arena</h1>
+<p>Virtual Practice Simulator</p>
 </div>
 <div class="profileIcon">👤</div>
 </header>
 
 <section class="balanceCard">
-<p>Virtual Coins Balance</p>
+<p>Virtual Practice Coins</p>
 <h1 id="balanceText">₹10,000</h1>
-<button id="resetCoinsBtn" style="margin-top:8px; padding:6px 12px; background:#00E5FF; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">♻ Reset Coins</button>
+<button id="resetCoinsBtn" style="margin-top:8px; padding:6px 14px; background:#00E5FF; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">♻ Reset Coins</button>
 </section>
 
-<!-- 🎰 5 GAME SELECTION TABS -->
-<div class="game-tabs">
-<button class="tab-btn active" onclick="switchGame('color')">🎨 Color Pred.</button>
-<button class="tab-btn" onclick="switchGame('aviator')">🚀 Aviator Crash</button>
-<button class="tab-btn" onclick="switchGame('mines')">💣 Mines (5x5)</button>
-<button class="tab-btn" onclick="switchGame('dice')">🎲 Dice Roll</button>
-<button class="tab-btn" onclick="switchGame('wheel')">🎡 Spin Wheel</button>
+<!-- TOP BACK BAR (When inside a game) -->
+<div id="backBar" class="back-bar">
+<button class="back-btn" onclick="exitToArena()">⬅️ Back to Games</button>
+<b id="activeGameTitle" style="color:#00E5FF; font-size:14px;">Game</b>
 </div>
 
-<!-- ================= 1. COLOR PREDICTION ================= -->
-<div id="game-color" class="game-section active">
+<!-- ================= 🎰 MAIN ARENA: 5 GAME CARDS ================= -->
+<div id="arenaHub">
+<h3 style="color:#94a3b8; font-size:13px; margin:10px 0 5px 0;">SELECT GAME TO PRACTICE</h3>
+<div class="arena-grid">
+
+<div class="game-card" onclick="openGame('color', '🎨 Color Prediction')">
+<div class="game-icon">🎨</div>
+<h3>Color Prediction</h3>
+<p>Red / Green / Violet</p>
+</div>
+
+<div class="game-card" onclick="openGame('aviator', '🚀 Aviator Crash')">
+<div class="game-icon">🚀</div>
+<h3>Aviator Crash</h3>
+<p>High Multiplier Flight</p>
+</div>
+
+<div class="game-card" onclick="openGame('mines', '💣 Mines 5x5')">
+<div class="game-icon">💣</div>
+<h3>Mines Sweeper</h3>
+<p>Avoid 3 Hidden Bombs</p>
+</div>
+
+<div class="game-card" onclick="openGame('dice', '🎲 Over/Under Dice')">
+<div class="game-icon">🎲</div>
+<h3>Dice Roll</h3>
+<p>Instant 2X Payout</p>
+</div>
+
+</div>
+
+<div class="game-card" style="margin-top:5px;" onclick="openGame('wheel', '🎡 Lucky Wheel')">
+<div class="game-icon">🎡</div>
+<h3>Lucky Spin Wheel</h3>
+<p>Spin & Win Up to 5X Rewards</p>
+</div>
+</div>
+
+<!-- ================= 1. DEDICATED COLOR PREDICTION ================= -->
+<div id="game-color" class="game-screen">
 <section class="timerCard"><h2>⏱ Next Round</h2><h1 id="timer">30</h1></section>
 <section class="membershipCard">
 <h3>💰 Select Bet Coins</h3>
@@ -80,56 +119,56 @@
 </section>
 </div>
 
-<!-- ================= 2. AVIATOR CRASH ================= -->
-<div id="game-aviator" class="game-section">
+<!-- ================= 2. DEDICATED AVIATOR CRASH ================= -->
+<div id="game-aviator" class="game-screen">
 <div class="aviator-box">
 <p style="color:#ef4444; font-weight:bold;">🚀 PLANE IN FLIGHT</p>
 <div class="multiplier-text" id="aviatorMulti">1.00x</div>
-<p id="aviatorStatus" style="font-size:12px; color:#94a3b8; margin-top:5px;">Bet before plane crashes!</p>
+<p id="aviatorStatus" style="font-size:12px; color:#94a3b8; margin-top:5px;">Cashout before plane crashes!</p>
 </div>
 <div class="action-box">
-<input type="number" id="aviatorBet" placeholder="Bet Amount (e.g. 500)" style="padding:8px; width:80%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:10px;">
+<input type="number" id="aviatorBet" placeholder="Bet Amount (e.g. 500)" style="padding:10px; width:90%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:12px;">
 <br>
-<button id="startAviatorBtn" onclick="startAviator()" style="padding:10px 20px; background:#10b981; border:none; color:#fff; font-weight:bold; border-radius:6px; cursor:pointer;">🚀 FLY PLANE</button>
-<button id="cashoutBtn" onclick="cashoutAviator()" style="padding:10px 20px; background:#f59e0b; border:none; color:#000; font-weight:bold; border-radius:6px; cursor:pointer; display:none;">💰 CASH OUT</button>
+<button id="startAviatorBtn" onclick="startAviator()" style="padding:12px 25px; background:#10b981; border:none; color:#fff; font-weight:bold; border-radius:6px; width:90%; cursor:pointer;">🚀 START FLIGHT</button>
+<button id="cashoutBtn" onclick="cashoutAviator()" style="padding:12px 25px; background:#f59e0b; border:none; color:#000; font-weight:bold; border-radius:6px; width:90%; cursor:pointer; display:none;">💰 CASH OUT NOW</button>
 </div>
 </div>
 
-<!-- ================= 3. MINES GAME ================= -->
-<div id="game-mines" class="game-section">
+<!-- ================= 3. DEDICATED MINES ================= -->
+<div id="game-mines" class="game-screen">
 <div class="action-box">
-<p>💣 Avoid the 3 Hidden Bombs!</p>
-<input type="number" id="minesBet" placeholder="Bet Amount" style="padding:8px; width:70%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff;">
-<button onclick="startMinesGame()" style="padding:8px 15px; background:#00E5FF; border:none; font-weight:bold; border-radius:6px; margin-left:5px;">Start Game</button>
+<p style="margin-bottom:8px;">💣 Avoid 3 Hidden Bombs!</p>
+<input type="number" id="minesBet" placeholder="Bet Coins" style="padding:8px; width:50%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff;">
+<button onclick="startMinesGame()" style="padding:8px 15px; background:#00E5FF; border:none; font-weight:bold; border-radius:6px;">Start</button>
 </div>
 <div class="mines-grid" id="minesGrid"></div>
 </div>
 
-<!-- ================= 4. DICE ROLL ================= -->
-<div id="game-dice" class="game-section">
+<!-- ================= 4. DEDICATED DICE ROLL ================= -->
+<div id="game-dice" class="game-screen">
 <div class="action-box">
-<h2>🎲 Over / Under Dice Roll</h2>
-<p id="diceResult" style="font-size:40px; margin:10px 0;">🎲 ?</p>
-<button onclick="playDice('UNDER')" style="padding:10px 15px; background:#ef4444; color:#fff; font-weight:bold; border:none; border-radius:6px; margin:5px;">Under 4 (2X)</button>
-<button onclick="playDice('OVER')" style="padding:10px 15px; background:#10b981; color:#fff; font-weight:bold; border:none; border-radius:6px; margin:5px;">Over 4 (2X)</button>
+<h2>🎲 Over / Under 4</h2>
+<div id="diceResult" style="font-size:50px; margin:15px 0;">🎲 ?</div>
+<button onclick="playDice('UNDER')" style="padding:12px 20px; background:#ef4444; color:#fff; font-weight:bold; border:none; border-radius:6px; margin:5px;">Under 4 (2X)</button>
+<button onclick="playDice('OVER')" style="padding:12px 20px; background:#10b981; color:#fff; font-weight:bold; border:none; border-radius:6px; margin:5px;">Over 4 (2X)</button>
 </div>
 </div>
 
-<!-- ================= 5. SPIN WHEEL ================= -->
-<div id="game-wheel" class="game-section">
+<!-- ================= 5. DEDICATED SPIN WHEEL ================= -->
+<div id="game-wheel" class="game-screen">
 <div class="action-box">
-<h2>🎡 Lucky Wheel Multiplier</h2>
-<div id="wheelDisplay" style="font-size:36px; font-weight:bold; color:#f59e0b; margin:15px 0;">🎯 1.0X</div>
-<button onclick="spinWheel()" style="padding:12px 30px; background:#ec4899; color:#fff; font-weight:bold; border:none; border-radius:25px; font-size:16px; cursor:pointer;">SPIN (500 Coins)</button>
+<h2>🎡 Lucky Wheel</h2>
+<div id="wheelDisplay" style="font-size:42px; font-weight:bold; color:#f59e0b; margin:20px 0;">🎯 1.0X</div>
+<button onclick="spinWheel()" style="padding:14px 35px; background:#ec4899; color:#fff; font-weight:bold; border:none; border-radius:25px; font-size:16px; cursor:pointer;">SPIN (500 Coins)</button>
 </div>
 </div>
 
-<!-- Common History -->
+<!-- Recent Result Card -->
 <section class="historyPanel" style="margin-top:20px;">
-<h2>🎯 Round Result</h2>
+<h2>🎯 Round Status</h2>
 <div class="historyCard">
 <p>Result: <b id="resultText">Ready</b></p>
-<p>Status: <b id="statusText">Select any game to play</b></p>
+<p>Status: <b id="statusText">Choose a game above to start</b></p>
 </div>
 </section>
 
@@ -141,6 +180,25 @@
 </nav>
 
 </div>
+
+<script>
+/* Navigation Logic for Dedicated View */
+function openGame(gameId, title) {
+    document.getElementById('arenaHub').style.display = 'none';
+    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('game-' + gameId).classList.add('active');
+    document.getElementById('backBar').style.display = 'flex';
+    document.getElementById('activeGameTitle').innerText = title;
+}
+
+function exitToArena() {
+    document.getElementById('arenaHub').style.display = 'block';
+    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('backBar').style.display = 'none';
+}
+</script>
+
 <script src="script.js"></script>
 </body>
 </html>
+
