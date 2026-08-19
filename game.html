@@ -2,16 +2,14 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>RWIN Practice</title>
-
 <link rel="stylesheet" href="style.css">
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
+<!-- 🎉 Confetti Animation CDN -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
@@ -19,120 +17,65 @@
 <div class="gameContainer">
 
 <!-- Header -->
-
 <header class="topBar">
-
 <div>
-
 <h1>🎮 Practice Arena</h1>
-
 <p>Virtual Practice Mode</p>
-
 </div>
-
-<div class="profileIcon">
-
-👤
-
-</div>
-
+<div class="profileIcon">👤</div>
 </header>
 
 <!-- Live -->
-
 <div class="liveStatus">
-
-<span class="liveDot"></span>
-
-LIVE PRACTICE
-
+<span class="liveDot"></span> LIVE PRACTICE
 </div>
 
 <!-- Balance -->
-
 <section class="balanceCard">
-
 <p>Virtual Practice Coins</p>
-
 <h1 id="balanceText">₹10,000</h1>
-
 <span>Unlimited Reset During Membership</span>
-
 </section>
+
 <section class="membershipCard">
-
 <h3>♻ Reset Practice Coins</h3>
-
 <p>Unlimited while Membership is Active</p>
-
-<button id="resetCoinsBtn">
-Reset to ₹10,000
-</button>
-
+<button id="resetCoinsBtn">Reset to ₹10,000</button>
 </section>
+
 <!-- Timer -->
-
 <section class="timerCard">
-
 <h2>⏱ Next Round</h2>
-
 <h1 id="timer">30</h1>
-
 </section>
 
 <!-- Bet Amount -->
-
 <section class="membershipCard">
-
 <h3>💰 Select Practice Coins</h3>
-
 <div class="numberGrid">
-
 <button class="betBtn">100</button>
-
 <button class="betBtn">500</button>
-
 <button class="betBtn">1000</button>
-
 <button class="betBtn">5000</button>
-
 <button class="betBtn">10000</button>
-
 </div>
-
-<p id="betStatus">
-
-No Coins Selected
-
-</p>
-
+<p id="betStatus">No Coins Selected</p>
 </section>
+
 <!-- Color Panel -->
-
 <section class="colorPanel">
-
 <h2>🎨 Select Color</h2>
-
 <div class="colorGrid">
-
 <button class="green">GREEN</button>
-
 <button class="red">RED</button>
-
 <button class="violet">VIOLET</button>
-
 </div>
-
 </section>
 
 <!-- Number Panel -->
-
 <section class="numberPanel">
-
 <h2>🔢 Select Number</h2>
-
 <div class="numberGrid">
-
 <button>0</button>
 <button>1</button>
 <button>2</button>
@@ -143,156 +86,63 @@ No Coins Selected
 <button>7</button>
 <button>8</button>
 <button>9</button>
-
 </div>
-
 </section>
 
 <!-- Big Small -->
-
 <section class="membershipCard">
-
 <h3>📈 Select Mode</h3>
-
 <div class="bigSmall">
-
-<button class="bigBtn">
-
-BIG
-
-</button>
-
-<button class="smallBtn">
-
-SMALL
-
-</button>
-
+<button class="bigBtn">BIG</button>
+<button class="smallBtn">SMALL</button>
 </div>
-
 </section>
 
 <!-- Confirm Practice -->
-
 <section class="membershipCard">
-
 <h3>🚀 Ready?</h3>
-
-<button id="playBtn">
-
-Start Practice
-
-</button>
-
-<p id="playStatus">
-
-Choose Coins + Color/Number/Big-Small
-
-</p>
-
+<button id="playBtn">Start Practice</button>
+<p id="playStatus">Choose Coins + Color/Number/Big-Small</p>
 </section>
-  <!-- Result Panel -->
 
+<!-- Result Panel -->
 <section class="historyPanel">
-
 <h2>🎯 Round Result</h2>
-
 <div class="historyCard">
-
-<p>
-Result :
-<b id="resultText">Waiting...</b>
-</p>
-
-<p>
-Status :
-<b id="statusText">Ready</b>
-</p>
-
-<p>
-Balance :
-<b id="gameBalance">₹10,000</b>
-</p>
-
+<p>Result : <b id="resultText">Waiting...</b></p>
+<p>Status : <b id="statusText">Ready</b></p>
+<p>Balance : <b id="gameBalance">₹10,000</b></p>
 </div>
-
 </section>
 
 <!-- Progress -->
-
 <section class="levelPanel">
-
 <h2>🏆 Your Progress</h2>
-
-<p id="levelText">
-
-Level 1 - Beginner
-
-</p>
-
+<p id="levelText">Level 1 - Beginner</p>
 <div class="xpBar">
-
 <div class="xpFill" id="xpFill"></div>
-
 </div>
-  <p id="xpText">XP : 0 / 100</p>
+<p id="xpText">XP : 0 / 100</p>
 </section>
+
 <!-- Recent Activity -->
-
 <section class="recentPanel">
-
 <h2>📝 Recent Activity</h2>
-
 <div class="recentCard" id="recentCard">
-
 <p>No Practice Yet.</p>
-
 </div>
-
 </section>
 
 <!-- Bottom Navigation -->
-
 <nav class="bottomNav">
-
-<a href="home.html" class="navItem">
-
-🏠
-
-<span>Home</span>
-
-</a>
-
-<a href="game.html" class="navItem active">
-
-🎮
-
-<span>Practice</span>
-
-</a>
-
-<a href="wallet.html" class="navItem">
-
-💰
-
-<span>Wallet</span>
-
-</a>
-
-<a href="profile.html" class="navItem">
-
-👤
-
-<span>Profile</span>
-
-</a>
-
+<a href="home.html" class="navItem">🏠 <span>Home</span></a>
+<a href="game.html" class="navItem active">🎮 <span>Practice</span></a>
+<a href="wallet.html" class="navItem">💰 <span>Wallet</span></a>
+<a href="profile.html" class="navItem">👤 <span>Profile</span></a>
 </nav>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
-
 </html>
