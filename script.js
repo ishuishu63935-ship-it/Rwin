@@ -183,11 +183,31 @@ window.spinWheel = function() {
         if (res >= 1.5) playSound('win'); else playSound('lose');
     }, 1000);
 };
+/* ==========================================
+        STRICT RESET LOCK (VIP ONLY)
+========================================== */
+const resetBtn = document.getElementById("resetCoinsBtn");
+if (resetBtn) {
+    resetBtn.onclick = () => {
+        // LocalStorage & Membership Expiry Check
+        const isVip = game.membership && membershipActive();
 
-/* RESET BUTTON */
-$("#resetCoinsBtn").onclick = () => {
-    game.balance = 10000; updateBalance(); saveGame(); alert("🔄 Reset to 10,000 Coins!");
-};
+        if (!isVip) {
+            alert("🔒 Aapka Free Limit Khatam! Unlimited Coins Reset karne ke liye ₹9 ka VIP Pass lein.");
+            window.location.href = "wallet.html";
+            return;
+        }
+
+        // Only VIP Users Get Reset
+        game.balance = 10000;
+        updateBalance();
+        saveGame();
+        playSound('win');
+        alert("🎉 VIP Coins Reset Successful! (₹10,000 Added)");
+    };
+        }
+
+
 
 loadGame();
         
