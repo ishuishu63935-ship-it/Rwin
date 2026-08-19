@@ -1,4 +1,5 @@
-"use strict";
+import { db } from "./firebase.js";
+import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* HARDWARE DEVICE FINGERPRINT ENGINE */
 function getOrCreateDeviceId() {
@@ -51,26 +52,65 @@ function playSound(type) {
     } catch(e) {}
 }
 
-/* NO AUTO RESET - STRICT BALANCE PERSISTENCE */
-function loadGame() {
+/* 🔒 STRICT DEVICE-LEVEL CLOUD BALANCE LOCK */
+async function loadGame() {
     const hwId = getOrCreateDeviceId();
-    const data = localStorage.getItem("rwinGame") || localStorage.getItem("rwinCloud");
+    const deviceRef = doc(db, "devices", hwId);
 
-    if (data) {
-        try { Object.assign(game, JSON.parse(data)); } catch (e) {}
-    } else {
-        // FIRST TIME ON THIS DEVICE
-        game.balance = 10000;
-        game.hasClaimedFreeCoins = true;
-        saveGame();
+    try {
+        const deviceSnap = await getDoc(deviceRef);
+
+        if (deviceSnap.exists()) {
+            // Phone pehle se registered hai - Cloud se exact balance uuthao
+            const devData = deviceSnap.data();
+            game.balance = devData.balance !== undefined ? devData.balance : 10000;
+            game.hasClaimedFreeCoins = true;
+            console.log("🔒 Device Recognized! Loaded Cloud Balance:", game.balance);
+        } else {
+            // Bilkul Naya Device hai - Sirf 10,000 Free Coins
+            game.balance = 10000;
+            game.hasClaimedFreeCoins = true;
+            
+            await setDoc(deviceRef, {
+                deviceId: hwId,
+                balance: 10000,
+                hasClaimedFreeCoins: true,
+                createdAt: new Date().toISOString()
+            });
+            console.log("🎉 New Device Registered! 10,000 Coins Granted.");
+        }
+    } catch (error) {
+        console.error("Device Sync Error, falling back to local:", error);
+        const data = localStorage.getItem("rwinGame");
+        if (data) {
+            try { Object.assign(game, JSON.parse(data)); } catch(e){}
+        } else {
+            game.balance = 10000;
+        }
     }
+
     updateBalance();
+    saveLocal();
 }
 
-function saveGame() {
+async function saveGame() {
+    saveLocal();
+    const hwId = getOrCreateDeviceId();
+    const deviceRef = doc(db, "devices", hwId);
+
+    try {
+        await updateDoc(deviceRef, {
+            balance: game.balance,
+            lastUpdated: new Date().toISOString()
+        });
+    } catch (e) {
+        await setDoc(deviceRef, { deviceId: hwId, balance: game.balance }, { merge: true });
+    }
+}
+
+function saveLocal() {
     localStorage.setItem("rwinGame", JSON.stringify(game));
     localStorage.setItem("rwinCloud", JSON.stringify(game));
-    if (window.syncRwinToCloud) window.syncRwinToCloud(game);
 }
 
 function updateBalance() {
@@ -84,8 +124,8 @@ function membershipActive() {
     return new Date() < new Date(game.membershipExpiry);
 }
 
-/* COLOR PREDICTION TIMER (FIXED COUNTDOWN) */
-let timerInterval = setInterval(() => {
+/* COLOR PREDICTION TIMER */
+setInterval(() => {
     game.timer--;
     const t = $("#timer");
     if (t) t.innerText = game.timer;
@@ -101,17 +141,34 @@ window.setColor = (col) => { game.selectedColor = col; };
 window.setNumber = (num) => { game.selectedNumber = num; };
 window.setSize = (sz) => { game.selectedSize = sz; };
 
-if ($("#playBtn")) {
-    $("#playBtn").onclick = () => {
-        if (!game.selectedBet) return alert("Select Bet Coins!");
-        if (!game.selectedColor && game.selectedNumber === null && !game.selectedSize) return alert("Select Color, Number, or Size!");
-        if (game.balance < game.selectedBet) return alert("Insufficient Balance!");
+document.addEventListener("DOMContentLoaded", () => {
+    if ($("#playBtn")) {
+        $("#playBtn").onclick = () => {
+            if (!game.selectedBet) return alert("Select Bet Coins!");
+            if (!game.selectedColor && game.selectedNumber === null && !game.selectedSize) return alert("Select Color, Number, or Size!");
+            if (game.balance < game.selectedBet) return alert("Insufficient Balance!");
 
-        game.balance -= game.selectedBet;
-        updateBalance(); saveGame();
-        $("#playStatus").innerText = "✅ Bet Placed Successfully!";
-    };
-}
+            game.balance -= game.selectedBet;
+            updateBalance(); saveGame();
+            $("#playStatus").innerText = "✅ Bet Placed Successfully!";
+        };
+    }
+
+    const resetBtn = $("#resetCoinsBtn");
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            playSound('win');
+            if (!membershipActive()) {
+                alert("🔒 Aapka Free Limit Khatam! Unlimited Coins Reset karne ke liye VIP Pass lein.");
+                window.location.href = "wallet.html";
+                return;
+            }
+            game.balance = 10000;
+            updateBalance(); saveGame();
+            alert("🔄 VIP Coins Reset Successful! (₹10,000 Added)");
+        };
+    }
+});
 
 function finishColorRound() {
     const num = Math.floor(Math.random() * 10);
@@ -137,13 +194,12 @@ function finishColorRound() {
     if(res) res.innerText = `${num} | ${col} | ${sz}`;
     updateBalance();
     
-    // Clear selection
     game.selectedBet = 0; game.selectedColor = null; game.selectedNumber = null; game.selectedSize = null;
     if($("#playStatus")) $("#playStatus").innerText = "Choose Coins + Bet Option";
     saveGame();
 }
 
-/* AVIATOR REAL ANIMATED FLIGHT */
+/* AVIATOR GAME */
 let aviatorTimer, aviatorMulti = 1.00, isFlying = false, aviatorBetAmt = 0;
 window.startAviator = function() {
     aviatorBetAmt = Number($("#aviatorBet").value);
@@ -161,7 +217,6 @@ window.startAviator = function() {
         aviatorMulti += 0.04;
         $("#aviatorMulti").innerText = aviatorMulti.toFixed(2) + "x";
 
-        // Move Plane Up & Right
         if(plane) {
             let leftVal = Math.min(80, (aviatorMulti - 1) * 30 + 10);
             let bottomVal = Math.min(70, (aviatorMulti - 1) * 25 + 20);
@@ -194,7 +249,7 @@ window.cashoutAviator = function() {
     $("#cashoutBtn").style.display = "none";
 };
 
-/* MINES SWEEPER WITH CASHOUT */
+/* MINES GAME */
 let mineLocations = [], minesActive = false, minesBetAmt = 0, gemsFound = 0, currentMinesWin = 0;
 window.startMinesGame = function() {
     minesBetAmt = Number($("#minesBet").value);
@@ -246,7 +301,7 @@ window.cashoutMines = function() {
     $("#minesCashoutBtn").style.display = "none";
 };
 
-/* 3D ANIMATED DICE ROLL */
+/* DICE GAME */
 window.playDice = function(choice) {
     const bet = Number($("#diceBet").value) || 200;
     if (game.balance < bet) return alert("Low balance!");
@@ -274,11 +329,11 @@ window.playDice = function(choice) {
     }, 400);
 };
 
-/* 12-SLOT SPIN WHEEL CANVAS */
+/* SPIN WHEEL */
 const wheelSlices = ["0X", "1.2X", "2X", "0.5X", "3X", "0X", "1.5X", "5X", "0X", "2X", "10X", "1.1X"];
 const colors = ["#ef4444", "#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444", "#10b981", "#ec4899", "#ef4444", "#3b82f6", "#f59e0b", "#10b981"];
 
-function drawWheel() {
+window.drawWheel = function() {
     const canvas = document.getElementById("wheelCanvas");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -300,7 +355,7 @@ function drawWheel() {
         ctx.fillText(wheelSlices[i], 55, 5);
         ctx.restore();
     }
-}
+};
 
 let wheelDegree = 0;
 window.spinWheel = function() {
@@ -327,22 +382,5 @@ window.spinWheel = function() {
     }, 4000);
 };
 
-/* STRICT RESET GATE FOR VIP ONLY */
-const resetBtn = $("#resetCoinsBtn");
-if (resetBtn) {
-    resetBtn.onclick = () => {
-        playSound('win');
-        if (!membershipActive()) {
-            alert("🔒 Aapka Free Limit Khatam! Unlimited Coins Reset karne ke liye VIP Pass lein.");
-            window.location.href = "wallet.html";
-            return;
-        }
-        game.balance = 10000;
-        updateBalance(); saveGame();
-        alert("🔄 VIP Coins Reset Successful! (₹10,000 Added)");
-    };
-}
-
 loadGame();
-console.log("🚀 RWIN ENGINE V7 HARDWARE FINGERPRINT LOCKED");
-            
+console.log("🚀 RWIN ENGINE V8 - DEVICE CLOUD LOCK ENABLED");
