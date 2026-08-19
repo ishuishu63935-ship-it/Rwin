@@ -70,28 +70,31 @@
     <div class="card-header">👑 Select Membership Plan</div>
     <div class="plans-grid">
       
-      <div class="plan-box selected" onclick="selectPlan('Starter', 49, this)">
+      <!-- New ₹9 Plan -->
+      <div class="plan-box selected" onclick="selectPlan('Starter', 9, this)">
         <div>
-          <div class="plan-title">2 Weeks Plan</div>
+          <div class="plan-title">16 Days Plan</div>
           <div class="plan-sub">Starter Practice Access</div>
         </div>
-        <div class="plan-price">₹49</div>
+        <div class="plan-price">₹9</div>
       </div>
 
-      <div class="plan-box" onclick="selectPlan('Pro', 399, this)">
+      <!-- New ₹49 Plan -->
+      <div class="plan-box" onclick="selectPlan('Pro', 49, this)">
         <div>
           <div class="plan-title">2 Months Plan</div>
           <div class="plan-sub">Pro Gamer Package</div>
         </div>
-        <div class="plan-price">₹399</div>
+        <div class="plan-price">₹49</div>
       </div>
 
-      <div class="plan-box" onclick="selectPlan('Elite', 3999, this)">
+      <!-- New ₹99 Plan -->
+      <div class="plan-box" onclick="selectPlan('Elite', 99, this)">
         <div>
-          <div class="plan-title">1 Year VIP Pass</div>
+          <div class="plan-title">6 Months VIP Pass</div>
           <div class="plan-sub">Unlimited Access + Premium Support</div>
         </div>
-        <div class="plan-price">₹3,999</div>
+        <div class="plan-price">₹99</div>
       </div>
 
     </div>
@@ -103,12 +106,12 @@
     
     <div class="qr-container">
       <p style="color:#94a3b8; font-size:12px; margin-bottom:10px;">
-        Selected Plan: <b id="displayPlanName" style="color:#00e5ff;">Starter (₹49)</b>
+        Selected Plan: <b id="displayPlanName" style="color:#00e5ff;">Starter (₹9)</b>
       </p>
       
       <!-- Dynamic QR Image -->
       <div class="qr-box">
-        <img id="upiQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl%26pn=RWIN_GAMING%26am=49%26cu=INR" alt="UPI QR Code" style="width:180px; height:180px;">
+        <img id="upiQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl%26pn=RWIN_GAMING%26am=9%26cu=INR" alt="UPI QR Code" style="width:180px; height:180px;">
       </div>
       
       <p style="margin-top:10px; font-weight:bold; color:#00e5ff; font-size:14px;">UPI ID: 7415325460-2@ibl</p>
@@ -148,27 +151,23 @@
 <script>
   const upiId = "7415325460-2@ibl";
 
-  // Select Plan & Change QR Code Automatically
   function selectPlan(planName, amount, element) {
     document.querySelectorAll('.plan-box').forEach(box => box.classList.remove('selected'));
     element.classList.add('selected');
 
-    // Save choice
     localStorage.setItem("selectedPlan", planName);
     localStorage.setItem("selectedPrice", amount);
 
-    // Update UI Text
     document.getElementById('displayPlanName').innerText = `${planName} (₹${amount})`;
 
-    // Generate Fixed Amount QR Code
     const upiString = `upi://pay?pa=${upiId}&pn=RWIN_GAMING&am=${amount}&cu=INR`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiString)}`;
     document.getElementById('upiQrCode').src = qrUrl;
   }
 
-  // Set default selection on load
+  // Set default selection to ₹9 on load
   localStorage.setItem("selectedPlan", "Starter");
-  localStorage.setItem("selectedPrice", "49");
+  localStorage.setItem("selectedPrice", "9");
 </script>
 
 <!-- Firebase Verification Script -->
@@ -176,3 +175,4 @@
 
 </body>
 </html>
+
