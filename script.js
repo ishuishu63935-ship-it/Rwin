@@ -13,7 +13,7 @@ function getOrCreateDeviceId() {
     return 'DEV_HW_' + Math.abs(hash);
 }
 
-console.log("🚀 RWIN Engine V5 Active | Hardware Device ID:", getOrCreateDeviceId());
+console.log("🚀 RWIN Engine V6 Active | Hardware Device ID:", getOrCreateDeviceId());
 
 /* ==========================================
         HELPERS
@@ -39,6 +39,59 @@ const game = {
     selectedNumber: null,
     selectedSize: null
 };
+
+/* ==========================================
+        REAL-TIME WEB AUDIO SYNTHESIZER
+========================================== */
+let audioCtx = null;
+
+function getAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
+
+function playSound(type) {
+    try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'win') {
+            osc.frequency.setValueAtTime(440, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.3, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            osc.start(); osc.stop(ctx.currentTime + 0.3);
+        } else if (type === 'lose') {
+            osc.frequency.setValueAtTime(300, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.4);
+            gain.gain.setValueAtTime(0.3, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+            osc.start(); osc.stop(ctx.currentTime + 0.4);
+        } else if (type === 'click') {
+            osc.frequency.setValueAtTime(600, ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+            osc.start(); osc.stop(ctx.currentTime + 0.05);
+        }
+    } catch (e) {
+        console.error("Audio error:", e);
+    }
+}
+
+// Add click sounds to all buttons
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => playSound('click'));
+    });
+});
 
 /* ==========================================
         LOAD & SAVE WITH CLOUD SYNC
@@ -90,9 +143,11 @@ function updateBalance() {
 function updateXP() {
     const level = document.getElementById("levelText");
     const fill = document.getElementById("xpFill");
+    const xpText = document.getElementById("xpText");
 
     if (level) level.innerText = "Level " + game.level;
     if (fill) fill.style.width = game.xp + "%";
+    if (xpText) xpText.innerText = "XP : " + game.xp + " / 100";
 }
 
 function updateMembership() {
@@ -163,17 +218,21 @@ if (document.getElementById("timer") !== null) {
 if (document.getElementById("timer") !== null) {
     const playBtn = $("#playBtn");
     const playStatus = $("#playStatus");
+    const betStatus = $("#betStatus");
 
     $$(".betBtn").forEach(btn => {
         btn.onclick = () => {
+            playSound('click');
             $$(".betBtn").forEach(b => { b.style.outline = "none"; });
             btn.style.outline = "3px solid #00E5FF";
             game.selectedBet = Number(btn.innerText);
+            if (betStatus) betStatus.innerText = "Selected: " + game.selectedBet + " Coins";
         };
     });
 
     $$(".colorGrid button").forEach(btn => {
         btn.onclick = () => {
+            playSound('click');
             $$(".colorGrid button").forEach(b => { b.style.outline = "none"; });
             btn.style.outline = "3px solid #00E5FF";
             game.selectedColor = btn.innerText.trim();
@@ -182,6 +241,7 @@ if (document.getElementById("timer") !== null) {
 
     document.querySelectorAll(".numberPanel .numberGrid button").forEach(btn => {
         btn.onclick = () => {
+            playSound('click');
             document.querySelectorAll(".numberPanel .numberGrid button").forEach(b => { b.style.outline = "none"; });
             btn.style.outline = "3px solid yellow";
             game.selectedNumber = Number(btn.innerText);
@@ -189,13 +249,14 @@ if (document.getElementById("timer") !== null) {
     });
 
     const bigBtn = $(".bigBtn");
-    if (bigBtn) bigBtn.onclick = () => { game.selectedSize = "BIG"; };
+    if (bigBtn) bigBtn.onclick = () => { playSound('click'); game.selectedSize = "BIG"; };
 
     const smallBtn = $(".smallBtn");
-    if (smallBtn) smallBtn.onclick = () => { game.selectedSize = "SMALL"; };
+    if (smallBtn) smallBtn.onclick = () => { playSound('click'); game.selectedSize = "SMALL"; };
 
     if (playBtn) {
         playBtn.onclick = () => {
+            playSound('click');
             if (game.selectedBet <= 0) {
                 playStatus.innerText = "❌ Select Coins";
                 return;
@@ -220,8 +281,10 @@ if (document.getElementById("timer") !== null) {
 }
 
 /* ==========================================
-        RESULT ENGINE
+        RESULT ENGINE (WITH SUSPENSE & CONFETTI)
 ========================================== */
+let winStreak = 0;
+
 function generateResult() {
     const number = Math.floor(Math.random() * 10);
     let color = (number === 0 || number === 5) ? "VIOLET" : (number % 2 === 0 ? "RED" : "GREEN");
@@ -230,35 +293,61 @@ function generateResult() {
 }
 
 function finishRound() {
-    const result = generateResult();
-    let win = false;
-
-    if (game.selectedColor === result.color) win = true;
-    if (game.selectedNumber === result.number) win = true;
-    if (game.selectedSize === result.size) win = true;
-
     const statusText = $("#statusText");
     const resultText = $("#resultText");
 
-    if (win) {
-        game.balance += game.selectedBet * 2;
-        game.xp += 10;
-        if (statusText) statusText.innerText = "🎉 WIN";
-    } else {
-        if (game.xp > 0) game.xp -= 2;
-        if (statusText) statusText.innerText = "❌ LOSE";
-    }
+    // 1. Rolling Suspense Animation (1.5 Seconds)
+    let rollInterval = setInterval(() => {
+        if (resultText) {
+            const tempNum = Math.floor(Math.random() * 10);
+            resultText.innerText = `🎲 Rolling: ${tempNum}...`;
+            resultText.style.color = "#00E5FF";
+        }
+    }, 80);
 
-    if (resultText) {
-        resultText.innerText = result.number + " | " + result.color + " | " + result.size;
-    }
+    setTimeout(() => {
+        clearInterval(rollInterval);
+        const result = generateResult();
+        let win = false;
 
-    updateBalance();
-    updateXP();
-    updateHistory(result);
-    checkLevelUp();
-    clearSelection();
-    saveGame();
+        if (game.selectedColor === result.color) win = true;
+        if (game.selectedNumber === result.number) win = true;
+        if (game.selectedSize === result.size) win = true;
+
+        if (win) {
+            winStreak++;
+            game.balance += game.selectedBet * 2;
+            game.xp += 10;
+            
+            if (statusText) {
+                statusText.innerText = winStreak > 1 ? `🎉 WIN (${winStreak}X STREAK 🔥)` : "🎉 BIG WIN!";
+            }
+
+            playSound('win');
+
+            // Trigger Fireworks / Confetti
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+            }
+        } else {
+            winStreak = 0;
+            if (game.xp > 0) game.xp -= 2;
+            if (statusText) statusText.innerText = "❌ LOSE";
+            playSound('lose');
+        }
+
+        if (resultText) {
+            resultText.style.color = "#FFF";
+            resultText.innerText = `${result.number} | ${result.color} | ${result.size}`;
+        }
+
+        updateBalance();
+        updateXP();
+        updateHistory(result);
+        checkLevelUp();
+        clearSelection();
+        saveGame();
+    }, 1500);
 }
 
 function checkLevelUp() {
@@ -295,7 +384,9 @@ function clearSelection() {
     document.querySelectorAll(".numberPanel .numberGrid button").forEach(btn => { btn.style.outline = "none"; });
 
     const playStatus = $("#playStatus");
+    const betStatus = $("#betStatus");
     if (playStatus) playStatus.innerText = "Choose Coins + Color / Number / BIG-SMALL";
+    if (betStatus) betStatus.innerText = "No Coins Selected";
 }
 
 /* ==========================================
@@ -304,6 +395,7 @@ function clearSelection() {
 const resetBtn = $("#resetCoinsBtn");
 if (resetBtn) {
     resetBtn.onclick = () => {
+        playSound('click');
         if (!membershipActive()) {
             alert("🔒 कॉइन्स खत्म! Unlimited Reset करने के लिए VIP Membership लें।");
             window.location.href = "wallet.html";
@@ -317,4 +409,5 @@ if (resetBtn) {
 }
 
 loadHistory();
-console.log("🎉 RWIN ENGINE V5 LOCKED & READY");
+console.log("🎉 RWIN ENGINE V6 LOCKED & READY");
+            
