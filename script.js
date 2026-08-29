@@ -13,20 +13,18 @@ function getOrCreateDeviceId() {
 }
 
 const $ = (e) => document.querySelector(e);
-const $$ = (e) => document.querySelectorAll(e);
 
 const game = {
-    balance: 0,
+    balance: 10000,
+    xp: 0,
+    level: 1,
     membership: false,
     membershipPlan: "Free",
     membershipExpiry: null,
-    hasClaimedFreeCoins: false,
-    history: [],
     timer: 30,
     selectedBet: 0,
     selectedColor: null,
-    selectedNumber: null,
-    selectedSize: null
+    currentCard: 7
 };
 
 /* AUDIO SYNTHESIZER */
@@ -40,56 +38,66 @@ function playSound(type) {
 
         if (type === 'win') {
             osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.25);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.25);
         } else if (type === 'lose') {
             osc.frequency.setValueAtTime(250, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.25);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.25);
         }
     } catch(e) {}
 }
 
-/* 🔒 STRICT DEVICE-LEVEL CLOUD BALANCE LOCK */
+/* XP & LEVEL ENGINE */
+function addXP(amount) {
+    game.xp += amount;
+    const nextLevelXP = game.level * 500;
+    if (game.xp >= nextLevelXP) {
+        game.level++;
+        playSound('win');
+        if (typeof confetti === 'function') confetti();
+        alert(`🎉 LEVEL UP! You reached Level ${game.level}!`);
+    }
+    updateLevelUI();
+}
+
+function updateLevelUI() {
+    const badge = $("#userLevelBadge");
+    const xpTxt = $("#xpText");
+    const bar = $("#xpBar");
+    const targetXP = game.level * 500;
+    const progress = Math.min(100, (game.xp / targetXP) * 100);
+
+    if (badge) badge.innerText = `LVL ${game.level}`;
+    if (xpTxt) xpTxt.innerText = `${game.xp} / ${targetXP} XP`;
+    if (bar) bar.style.width = `${progress}%`;
+}
+
+/* 🔒 DEVICE-LEVEL CLOUD BALANCE & PROGRESS SYNC */
 async function loadGame() {
     const hwId = getOrCreateDeviceId();
     const deviceRef = doc(db, "devices", hwId);
 
     try {
         const deviceSnap = await getDoc(deviceRef);
-
         if (deviceSnap.exists()) {
-            // Phone pehle se registered hai - Cloud se exact balance uuthao
             const devData = deviceSnap.data();
             game.balance = devData.balance !== undefined ? devData.balance : 10000;
-            game.hasClaimedFreeCoins = true;
-            console.log("🔒 Device Recognized! Loaded Cloud Balance:", game.balance);
-        } else {
-            // Bilkul Naya Device hai - Sirf 10,000 Free Coins
-            game.balance = 10000;
-            game.hasClaimedFreeCoins = true;
-            
-            await setDoc(deviceRef, {
-                deviceId: hwId,
-                balance: 10000,
-                hasClaimedFreeCoins: true,
-                createdAt: new Date().toISOString()
-            });
-            console.log("🎉 New Device Registered! 10,000 Coins Granted.");
-        }
-    } catch (error) {
-        console.error("Device Sync Error, falling back to local:", error);
-        const data = localStorage.getItem("rwinGame");
-        if (data) {
-            try { Object.assign(game, JSON.parse(data)); } catch(e){}
+            game.xp = devData.xp || 0;
+            game.level = devData.level || 1;
         } else {
             game.balance = 10000;
+            await setDoc(deviceRef, { deviceId: hwId, balance: 10000, xp: 0, level: 1 });
         }
+    } catch (e) {
+        const local = localStorage.getItem("rwinGame");
+        if (local) try { Object.assign(game, JSON.parse(local)); } catch(err){}
     }
 
     updateBalance();
+    updateLevelUI();
     saveLocal();
 }
 
@@ -101,120 +109,53 @@ async function saveGame() {
     try {
         await updateDoc(deviceRef, {
             balance: game.balance,
+            xp: game.xp,
+            level: game.level,
             lastUpdated: new Date().toISOString()
         });
     } catch (e) {
-        await setDoc(deviceRef, { deviceId: hwId, balance: game.balance }, { merge: true });
+        await setDoc(deviceRef, { deviceId: hwId, balance: game.balance, xp: game.xp, level: game.level }, { merge: true });
     }
 }
 
 function saveLocal() {
     localStorage.setItem("rwinGame", JSON.stringify(game));
-    localStorage.setItem("rwinCloud", JSON.stringify(game));
 }
 
 function updateBalance() {
     const b = document.getElementById("balanceText");
-    if (b) b.innerText = "₹" + game.balance;
+    if (b) b.innerText = "₹" + game.balance.toLocaleString();
 }
 
-function membershipActive() {
-    if (!game.membership) return false;
-    if (!game.membershipExpiry) return true;
-    return new Date() < new Date(game.membershipExpiry);
-}
-
-/* COLOR PREDICTION TIMER */
+/* REALTIME LIVE WIN TICKER SIMULATOR */
+const tickerUsers = ["ProGamer_91", "Priya_VIP", "Aman_Bhai", "Karan_RWIN", "Rohan_xX", "Viper_07"];
+const tickerGames = ["Aviator Crash", "Cyber Mines", "Hi-Lo Cards", "Cyber Slots"];
 setInterval(() => {
-    game.timer--;
-    const t = $("#timer");
-    if (t) t.innerText = game.timer;
-
-    if (game.timer <= 0) {
-        game.timer = 30;
-        finishColorRound();
+    const user = tickerUsers[Math.floor(Math.random() * tickerUsers.length)];
+    const gName = tickerGames[Math.floor(Math.random() * tickerGames.length)];
+    const amt = (Math.floor(Math.random() * 45) + 5) * 100;
+    const tickerEl = $("#liveTickerText");
+    if (tickerEl) {
+        tickerEl.innerText = `⚡ ${user} won ₹${amt.toLocaleString()} on ${gName}!`;
     }
-}, 1000);
-
-window.setBet = (amt) => { game.selectedBet = amt; if($("#playStatus")) $("#playStatus").innerText = "Coins Selected: " + amt; };
-window.setColor = (col) => { game.selectedColor = col; };
-window.setNumber = (num) => { game.selectedNumber = num; };
-window.setSize = (sz) => { game.selectedSize = sz; };
-
-document.addEventListener("DOMContentLoaded", () => {
-    if ($("#playBtn")) {
-        $("#playBtn").onclick = () => {
-            if (!game.selectedBet) return alert("Select Bet Coins!");
-            if (!game.selectedColor && game.selectedNumber === null && !game.selectedSize) return alert("Select Color, Number, or Size!");
-            if (game.balance < game.selectedBet) return alert("Insufficient Balance!");
-
-            game.balance -= game.selectedBet;
-            updateBalance(); saveGame();
-            $("#playStatus").innerText = "✅ Bet Placed Successfully!";
-        };
-    }
-
-    const resetBtn = $("#resetCoinsBtn");
-    if (resetBtn) {
-        resetBtn.onclick = () => {
-            playSound('win');
-            if (!membershipActive()) {
-                alert("🔒 Aapka Free Limit Khatam! Unlimited Coins Reset karne ke liye VIP Pass lein.");
-                window.location.href = "wallet.html";
-                return;
-            }
-            game.balance = 10000;
-            updateBalance(); saveGame();
-            alert("🔄 VIP Coins Reset Successful! (₹10,000 Added)");
-        };
-    }
-});
-
-function finishColorRound() {
-    const num = Math.floor(Math.random() * 10);
-    const col = (num === 0 || num === 5) ? "VIOLET" : (num % 2 === 0 ? "RED" : "GREEN");
-    const sz = num >= 5 ? "BIG" : "SMALL";
-
-    let win = false;
-    if (game.selectedColor === col || game.selectedNumber === num || game.selectedSize === sz) win = true;
-
-    const res = $("#resultText");
-    const st = $("#statusText");
-
-    if (win) {
-        game.balance += game.selectedBet * 2;
-        playSound('win');
-        if(st) st.innerText = "🎉 WIN!";
-        if (typeof confetti === 'function') confetti();
-    } else {
-        if (game.selectedBet > 0) playSound('lose');
-        if(st) st.innerText = "❌ LOSE";
-    }
-
-    if(res) res.innerText = `${num} | ${col} | ${sz}`;
-    updateBalance();
-    
-    game.selectedBet = 0; game.selectedColor = null; game.selectedNumber = null; game.selectedSize = null;
-    if($("#playStatus")) $("#playStatus").innerText = "Choose Coins + Bet Option";
-    saveGame();
-}
+}, 4000);
 
 /* AVIATOR GAME */
 let aviatorTimer, aviatorMulti = 1.00, isFlying = false, aviatorBetAmt = 0;
 window.startAviator = function() {
     aviatorBetAmt = Number($("#aviatorBet").value);
     if (!aviatorBetAmt || aviatorBetAmt > game.balance) return alert("Enter valid bet amount!");
-    game.balance -= aviatorBetAmt; updateBalance(); saveGame();
+    game.balance -= aviatorBetAmt; updateBalance(); addXP(50); saveGame();
 
     isFlying = true; aviatorMulti = 1.00;
     $("#startAviatorBtn").style.display = "none";
     $("#cashoutBtn").style.display = "block";
     
-    const crashAt = (Math.random() * 3 + 1.2).toFixed(2);
+    const crashAt = (Math.random() * 3.5 + 1.1).toFixed(2);
     const plane = $("#aviatorPlane");
 
     aviatorTimer = setInterval(() => {
-        aviatorMulti += 0.04;
+        aviatorMulti += 0.05;
         $("#aviatorMulti").innerText = aviatorMulti.toFixed(2) + "x";
 
         if(plane) {
@@ -233,7 +174,7 @@ window.startAviator = function() {
             $("#startAviatorBtn").style.display = "block";
             $("#cashoutBtn").style.display = "none";
         }
-    }, 120);
+    }, 110);
 };
 
 window.cashoutAviator = function() {
@@ -241,7 +182,7 @@ window.cashoutAviator = function() {
     clearInterval(aviatorTimer);
     isFlying = false;
     const winAmt = Math.floor(aviatorBetAmt * aviatorMulti);
-    game.balance += winAmt;
+    game.balance += winAmt; addXP(100);
     updateBalance(); saveGame(); playSound('win');
     if (typeof confetti === 'function') confetti();
     alert(`🎉 CASHED OUT AT ${aviatorMulti.toFixed(2)}x! Won ₹${winAmt}`);
@@ -254,7 +195,7 @@ let mineLocations = [], minesActive = false, minesBetAmt = 0, gemsFound = 0, cur
 window.startMinesGame = function() {
     minesBetAmt = Number($("#minesBet").value);
     if (!minesBetAmt || minesBetAmt > game.balance) return alert("Enter valid bet!");
-    game.balance -= minesBetAmt; updateBalance(); saveGame();
+    game.balance -= minesBetAmt; updateBalance(); addXP(40); saveGame();
     
     minesActive = true; gemsFound = 0; currentMinesWin = 0; mineLocations = [];
     $("#minesCashoutBtn").style.display = "none";
@@ -282,7 +223,7 @@ function revealMine(el, idx) {
     } else {
         el.innerText = "💎"; el.style.background = "#10b981"; playSound('win');
         gemsFound++;
-        let multi = (1 + (gemsFound * 0.25)).toFixed(2);
+        let multi = (1 + (gemsFound * 0.3)).toFixed(2);
         currentMinesWin = Math.floor(minesBetAmt * multi);
         
         const btn = $("#minesCashoutBtn");
@@ -294,93 +235,78 @@ function revealMine(el, idx) {
 window.cashoutMines = function() {
     if (!minesActive || gemsFound === 0) return;
     minesActive = false;
-    game.balance += currentMinesWin;
+    game.balance += currentMinesWin; addXP(80);
     updateBalance(); saveGame(); playSound('win');
     if (typeof confetti === 'function') confetti();
     alert(`🎉 CASH OUT SUCCESSFUL! Won ₹${currentMinesWin}`);
     $("#minesCashoutBtn").style.display = "none";
 };
 
-/* DICE GAME */
-window.playDice = function(choice) {
-    const bet = Number($("#diceBet").value) || 200;
+/* HI-LO CARDS (DICE REPLACEMENT) */
+window.playHiLo = function(choice) {
+    const bet = Number($("#hiloBet").value) || 200;
     if (game.balance < bet) return alert("Low balance!");
     game.balance -= bet;
 
-    const dice = $("#dice3D");
-    dice.style.transform = "rotate(720deg) scale(1.2)";
+    const nextCard = Math.floor(Math.random() * 12) + 1;
+    let win = false;
+    if (choice === 'HIGHER' && nextCard >= game.currentCard) win = true;
+    if (choice === 'LOWER' && nextCard <= game.currentCard) win = true;
 
-    setTimeout(() => {
-        dice.style.transform = "rotate(0deg) scale(1)";
-        const roll = Math.floor(Math.random() * 6) + 1;
-        const diceIcons = ["🎲", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-        dice.innerText = diceIcons[roll];
+    $("#currentCardDisplay").innerText = nextCard;
 
-        let win = (choice === 'UNDER' && roll <= 3) || (choice === 'OVER' && roll >= 4);
-        if (win) {
-            game.balance += bet * 2; playSound('win');
-            if (typeof confetti === 'function') confetti();
-            alert(`🎉 YOU WON ₹${bet * 2}! Dice rolled ${roll}`);
-        } else {
-            playSound('lose');
-            alert(`❌ LOST! Dice rolled ${roll}`);
-        }
-        updateBalance(); saveGame();
-    }, 400);
-};
-
-/* SPIN WHEEL */
-const wheelSlices = ["0X", "1.2X", "2X", "0.5X", "3X", "0X", "1.5X", "5X", "0X", "2X", "10X", "1.1X"];
-const colors = ["#ef4444", "#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444", "#10b981", "#ec4899", "#ef4444", "#3b82f6", "#f59e0b", "#10b981"];
-
-window.drawWheel = function() {
-    const canvas = document.getElementById("wheelCanvas");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const total = wheelSlices.length;
-    const sliceAngle = (2 * Math.PI) / total;
-
-    for (let i = 0; i < total; i++) {
-        ctx.beginPath();
-        ctx.fillStyle = colors[i];
-        ctx.moveTo(110, 110);
-        ctx.arc(110, 110, 110, i * sliceAngle, (i + 1) * sliceAngle);
-        ctx.fill();
-
-        ctx.save();
-        ctx.translate(110, 110);
-        ctx.rotate(i * sliceAngle + sliceAngle / 2);
-        ctx.fillStyle = "#FFF";
-        ctx.font = "bold 12px sans-serif";
-        ctx.fillText(wheelSlices[i], 55, 5);
-        ctx.restore();
+    if (win) {
+        game.balance += bet * 2; addXP(60); playSound('win');
+        if (typeof confetti === 'function') confetti();
+        alert(`🎉 WON ₹${bet * 2}! Next Card was ${nextCard}`);
+    } else {
+        playSound('lose');
+        alert(`❌ LOST! Next Card was ${nextCard}`);
     }
+
+    game.currentCard = nextCard;
+    updateBalance(); saveGame();
 };
 
-let wheelDegree = 0;
-window.spinWheel = function() {
+/* CYBER SLOTS (WHEEL REPLACEMENT) */
+const slotIcons = ["💎", "7️⃣", "🎰", "🔥", "👑", "🍒"];
+window.spinSlots = function() {
     if (game.balance < 500) return alert("Need 500 coins to spin!");
-    game.balance -= 500; updateBalance();
+    game.balance -= 500; updateBalance(); addXP(75);
 
-    const canvas = document.getElementById("wheelCanvas");
-    const randIndex = Math.floor(Math.random() * wheelSlices.length);
-    const degreesPerSlice = 360 / wheelSlices.length;
-    
-    wheelDegree += 1800 + (360 - (randIndex * degreesPerSlice));
-    canvas.style.transform = `rotate(${wheelDegree}deg)`;
+    const r1 = slotIcons[Math.floor(Math.random() * slotIcons.length)];
+    const r2 = slotIcons[Math.floor(Math.random() * slotIcons.length)];
+    const r3 = slotIcons[Math.floor(Math.random() * slotIcons.length)];
 
-    setTimeout(() => {
-        const resText = wheelSlices[randIndex];
-        const multi = parseFloat(resText) || 0;
-        const won = Math.floor(500 * multi);
+    $("#reel1").innerText = r1;
+    $("#reel2").innerText = r2;
+    $("#reel3").innerText = r3;
 
-        game.balance += won;
-        updateBalance(); saveGame();
-
-        if (multi > 1) { playSound('win'); if (typeof confetti === 'function') confetti(); alert(`🎉 WON ${won} COINS! (${resText})`); }
-        else { playSound('lose'); alert(`❌ OUT! Multiplier ${resText}`); }
-    }, 4000);
+    if (r1 === r2 && r2 === r3) {
+        game.balance += 5000; playSound('win'); if (typeof confetti === 'function') confetti();
+        alert("🎉 TRIPLE JACKPOT! Won ₹5,000 Coins!");
+    } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+        game.balance += 1000; playSound('win');
+        alert("🎉 DOUBLE MATCH! Won ₹1,000 Coins!");
+    } else {
+        playSound('lose');
+    }
+    updateBalance(); saveGame();
 };
 
-loadGame();
-console.log("🚀 RWIN ENGINE V8 - DEVICE CLOUD LOCK ENABLED");
+/* COLOR PREDICTION BETS */
+window.setBet = (amt) => { game.selectedBet = amt; if($("#playStatus")) $("#playStatus").innerText = "Coins Selected: " + amt; };
+window.setColor = (col) => { game.selectedColor = col; };
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadGame();
+    const resetBtn = $("#resetCoinsBtn");
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            playSound('win');
+            game.balance = 10000;
+            updateBalance(); saveGame();
+            alert("🔄 VIP Coins Reset Successful! (₹10,000 Added)");
+        };
+    }
+});
