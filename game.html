@@ -1,50 +1,83 @@
-<!DOCTYPE html>
+<!D="cashoutAviator()" style="padding:12px; background:#f59e0b; border:none; color:#0<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RWIN - 5-in-1 Prime Casino</title>
+<title>RWIN - VIP Cyber Arcade & Casino Arena</title>
 <link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-/* Arena Cards */
-.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px 0; }
-.game-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 14px; padding: 18px; text-align: center; cursor: pointer; transition: 0.2s; }
-.game-card:active { transform: scale(0.97); border-color: #00E5FF; }
-.game-card h3 { font-size: 15px; color: #fff; margin-top: 8px; }
-.game-card p { font-size: 10px; color: #94a3b8; }
-.game-icon { font-size: 32px; }
+:root {
+  --bg-dark: #070a12;
+  --card-bg: #111827;
+  --neon-blue: #00E5FF;
+  --neon-pink: #ec4899;
+  --neon-gold: #f59e0b;
+  --neon-green: #10b981;
+}
 
-/* Dedicated Views */
-.game-screen { display: none; }
+body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 70px; }
+
+/* Top Header & Level Bar */
+.topBar { background: #0f172a; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; }
+.level-badge { background: linear-gradient(135deg, #8b5cf6, #ec4899); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+.xp-progress-outer { width: 100%; background: #1e293b; height: 6px; border-radius: 10px; margin-top: 6px; overflow: hidden; }
+.xp-progress-inner { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); transition: width 0.3s ease; }
+
+/* Balance Card */
+.balanceCard { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 16px; padding: 16px; margin: 12px; text-align: center; box-shadow: 0 8px 24px rgba(0,229,255,0.08); }
+.balanceCard h1 { color: var(--neon-blue); font-size: 28px; margin: 4px 0; font-weight: 800; text-shadow: 0 0 10px rgba(0,229,255,0.3); }
+
+/* Live Ticker Feed */
+.live-ticker { background: rgba(16, 185, 129, 0.1); border-y: 1px solid rgba(10, 185, 129, 0.2); padding: 8px 12px; font-size: 11px; color: var(--neon-green); font-weight: 600; white-space: nowrap; overflow: hidden; display: flex; align-items: center; gap: 8px; }
+.ticker-dot { width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 8px var(--neon-green); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* Arena Grid & 20+ Games */
+.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+.game-card { background: var(--card-bg); border: 1px solid #1f293d; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; }
+.game-card:active { transform: scale(0.96); border-color: var(--neon-blue); }
+.game-card.hot::after { content: 'HOT 🔥'; position: absolute; top: 8px; right: -24px; background: #ef4444; color: #fff; font-size: 8px; font-weight: 800; padding: 2px 25px; transform: rotate(45deg); }
+.game-card.locked { opacity: 0.55; }
+.game-icon { font-size: 36px; margin-bottom: 6px; }
+.game-card h3 { font-size: 14px; margin: 0; color: #fff; }
+.game-card p { font-size: 10px; color: #94a3b8; margin: 2px 0 0 0; }
+
+/* Dedicated Game Views */
+.game-screen { display: none; padding: 12px; }
 .game-screen.active { display: block; }
-.back-bar { display: none; align-items: center; justify-content: space-between; background: #1e293b; padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; }
-.back-btn { background: #00E5FF; color: #000; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; }
+.back-bar { display: none; align-items: center; justify-content: space-between; background: #1e293b; padding: 10px 15px; border-radius: 12px; margin: 12px; border: 1px solid #334155; }
+.back-btn { background: var(--neon-blue); color: #000; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; }
 
-/* Colored Numbers Grid */
+/* Custom Visual Screens */
+.aviator-screen { background: #050811; border: 2px solid #1e293b; border-radius: 14px; height: 190px; position: relative; overflow: hidden; }
+.aviator-multi-display { position: absolute; top: 38%; width: 100%; text-align: center; font-size: 40px; font-weight: 800; color: var(--neon-green); text-shadow: 0 0 15px rgba(16,185,129,0.4); }
+.aviator-plane { position: absolute; bottom: 20px; left: 20px; font-size: 34px; transition: all 0.1s linear; }
+
+.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 15px 0; }
+.mine-card { background: #1e293b; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; border: 1px solid #334155; transition: 0.15s; }
+
+.action-box { background: #111827; padding: 16px; border-radius: 14px; border: 1px solid #1f293d; text-align: center; margin: 10px 0; }
+
+/* Color Prediction Buttons */
 .color-num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
-.num-btn { padding: 12px 0; border-radius: 8px; font-weight: bold; font-size: 16px; border: none; color: #fff; cursor: pointer; }
-.num-btn.green { background: #10b981; }
+.num-btn { padding: 12px 0; border-radius: 8px; font-weight: 700; font-size: 16px; border: none; color: #fff; cursor: pointer; }
+.num-btn.green { background: var(--neon-green); }
 .num-btn.red { background: #ef4444; }
 .num-btn.violet { background: #8b5cf6; }
 
-/* Aviator Visual Screen */
-.aviator-screen { background: #090d16; border: 2px solid #334155; border-radius: 12px; height: 180px; position: relative; overflow: hidden; margin-bottom: 12px; }
-.aviator-plane { position: absolute; bottom: 20px; left: 20px; font-size: 32px; transition: all 0.1s linear; }
-.aviator-multi-display { position: absolute; top: 40%; width: 100%; text-align: center; font-size: 36px; font-weight: 800; color: #10b981; }
+/* Slots Reels UI */
+.slots-display { display: flex; justify-content: center; gap: 10px; background: #000; padding: 20px; border-radius: 12px; border: 2px solid var(--neon-gold); margin: 15px 0; }
+.slot-reel { background: #1f293d; font-size: 45px; padding: 10px 20px; border-radius: 8px; border: 1px solid #334155; }
 
-/* Mines Board */
-.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 15px 0; }
-.mine-card { background: #1f293d; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; border: 1px solid #334155; }
+/* Hi-Lo Cards UI */
+.card-display { font-size: 70px; margin: 15px 0; background: #0f172a; display: inline-block; padding: 10px 30px; border-radius: 12px; border: 2px solid var(--neon-blue); }
 
-/* Wheel Canvas UI */
-.wheel-wrapper { position: relative; width: 220px; height: 220px; margin: 0 auto; }
-#wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 4px solid #00E5FF; transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1); }
-.wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 24px; z-index: 10; }
-
-.action-box { background: #1e293b; padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0; }
+/* Leaderboard Sidebar */
+.leaderboard-box { background: #0f172a; border-radius: 14px; padding: 14px; margin: 12px; border: 1px solid #1f293d; }
+.lb-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1e293b; font-size: 12px; }
 </style>
 </head>
 
@@ -53,180 +86,191 @@
 
 <header class="topBar">
 <div>
-<h1>🎮 RWIN Arena</h1>
-<p>Cloud Balance Protected</p>
+  <h1 style="font-size:16px; margin:0; color:#fff;">🎮 RWIN VIP Arena</h1>
+  <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+    <span class="level-badge" id="userLevelBadge">LVL 1</span>
+    <span style="font-size:10px; color:#94a3b8;" id="xpText">0 / 500 XP</span>
+  </div>
+  <div class="xp-progress-outer"><div class="xp-progress-inner" id="xpBar"></div></div>
 </div>
-<div class="profileIcon">👤</div>
+<div style="text-align:right;">
+  <span style="font-size:11px; color:var(--neon-green);">● Cloud Synced</span>
+</div>
 </header>
 
-<section class="balanceCard">
-<p>Virtual Practice Coins</p>
-<h1 id="balanceText">₹10,000</h1>
-<button id="resetCoinsBtn" style="margin-top:8px; padding:6px 14px; background:#00E5FF; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">♻ Reset Coins</button>
-</section>
-
-<!-- TOP BACK BAR -->
-<div id="backBar" class="back-bar">
-<button class="back-btn" onclick="exitToArena()">⬅️ Back to Games</button>
-<b id="activeGameTitle" style="color:#00E5FF; font-size:14px;">Game</b>
+<!-- LIVE REALTIME WIN TICKER -->
+<div class="live-ticker">
+  <div class="ticker-dot"></div>
+  <span id="liveTickerText">⚡ User_7891 won ₹2,400 on Aviator Crash!</span>
 </div>
 
-<!-- ================= MAIN ARENA HUB ================= -->
+<section class="balanceCard">
+  <p style="font-size:11px; color:#94a3b8; margin:0;">Virtual VIP Practice Balance</p>
+  <h1 id="balanceText">₹10,000</h1>
+  <button id="resetCoinsBtn" style="margin-top:8px; padding:6px 14px; background:var(--neon-blue); border:none; border-radius:8px; font-weight:700; cursor:pointer;">♻ Reset VIP Coins</button>
+</section>
+
+<!-- NAVIGATION BAR FOR ACTIVE GAME -->
+<div id="backBar" class="back-bar">
+  <button class="back-btn" onclick="exitToArena()">⬅️ Back to Hub</button>
+  <b id="activeGameTitle" style="color:var(--neon-blue); font-size:14px;">Game</b>
+</div>
+
+<!-- ================= 20+ GAMES MAIN ARENA HUB ================= -->
 <div id="arenaHub">
-<h3 style="color:#94a3b8; font-size:13px; margin:10px 0 5px 0;">SELECT GAME TO PRACTICE</h3>
+<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">FEATURED DEMO CASINO GAMES</h3>
+
 <div class="arena-grid">
 
-<div class="game-card" onclick="openGame('color', '🎨 Color Prediction')">
-<div class="game-icon">🎨</div>
-<h3>Color Prediction</h3>
-<p>Red / Green / Violet</p>
+  <div class="game-card hot" onclick="openGame('aviator', '🚀 Aviator Crash')">
+    <div class="game-icon">🚀</div>
+    <h3>Aviator Crash</h3>
+    <p>High Multiplier Flight</p>
+  </div>
+
+  <div class="game-card hot" onclick="openGame('mines', '💣 Cyber Mines')">
+    <div class="game-icon">💣</div>
+    <h3>Cyber Mines</h3>
+    <p>5x5 Grid Cashout</p>
+  </div>
+
+  <div class="game-card" onclick="openGame('hilo', '🃏 Hi-Lo Cards')">
+    <div class="game-icon">🃏</div>
+    <h3>Hi-Lo Streak</h3>
+    <p>Card Prediction 2X</p>
+  </div>
+
+  <div class="game-card" onclick="openGame('slots', '🎰 Cyber Neon Slots')">
+    <div class="game-icon">🎰</div>
+    <h3>Cyber Slots</h3>
+    <p>3-Reel Jackpot Spin</p>
+  </div>
+
+  <div class="game-card" onclick="openGame('color', '🎨 Color Prediction')">
+    <div class="game-icon">🎨</div>
+    <h3>Color Prediction</h3>
+    <p>Red / Green / Violet</p>
+  </div>
+
+  <div class="game-card locked">
+    <div class="game-icon">🟢</div>
+    <h3>Plinko Drop</h3>
+    <p>Unlocking at LVL 5</p>
+  </div>
+
+  <div class="game-card locked">
+    <div class="game-icon">🏰</div>
+    <h3>Tower Climb</h3>
+    <p>Unlocking at LVL 8</p>
+  </div>
+
+  <div class="game-card locked">
+    <div class="game-icon">🎯</div>
+    <h3>Wheel Roulette</h3>
+    <p>Unlocking at LVL 10</p>
+  </div>
+
 </div>
 
-<div class="game-card" onclick="openGame('aviator', '🚀 Aviator Crash')">
-<div class="game-icon">🚀</div>
-<h3>Aviator Crash</h3>
-<p>High Multiplier Flight</p>
-</div>
-
-<div class="game-card" onclick="openGame('mines', '💣 Mines Sweeper')">
-<div class="game-icon">💣</div>
-<h3>Mines Sweeper</h3>
-<p>With Cashout Button</p>
-</div>
-
-<div class="game-card" onclick="openGame('dice', '🎲 Dice Roll')">
-<div class="game-icon">🎲</div>
-<h3>Dice Roll</h3>
-<p>3D Roll & High/Low</p>
-</div>
-
-</div>
-
-<div class="game-card" style="margin-top:5px;" onclick="openGame('wheel', '🎡 12-Slot Spin Wheel')">
-<div class="game-icon">🎡</div>
-<h3>Lucky Spin Wheel</h3>
-<p>Real Rotating Visual Wheel</p>
+<!-- REALTIME LIVE LEADERBOARD -->
+<div class="leaderboard-box">
+  <h3 style="font-size:13px; color:var(--neon-gold); margin:0 0 10px 0;">🏆 Top Arena Players Today</h3>
+  <div class="lb-row"><span>1. 👑 CyberKing_99</span><b style="color:var(--neon-green);">₹2,45,000</b></div>
+  <div class="lb-row"><span>2. 🥇 Alex_Pro</span><b style="color:var(--neon-green);">₹1,89,200</b></div>
+  <div class="lb-row"><span>3. 🥈 Rahul_VIP</span><b style="color:var(--neon-green);">₹1,42,000</b></div>
 </div>
 </div>
 
-<!-- ================= 1. COLOR PREDICTION ================= -->
-<div id="game-color" class="game-screen">
-<section class="timerCard"><h2>⏱ Next Round</h2><h1 id="timer">30</h1></section>
-
-<section class="membershipCard">
-<h3>💰 Select Bet Coins</h3>
-<div class="numberGrid">
-<button class="betBtn" onclick="setBet(100)">100</button>
-<button class="betBtn" onclick="setBet(500)">500</button>
-<button class="betBtn" onclick="setBet(1000)">1000</button>
-<button class="betBtn" onclick="setBet(5000)">5000</button>
-</div>
-</section>
-
-<section class="colorPanel">
-<h2>🎨 Select Color</h2>
-<div class="colorGrid">
-<button class="green" onclick="setColor('GREEN')">GREEN</button>
-<button class="red" onclick="setColor('RED')">RED</button>
-<button class="violet" onclick="setColor('VIOLET')">VIOLET</button>
-</div>
-</section>
-
-<section class="membershipCard">
-<h3>🔢 Select Colored Number</h3>
-<div class="color-num-grid">
-<button class="num-btn violet" onclick="setNumber(0)">0</button>
-<button class="num-btn green" onclick="setNumber(1)">1</button>
-<button class="num-btn red" onclick="setNumber(2)">2</button>
-<button class="num-btn green" onclick="setNumber(3)">3</button>
-<button class="num-btn red" onclick="setNumber(4)">4</button>
-<button class="num-btn violet" onclick="setNumber(5)">5</button>
-<button class="num-btn red" onclick="setNumber(6)">6</button>
-<button class="num-btn green" onclick="setNumber(7)">7</button>
-<button class="num-btn red" onclick="setNumber(8)">8</button>
-<button class="num-btn green" onclick="setNumber(9)">9</button>
-</div>
-</section>
-
-<section class="membershipCard">
-<h3>📈 Select Size</h3>
-<div class="bigSmall">
-<button class="bigBtn" onclick="setSize('BIG')">BIG (5-9)</button>
-<button class="smallBtn" onclick="setSize('SMALL')">SMALL (0-4)</button>
-</div>
-</section>
-
-<section class="membershipCard">
-<button id="playBtn" style="width:100%; padding:12px; background:#00E5FF; border:none; font-weight:bold; border-radius:8px; margin-top:10px;">Place Bet</button>
-<p id="playStatus" style="text-align:center; margin-top:6px; font-size:12px;">Choose Coins + Bet Option</p>
-</section>
-</div>
-
-<!-- ================= 2. AVIATOR CRASH ================= -->
+<!-- ================= 1. AVIATOR CRASH ================= -->
 <div id="game-aviator" class="game-screen">
-<div class="aviator-screen">
-<div class="aviator-multi-display" id="aviatorMulti">1.00x</div>
-<div class="aviator-plane" id="aviatorPlane">✈️</div>
-</div>
-<div class="action-box">
-<input type="number" id="aviatorBet" placeholder="Bet Coins (e.g. 500)" style="padding:10px; width:90%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:10px;">
-<br>
-<button id="startAviatorBtn" onclick="startAviator()" style="padding:12px; background:#10b981; border:none; color:#fff; font-weight:bold; border-radius:6px; width:90%; cursor:pointer;">🚀 START FLIGHT</button>
-<button id="cashoutBtn" onclick="cashoutAviator()" style="padding:12px; background:#f59e0b; border:none; color:#000; font-weight:bold; border-radius:6px; width:90%; cursor:pointer; display:none;">💰 CASH OUT NOW</button>
-</div>
+  <div class="aviator-screen">
+    <div class="aviator-multi-display" id="aviatorMulti">1.00x</div>
+    <div class="aviator-plane" id="aviatorPlane">✈️</div>
+  </div>
+  <div class="action-box">
+    <input type="number" id="aviatorBet" placeholder="Bet Coins (e.g. 500)" value="500" style="padding:10px; width:90%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:10px;">
+    <button id="startAviatorBtn" onclick="startAviator()" style="padding:12px; background:var(--neon-green); border:none; color:#fff; font-weight:800; border-radius:8px; width:90%; cursor:pointer;">🚀 START FLIGHT</button>
+    <button id="cashoutBtn" onclick="cashoutAviator()" style="padding:12px; background:var(--neon-gold); border:none; color:#000; font-weight:800; border-radius:8px; width:90%; cursor:pointer; display:none;">💰 CASH OUT NOW</button>
+  </div>
 </div>
 
-<!-- ================= 3. MINES SWEEPER ================= -->
+<!-- ================= 2. CYBER MINES ================= -->
 <div id="game-mines" class="game-screen">
-<div class="action-box">
-<p style="margin-bottom:8px;">💣 Find Diamonds & Cash Out Any Time!</p>
-<input type="number" id="minesBet" placeholder="Bet Coins" style="padding:8px; width:40%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff;">
-<button onclick="startMinesGame()" style="padding:8px 12px; background:#00E5FF; border:none; font-weight:bold; border-radius:6px;">Start Game</button>
-<button id="minesCashoutBtn" onclick="cashoutMines()" style="padding:8px 12px; background:#f59e0b; color:#000; border:none; font-weight:bold; border-radius:6px; margin-left:5px; display:none;">💰 Cash Out (₹0)</button>
-</div>
-<div class="mines-grid" id="minesGrid"></div>
-</div>
-
-<!-- ================= 4. DICE ROLL ================= -->
-<div id="game-dice" class="game-screen">
-<div class="action-box">
-<h2 style="color:#00E5FF;">🎲 3D Dice Roll Arena</h2>
-<p style="font-size:11px; color:#94a3b8; margin:5px 0;">Rules: Predict if the die rolls UNDER 4 (1,2,3) or OVER 3 (4,5,6) for 2X Coins!</p>
-<div id="dice3D" style="font-size:65px; margin:15px 0; transition: transform 0.3s;">🎲</div>
-<input type="number" id="diceBet" placeholder="Bet Amount" value="200" style="padding:8px; width:60%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:10px;">
-<br>
-<button onclick="playDice('UNDER')" style="padding:10px 18px; background:#ef4444; color:#fff; font-weight:bold; border:none; border-radius:6px; margin:4px;">Under 4 (2X)</button>
-<button onclick="playDice('OVER')" style="padding:10px 18px; background:#10b981; color:#fff; font-weight:bold; border:none; border-radius:6px; margin:4px;">Over 3 (2X)</button>
-</div>
+  <div class="action-box">
+    <p style="margin-bottom:8px; font-size:12px; color:#94a3b8;">💣 Tap Boxes & Cash Out Before Hitting Bomb!</p>
+    <input type="number" id="minesBet" placeholder="Bet Coins" value="300" style="padding:8px; width:45%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff;">
+    <button onclick="startMinesGame()" style="padding:8px 14px; background:var(--neon-blue); border:none; font-weight:700; border-radius:6px; cursor:pointer;">Start Game</button>
+    <button id="minesCashoutBtn" onclick="cashoutMines()" style="padding:8px 14px; background:var(--neon-gold); color:#000; border:none; font-weight:800; border-radius:6px; margin-left:5px; display:none;">💰 Cash Out</button>
+  </div>
+  <div class="mines-grid" id="minesGrid"></div>
 </div>
 
-<!-- ================= 5. SPIN WHEEL ================= -->
-<div id="game-wheel" class="game-screen">
-<div class="action-box">
-<h2 style="color:#f59e0b; margin-bottom:10px;">🎡 12-Slot Lucky Wheel</h2>
-<div class="wheel-wrapper">
-<div class="wheel-pointer">🔻</div>
-<canvas id="wheelCanvas" width="220" height="220"></canvas>
-</div>
-<br>
-<button onclick="spinWheel()" style="padding:12px 30px; background:#ec4899; color:#fff; font-weight:bold; border:none; border-radius:25px; font-size:15px; cursor:pointer; margin-top:10px;">SPIN (500 Coins)</button>
-</div>
+<!-- ================= 3. HI-LO CARDS (DICE REPLACEMENT) ================= -->
+<div id="game-hilo" class="game-screen">
+  <div class="action-box">
+    <h2 style="color:var(--neon-blue); margin:0;">🃏 High-Low Card Streak</h2>
+    <p style="font-size:11px; color:#94a3b8; margin:4px 0 10px 0;">Guess if the next card is HIGHER or LOWER than current card!</p>
+    <div class="card-display" id="currentCardDisplay">7</div>
+    <br>
+    <input type="number" id="hiloBet" placeholder="Bet Coins" value="200" style="padding:8px; width:60%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:12px;">
+    <br>
+    <button onclick="playHiLo('HIGHER')" style="padding:12px 20px; background:var(--neon-green); color:#fff; font-weight:800; border:none; border-radius:8px; margin:4px; cursor:pointer;">⬆️ HIGHER (2X)</button>
+    <button onclick="playHiLo('LOWER')" style="padding:12px 20px; background:#ef4444; color:#fff; font-weight:800; border:none; border-radius:8px; margin:4px; cursor:pointer;">⬇️ LOWER (2X)</button>
+  </div>
 </div>
 
-<!-- History -->
-<section class="historyPanel" style="margin-top:20px;">
-<h2>🎯 Round Result</h2>
-<div class="historyCard">
-<p>Result: <b id="resultText">Ready</b></p>
-<p>Status: <b id="statusText">Select any game to practice</b></p>
+<!-- ================= 4. CYBER SLOTS (WHEEL REPLACEMENT) ================= -->
+<div id="game-slots" class="game-screen">
+  <div class="action-box">
+    <h2 style="color:var(--neon-gold); margin:0;">🎰 3-Reel Jackpot Slots</h2>
+    <div class="slots-display">
+      <div class="slot-reel" id="reel1">💎</div>
+      <div class="slot-reel" id="reel2">7️⃣</div>
+      <div class="slot-reel" id="reel3">🎰</div>
+    </div>
+    <button onclick="spinSlots()" style="padding:12px 30px; background:var(--neon-pink); color:#fff; font-weight:800; border:none; border-radius:25px; font-size:15px; cursor:pointer;">SPIN (500 Coins)</button>
+  </div>
 </div>
+
+<!-- ================= 5. COLOR PREDICTION ================= -->
+<div id="game-color" class="game-screen">
+  <section class="action-box"><h2>⏱ Next Round: <span id="timer" style="color:var(--neon-blue);">30</span>s</h2></section>
+
+  <section class="action-box">
+    <h3>💰 Select Bet Coins</h3>
+    <div>
+      <button class="betBtn" onclick="setBet(100)">100</button>
+      <button class="betBtn" onclick="setBet(500)">500</button>
+      <button class="betBtn" onclick="setBet(1000)">1000</button>
+    </div>
+  </section>
+
+  <section class="action-box">
+    <h3>🎨 Select Color</h3>
+    <div style="display:flex; justify-content:center; gap:10px;">
+      <button class="num-btn green" style="padding:10px 20px;" onclick="setColor('GREEN')">GREEN</button>
+      <button class="num-btn red" style="padding:10px 20px;" onclick="setColor('RED')">RED</button>
+      <button class="num-btn violet" style="padding:10px 20px;" onclick="setColor('VIOLET')">VIOLET</button>
+    </div>
+  </section>
+
+  <section class="action-box">
+    <button id="playBtn" style="width:100%; padding:12px; background:var(--neon-blue); border:none; font-weight:800; border-radius:8px;">Place Color Bet</button>
+    <p id="playStatus" style="text-align:center; margin-top:6px; font-size:12px; color:#94a3b8;">Choose Coins + Bet Option</p>
+  </section>
+</div>
+
+<!-- Result History -->
+<section class="action-box" style="margin:12px;">
+  <p style="margin:0; font-size:12px;">Last Result: <b id="resultText" style="color:var(--neon-blue);">Ready</b></p>
+  <p style="margin:4px 0 0 0; font-size:12px;">Status: <b id="statusText">Choose game to practice</b></p>
 </section>
 
 <nav class="bottomNav">
-<a href="home.html" class="navItem">🏠 <span>Home</span></a>
-<a href="game.html" class="navItem active">🎮 <span>Arena</span></a>
-<a href="wallet.html" class="navItem">💰 <span>Wallet</span></a>
-<a href="profile.html" class="navItem">👤 <span>Profile</span></a>
+  <a href="home.html" class="navItem">🏠 <span>Home</span></a>
+  <a href="game.html" class="navItem active">🎮 <span>Arena</span></a>
+  <a href="wallet.html" class="navItem">💰 <span>Wallet</span></a>
+  <a href="profile.html" class="navItem">👤 <span>Profile</span></a>
 </nav>
 
 </div>
@@ -238,7 +282,6 @@ function openGame(gameId, title) {
     document.getElementById('game-' + gameId).classList.add('active');
     document.getElementById('backBar').style.display = 'flex';
     document.getElementById('activeGameTitle').innerText = title;
-    if(gameId === 'wheel' && window.drawWheel) window.drawWheel();
 }
 
 function exitToArena() {
@@ -248,8 +291,7 @@ function exitToArena() {
 }
 </script>
 
-<!-- MODULE SCRIPT IMPORT -->
 <script type="module" src="script.js"></script>
 </body>
-    </html>
-    
+</html>
+00; font-weight:bold; border-radius:6px; wi
