@@ -1,7 +1,7 @@
 import { db } from "./firebase.js";
 import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-/* HARDWARE DEVICE FINGERPRINT ENGINE */
+/* HARDWARE FINGERPRINT ENGINE */
 function getOrCreateDeviceId() {
     const raw = navigator.userAgent + screen.width + "x" + screen.height + navigator.language;
     let hash = 0;
@@ -14,11 +14,12 @@ function getOrCreateDeviceId() {
 
 const $ = (e) => document.querySelector(e);
 
+/* GLOBAL GAME STATE */
 const game = {
     balance: 10000,
     xp: 0,
     level: 1,
-    membership: false,
+    membership: false, // Default Free
     membershipPlan: "Free",
     membershipExpiry: null,
     timer: 30,
@@ -50,17 +51,18 @@ function playSound(type) {
     } catch(e) {}
 }
 
-/* XP & LEVEL ENGINE */
+/* XP & LEVEL ENGINE WITH SYNC */
 function addXP(amount) {
     game.xp += amount;
-    const nextLevelXP = game.level * 500;
-    if (game.xp >= nextLevelXP) {
+    const targetXP = game.level * 500;
+    if (game.xp >= targetXP) {
         game.level++;
         playSound('win');
         if (typeof confetti === 'function') confetti();
-        alert(`🎉 LEVEL UP! You reached Level ${game.level}!`);
+        alert(`🎉 LEVEL UP! You reached Level ${game.level}! New Games Unlocked!`);
     }
     updateLevelUI();
+    saveGame();
 }
 
 function updateLevelUI() {
@@ -75,7 +77,7 @@ function updateLevelUI() {
     if (bar) bar.style.width = `${progress}%`;
 }
 
-/* 🔒 DEVICE-LEVEL CLOUD BALANCE & PROGRESS SYNC */
+/* CLOUD LOAD & STRICT HARDWARE LOCK */
 async function loadGame() {
     const hwId = getOrCreateDeviceId();
     const deviceRef = doc(db, "devices", hwId);
@@ -87,9 +89,11 @@ async function loadGame() {
             game.balance = devData.balance !== undefined ? devData.balance : 10000;
             game.xp = devData.xp || 0;
             game.level = devData.level || 1;
+            game.membership = devData.membership || false;
+            game.membershipPlan = devData.membershipPlan || "Free";
         } else {
             game.balance = 10000;
-            await setDoc(deviceRef, { deviceId: hwId, balance: 10000, xp: 0, level: 1 });
+            await setDoc(deviceRef, { deviceId: hwId, balance: 10000, xp: 0, level: 1, membership: false, membershipPlan: "Free" });
         }
     } catch (e) {
         const local = localStorage.getItem("rwinGame");
@@ -111,10 +115,12 @@ async function saveGame() {
             balance: game.balance,
             xp: game.xp,
             level: game.level,
+            membership: game.membership,
+            membershipPlan: game.membershipPlan,
             lastUpdated: new Date().toISOString()
         });
     } catch (e) {
-        await setDoc(deviceRef, { deviceId: hwId, balance: game.balance, xp: game.xp, level: game.level }, { merge: true });
+        await setDoc(deviceRef, { deviceId: hwId, balance: game.balance, xp: game.xp, level: game.level, membership: game.membership }, { merge: true });
     }
 }
 
@@ -127,17 +133,15 @@ function updateBalance() {
     if (b) b.innerText = "₹" + game.balance.toLocaleString();
 }
 
-/* REALTIME LIVE WIN TICKER SIMULATOR */
-const tickerUsers = ["ProGamer_91", "Priya_VIP", "Aman_Bhai", "Karan_RWIN", "Rohan_xX", "Viper_07"];
+/* REALTIME TICKER */
+const tickerUsers = ["ProGamer_91", "Priya_VIP", "Aman_Bhai", "Karan_RWIN", "Rohan_xX"];
 const tickerGames = ["Aviator Crash", "Cyber Mines", "Hi-Lo Cards", "Cyber Slots"];
 setInterval(() => {
     const user = tickerUsers[Math.floor(Math.random() * tickerUsers.length)];
     const gName = tickerGames[Math.floor(Math.random() * tickerGames.length)];
     const amt = (Math.floor(Math.random() * 45) + 5) * 100;
     const tickerEl = $("#liveTickerText");
-    if (tickerEl) {
-        tickerEl.innerText = `⚡ ${user} won ₹${amt.toLocaleString()} on ${gName}!`;
-    }
+    if (tickerEl) tickerEl.innerText = `⚡ ${user} won ₹${amt.toLocaleString()} on ${gName}!`;
 }, 4000);
 
 /* AVIATOR GAME */
@@ -145,7 +149,7 @@ let aviatorTimer, aviatorMulti = 1.00, isFlying = false, aviatorBetAmt = 0;
 window.startAviator = function() {
     aviatorBetAmt = Number($("#aviatorBet").value);
     if (!aviatorBetAmt || aviatorBetAmt > game.balance) return alert("Enter valid bet amount!");
-    game.balance -= aviatorBetAmt; updateBalance(); addXP(50); saveGame();
+    game.balance -= aviatorBetAmt; updateBalance(); addXP(50);
 
     isFlying = true; aviatorMulti = 1.00;
     $("#startAviatorBtn").style.display = "none";
@@ -195,7 +199,7 @@ let mineLocations = [], minesActive = false, minesBetAmt = 0, gemsFound = 0, cur
 window.startMinesGame = function() {
     minesBetAmt = Number($("#minesBet").value);
     if (!minesBetAmt || minesBetAmt > game.balance) return alert("Enter valid bet!");
-    game.balance -= minesBetAmt; updateBalance(); addXP(40); saveGame();
+    game.balance -= minesBetAmt; updateBalance(); addXP(40);
     
     minesActive = true; gemsFound = 0; currentMinesWin = 0; mineLocations = [];
     $("#minesCashoutBtn").style.display = "none";
@@ -242,7 +246,7 @@ window.cashoutMines = function() {
     $("#minesCashoutBtn").style.display = "none";
 };
 
-/* HI-LO CARDS (DICE REPLACEMENT) */
+/* HI-LO CARDS */
 window.playHiLo = function(choice) {
     const bet = Number($("#hiloBet").value) || 200;
     if (game.balance < bet) return alert("Low balance!");
@@ -268,7 +272,7 @@ window.playHiLo = function(choice) {
     updateBalance(); saveGame();
 };
 
-/* CYBER SLOTS (WHEEL REPLACEMENT) */
+/* CYBER SLOTS */
 const slotIcons = ["💎", "7️⃣", "🎰", "🔥", "👑", "🍒"];
 window.spinSlots = function() {
     if (game.balance < 500) return alert("Need 500 coins to spin!");
@@ -298,11 +302,29 @@ window.spinSlots = function() {
 window.setBet = (amt) => { game.selectedBet = amt; if($("#playStatus")) $("#playStatus").innerText = "Coins Selected: " + amt; };
 window.setColor = (col) => { game.selectedColor = col; };
 
+/* LEVEL & MEMBERSHIP GATEKEEPER FOR GAME OPENING */
+window.checkAndOpenGame = function(gameId, title, reqLevel) {
+    if (game.membershipPlan === "SUPER_VIP_200" || game.level >= reqLevel) {
+        openGame(gameId, title);
+    } else {
+        playSound('lose');
+        alert(`🔒 LOCKED! Reach Level ${reqLevel} OR Upgrade to ₹200 Super VIP Pass to Instant Unlock!`);
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     loadGame();
+    
+    /* 🔒 STRICT COIN RESET LOCK */
     const resetBtn = $("#resetCoinsBtn");
     if (resetBtn) {
         resetBtn.onclick = () => {
+            if (!game.membership || game.membership === false || game.membershipPlan === "Free") {
+                playSound('lose');
+                alert("🔒 Free limit over! Unlimited Coins Reset karne ke liye VIP Pass lein.");
+                window.location.href = "wallet.html";
+                return;
+            }
             playSound('win');
             game.balance = 10000;
             updateBalance(); saveGame();
@@ -310,3 +332,4 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 });
+
