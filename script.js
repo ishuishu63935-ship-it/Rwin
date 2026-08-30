@@ -333,3 +333,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+/* DYNAMIC MODULE LOADER & GATEKEEPER */
+let currentLoadedModule = null;
+
+window.checkAndOpenGame = function(gameId, title, reqLevel, isSuperVipOnly = false) {
+    const isSuperVip = game.membershipPlan === "SUPER_VIP_200";
+
+    // Tier 1 Check: 50+ Super VIP Exclusive Games Lock
+    if (isSuperVipOnly && !isSuperVip) {
+        playSound('lose');
+        alert("🔒 SUPER VIP ONLY! ₹200 Pass se saare 50+ Exclusive Games unlock karein.");
+        window.location.href = "wallet.html";
+        return;
+    }
+
+    // Tier 2 Check: Level Lock for Basic Games (LVL 1 to 20)
+    if (!isSuperVip && game.level < reqLevel) {
+        playSound('lose');
+        alert(`🔒 LOCKED! Reach Level ${reqLevel} OR Upgrade to ₹200 Super VIP Pass to Instant Unlock!`);
+        return;
+    }
+
+    openGame(gameId, title);
+    loadGameModule(gameId);
+};
+
+function loadGameModule(gameId) {
+    // Memory Clean-up to prevent browser crash
+    if (currentLoadedModule) {
+        currentLoadedModule.remove();
+        currentLoadedModule = null;
+    }
+
+    // Load module script on-demand
+    const script = document.createElement("script");
+    script.src = `games/${gameId}.js`;
+    script.id = `module-${gameId}`;
+    document.body.appendChild(script);
+    currentLoadedModule = script;
+}
