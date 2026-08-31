@@ -168,59 +168,111 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
 
 <!-- ================= 20+ GAMES MAIN ARENA HUB ================= -->
 <div id="arenaHub">
-<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">FEATURED DEMO CASINO GAMES</h3>
+<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">FREE / BASIC GAMES (LEVEL PROGRESSION)</h3>
 
 <div class="arena-grid">
-
-  <div class="game-card hot" onclick="openGame('aviator', '🚀 Aviator Crash')">
+  <div class="game-card hot" onclick="checkAndOpenGame('aviator', '🚀 Aviator Crash', 1, false)">
     <div class="game-icon">🚀</div>
     <h3>Aviator Crash</h3>
-    <p>High Multiplier Flight</p>
+    <p>LVL 1 • Unlocked</p>
   </div>
 
-  <div class="game-card hot" onclick="openGame('mines', '💣 Cyber Mines')">
+  <div class="game-card hot" onclick="checkAndOpenGame('mines', '💣 Cyber Mines', 2, false)">
     <div class="game-icon">💣</div>
     <h3>Cyber Mines</h3>
-    <p>5x5 Grid Cashout</p>
+    <p>LVL 2 Required</p>
   </div>
 
-  <div class="game-card" onclick="openGame('hilo', '🃏 Hi-Lo Cards')">
+  <div class="game-card" onclick="checkAndOpenGame('hilo', '🃏 Hi-Lo Cards', 3, false)">
     <div class="game-icon">🃏</div>
     <h3>Hi-Lo Streak</h3>
-    <p>Card Prediction 2X</p>
+    <p>LVL 3 Required</p>
   </div>
 
-  <div class="game-card" onclick="openGame('slots', '🎰 Cyber Neon Slots')">
+  <div class="game-card" onclick="checkAndOpenGame('slots', '🎰 Cyber Slots', 5, false)">
     <div class="game-icon">🎰</div>
     <h3>Cyber Slots</h3>
-    <p>3-Reel Jackpot Spin</p>
+    <p>LVL 5 Required</p>
   </div>
 
-  <div class="game-card" onclick="openGame('color', '🎨 Color Prediction')">
-    <div class="game-icon">🎨</div>
-    <h3>Color Prediction</h3>
-    <p>Red / Green / Violet</p>
+  <div class="game-card" onclick="checkAndOpenGame('dice2', '🎲 Cyber Dice 2.0', 6, false)">
+    <div class="game-icon">🎲</div>
+    <h3>Cyber Dice 2.0</h3>
+    <p>LVL 6 Required</p>
   </div>
 
-  <div class="game-card locked">
+  <div class="game-card" onclick="checkAndOpenGame('coinflip', '🪙 Cyber Coin Flip', 7, false)">
+    <div class="game-icon">🪙</div>
+    <h3>Cyber Coin Flip</h3>
+    <p>LVL 7 Required</p>
+  </div>
+</div>
+
+<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (₹200 PASS EXCLUSIVE)</h3>
+
+<div class="arena-grid">
+  <div class="game-card locked" onclick="checkAndOpenGame('plinko', '🟢 Plinko Drop', 0, true)">
     <div class="game-icon">🟢</div>
     <h3>Plinko Drop</h3>
-    <p>Unlocking at LVL 5</p>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
   </div>
 
-  <div class="game-card locked">
-    <div class="game-icon">🏰</div>
-    <h3>Tower Climb</h3>
-    <p>Unlocking at LVL 8</p>
+  <div class="game-card locked" onclick="checkAndOpenGame('roulette', '🎡 Cyber Roulette', 0, true)">
+    <div class="game-icon">🎡</div>
+    <h3>Cyber Roulette</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
   </div>
 
-  <div class="game-card locked">
-    <div class="game-icon">🎯</div>
-    <h3>Wheel Roulette</h3>
-    <p>Unlocking at LVL 10</p>
+  <div class="game-card locked" onclick="checkAndOpenGame('keno', '🔢 Cyber Keno', 0, true)">
+    <div class="game-icon">🔢</div>
+    <h3>Cyber Keno</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
   </div>
 
+  <div class="game-card locked" onclick="checkAndOpenGame('limbo', '⚡ Rocket Limbo', 0, true)">
+    <div class="game-icon">⚡</div>
+    <h3>Rocket Limbo</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('blackjack', '🃏 Cyber Blackjack 21', 0, true)">
+    <div class="game-icon">🃏</div>
+    <h3>Blackjack 21</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('wheel2', '🎡 VIP Mega Wheel', 0, true)">
+    <div class="game-icon">🎡</div>
+    <h3>VIP Mega Wheel</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('scratch', '🎟️ Gold Scratch Card', 0, true)">
+    <div class="game-icon">🎟️</div>
+    <h3>Gold Scratch</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('baccarat', '🃏 Speed Baccarat', 0, true)">
+    <div class="game-icon">🃏</div>
+    <h3>Speed Baccarat</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('crash2', '🚀 Space Dash', 0, true)">
+    <div class="game-icon">🚀</div>
+    <h3>Space Dash</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('mines2', '👑 Treasure Vault', 0, true)">
+    <div class="game-icon">👑</div>
+    <h3>Treasure Vault</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
 </div>
+</div>
+  
 
 <!-- REALTIME LIVE LEADERBOARD -->
 <div class="leaderboard-box">
