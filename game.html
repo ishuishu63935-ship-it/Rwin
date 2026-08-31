@@ -306,6 +306,35 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
   <h3>High Roller Dice</h3>
   <p style="color:var(--neon-gold);">🔒 ₹200 VIP • LVL 20</p>
 </div>
+<div class="game-card locked" onclick="checkAndOpenGame('plinko2', '🟢 Mega Plinko 50X', 22, true)">
+  <div class="game-icon">🟢</div>
+  <h3>Mega Plinko 50X</h3>
+  <p style="color:var(--neon-gold);">🔒 ₹200 VIP • LVL 22</p>
+</div>
+
+<div class="game-card locked" onclick="checkAndOpenGame('keno3', '🔢 VIP Keno 80', 25, true)">
+  <div class="game-icon">🔢</div>
+  <h3>VIP Keno 80</h3>
+  <p style="color:var(--neon-gold);">🔒 ₹200 VIP • LVL 25</p>
+</div>
+
+<div class="game-card locked" onclick="checkAndOpenGame('mines4', '💣 Grid Mine 4x4', 28, true)">
+  <div class="game-icon">💣</div>
+  <h3>Grid Mine 4x4</h3>
+  <p style="color:var(--neon-gold);">🔒 ₹200 VIP • LVL 28</p>
+</div>
+
+<div class="game-card locked" onclick="checkAndOpenGame('spinwin', '🌀 Lucky Spin 50X', 30, true)">
+  <div class="game-icon">🌀</div>
+  <h3>Lucky Spin 50X</h3>
+  <p style="color:var(--neon-gold);">🔒 ₹200 VIP • LVL 30</p>
+</div>
+
+<div class="game-card locked" onclick="checkAndOpenGame('baccarat2', '👑 VIP Gold Baccarat', 35, true)">
+  <div class="game-icon">👑</div>
+  <h3>VIP Gold Baccarat</h3>
+  <p style="color:var(--neon-gold);">🔒 ₹200 VIP • LVL 35</p>
+</div>
   
 <!-- REALTIME LIVE LEADERBOARD -->
 <div class="leaderboard-box">
@@ -418,6 +447,11 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
 <div id="game-slots2" class="game-screen"></div>
 <div id="game-cardflip" class="game-screen"></div>
 <div id="game-dice3" class="game-screen"></div>
+  <div id="game-plinko2" class="game-screen"></div>
+<div id="game-keno3" class="game-screen"></div>
+<div id="game-mines4" class="game-screen"></div>
+<div id="game-spinwin" class="game-screen"></div>
+<div id="game-baccarat2" class="game-screen"></div>
   
 <!-- Result History -->
 <section class="action-box" style="margin:12px;">
