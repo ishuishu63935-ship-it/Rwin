@@ -372,7 +372,42 @@
     }
   });
 </script>
+<script type="module">
+import { db } from "./firebase.js";
+import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+function getDeviceId() {
+    const raw = navigator.userAgent + screen.width + "x" + screen.height + navigator.language;
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) {
+        hash = (hash << 5) - hash + raw.charCodeAt(i);
+        hash |= 0;
+    }
+    return 'DEV_HW_' + Math.abs(hash);
+}
+
+// Realtime Listener for Instant Level & Balance Updates
+const hwId = getDeviceId();
+onSnapshot(doc(db, "devices", hwId), (docSnap) => {
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        const level = data.level || 1;
+        const xp = data.xp || 0;
+        const balance = data.balance !== undefined ? data.balance : 10000;
+
+        // Update Home UI elements dynamically
+        const lvlEl = document.querySelector(".progressCard p:nth-child(1)") || document.getElementById("homeLevel");
+        if(lvlEl) lvlEl.innerText = "Level " + level;
+
+        const xpEl = document.querySelector(".progressCard p:nth-child(2)") || document.getElementById("homeXP");
+        if(xpEl) xpEl.innerText = xp + " / " + (level * 500) + " XP";
+
+        const balEl = document.querySelector(".membershipCard h1") || document.getElementById("homeBalance");
+        if(balEl) balEl.innerText = "₹" + balance.toLocaleString();
+    }
+});
+</script>
+ 
 </body>
  </html>
  
