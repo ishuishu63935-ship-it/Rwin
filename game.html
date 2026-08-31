@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-  
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,64 +35,16 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
 .ticker-dot { width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 8px var(--neon-green); animation: pulse 1.5s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-<div id="arenaHub">
-<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">FREE / BASIC GAMES (LEVEL UNLOCKS)</h3>
+/* Arena Grid & Games */
+.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+.game-card { background: var(--card-bg); border: 1px solid #1f293d; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; }
+.game-card:active { transform: scale(0.96); border-color: var(--neon-blue); }
+.game-card.hot::after { content: 'HOT 🔥'; position: absolute; top: 8px; right: -24px; background: #ef4444; color: #fff; font-size: 8px; font-weight: 800; padding: 2px 25px; transform: rotate(45deg); }
+.game-card.locked { opacity: 0.7; border-color: rgba(245, 158, 11, 0.3); }
+.game-icon { font-size: 36px; margin-bottom: 6px; }
+.game-card h3 { font-size: 14px; margin: 0; color: #fff; }
+.game-card p { font-size: 10px; color: #94a3b8; margin: 2px 0 0 0; }
 
-<div class="arena-grid">
-  <div class="game-card hot" onclick="checkAndOpenGame('aviator', '🚀 Aviator Crash', 1, false)">
-    <div class="game-icon">🚀</div>
-    <h3>Aviator Crash</h3>
-    <p>LVL 1 • Unlocked</p>
-  </div>
-
-  <div class="game-card hot" onclick="checkAndOpenGame('mines', '💣 Cyber Mines', 2, false)">
-    <div class="game-icon">💣</div>
-    <h3>Cyber Mines</h3>
-    <p>LVL 2 Required</p>
-  </div>
-
-  <div class="game-card" onclick="checkAndOpenGame('hilo', '🃏 Hi-Lo Cards', 3, false)">
-    <div class="game-icon">🃏</div>
-    <h3>Hi-Lo Streak</h3>
-    <p>LVL 3 Required</p>
-  </div>
-
-  <div class="game-card" onclick="checkAndOpenGame('slots', '🎰 Cyber Slots', 5, false)">
-    <div class="game-icon">🎰</div>
-    <h3>Cyber Slots</h3>
-    <p>LVL 5 Required</p>
-  </div>
-</div>
-
-<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (₹200 PASS ONLY - 50+ GAMES)</h3>
-
-<div class="arena-grid">
-  <div class="game-card locked" onclick="checkAndOpenGame('plinko', '🟢 Plinko Drop', 0, true)">
-    <div class="game-icon">🟢</div>
-    <h3>Plinko Drop</h3>
-    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
-  </div>
-
-  <div class="game-card locked" onclick="checkAndOpenGame('roulette', '🎡 Cyber Roulette', 0, true)">
-    <div class="game-icon">🎡</div>
-    <h3>Cyber Roulette</h3>
-    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
-  </div>
-
-  <div class="game-card locked" onclick="checkAndOpenGame('keno', '🔢 Cyber Keno', 0, true)">
-    <div class="game-icon">🔢</div>
-    <h3>Cyber Keno</h3>
-    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
-  </div>
-
-  <div class="game-card locked" onclick="checkAndOpenGame('limbo', '⚡ Rocket Limbo', 0, true)">
-    <div class="game-icon">⚡</div>
-    <h3>Rocket Limbo</h3>
-    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
-  </div>
-</div>
-</div>
-  
 /* Dedicated Game Views */
 .game-screen { display: none; padding: 12px; }
 .game-screen.active { display: block; }
@@ -112,7 +62,6 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
 .action-box { background: #111827; padding: 16px; border-radius: 14px; border: 1px solid #1f293d; text-align: center; margin: 10px 0; }
 
 /* Color Prediction Buttons */
-.color-num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
 .num-btn { padding: 12px 0; border-radius: 8px; font-weight: 700; font-size: 16px; border: none; color: #fff; cursor: pointer; }
 .num-btn.green { background: var(--neon-green); }
 .num-btn.red { background: #ef4444; }
@@ -166,7 +115,7 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:14px;">Game</b>
 </div>
 
-<!-- ================= 20+ GAMES MAIN ARENA HUB ================= -->
+<!-- ================= MAIN ARENA HUB ================= -->
 <div id="arenaHub">
 <h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">FREE / BASIC GAMES (LEVEL PROGRESSION)</h3>
 
@@ -270,9 +219,31 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
     <h3>Treasure Vault</h3>
     <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
   </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('poker', '♠️ Video Poker', 0, true)">
+    <div class="game-icon">♠️</div>
+    <h3>Video Poker</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('wheel3', '🎡 Color Wheel', 0, true)">
+    <div class="game-icon">🎡</div>
+    <h3>Color Wheel</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('hilo2', '♥️ Red/Black Suit', 0, true)">
+    <div class="game-icon">♥️</div>
+    <h3>Red/Black Suit</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
+
+  <div class="game-card locked" onclick="checkAndOpenGame('keno2', '⚡ Speed Keno', 0, true)">
+    <div class="game-icon">⚡</div>
+    <h3>Speed Keno</h3>
+    <p style="color:var(--neon-gold);">🔒 ₹200 VIP Pass</p>
+  </div>
 </div>
-</div>
-  
 
 <!-- REALTIME LIVE LEADERBOARD -->
 <div class="leaderboard-box">
@@ -283,7 +254,7 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
 </div>
 </div>
 
-<!-- ================= 1. AVIATOR CRASH ================= -->
+<!-- ================= BUILT-IN BASIC GAME VIEWS ================= -->
 <div id="game-aviator" class="game-screen">
   <div class="aviator-screen">
     <div class="aviator-multi-display" id="aviatorMulti">1.00x</div>
@@ -296,7 +267,6 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
   </div>
 </div>
 
-<!-- ================= 2. CYBER MINES ================= -->
 <div id="game-mines" class="game-screen">
   <div class="action-box">
     <p style="margin-bottom:8px; font-size:12px; color:#94a3b8;">💣 Tap Boxes & Cash Out Before Hitting Bomb!</p>
@@ -307,7 +277,6 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
   <div class="mines-grid" id="minesGrid"></div>
 </div>
 
-<!-- ================= 3. HI-LO CARDS (DICE REPLACEMENT) ================= -->
 <div id="game-hilo" class="game-screen">
   <div class="action-box">
     <h2 style="color:var(--neon-blue); margin:0;">🃏 High-Low Card Streak</h2>
@@ -321,7 +290,6 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
   </div>
 </div>
 
-<!-- ================= 4. CYBER SLOTS (WHEEL REPLACEMENT) ================= -->
 <div id="game-slots" class="game-screen">
   <div class="action-box">
     <h2 style="color:var(--neon-gold); margin:0;">🎰 3-Reel Jackpot Slots</h2>
@@ -333,25 +301,7 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
     <button onclick="spinSlots()" style="padding:12px 30px; background:var(--neon-pink); color:#fff; font-weight:800; border:none; border-radius:25px; font-size:15px; cursor:pointer;">SPIN (500 Coins)</button>
   </div>
 </div>
-<!-- VIP GAMES DYNAMIC CONTAINERS -->
-<div id="game-plinko" class="game-screen"></div>
-<div id="game-roulette" class="game-screen"></div>
-<div id="game-keno" class="game-screen"></div>
-<div id="game-limbo" class="game-screen"></div>
-  <div id="game-blackjack" class="game-screen"></div>
-<div id="game-coinflip" class="game-screen"></div>
-<div id="game-wheel2" class="game-screen"></div>
-<div id="game-scratch" class="game-screen"></div>
-  <div id="game-dice2" class="game-screen"></div>
-<div id="game-baccarat" class="game-screen"></div>
-<div id="game-crash2" class="game-screen"></div>
-<div id="game-mines2" class="game-screen"></div>
-  <div id="game-poker" class="game-screen"></div>
-<div id="game-wheel3" class="game-screen"></div>
-<div id="game-hilo2" class="game-screen"></div>
-<div id="game-keno2" class="game-screen"></div>
-  
-<!-- ================= 5. COLOR PREDICTION ================= -->
+
 <div id="game-color" class="game-screen">
   <section class="action-box"><h2>⏱ Next Round: <span id="timer" style="color:var(--neon-blue);">30</span>s</h2></section>
 
@@ -378,6 +328,24 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
     <p id="playStatus" style="text-align:center; margin-top:6px; font-size:12px; color:#94a3b8;">Choose Coins + Bet Option</p>
   </section>
 </div>
+
+<!-- ================= VIP DYNAMIC GAME CONTAINERS ================= -->
+<div id="game-plinko" class="game-screen"></div>
+<div id="game-roulette" class="game-screen"></div>
+<div id="game-keno" class="game-screen"></div>
+<div id="game-limbo" class="game-screen"></div>
+<div id="game-blackjack" class="game-screen"></div>
+<div id="game-coinflip" class="game-screen"></div>
+<div id="game-wheel2" class="game-screen"></div>
+<div id="game-scratch" class="game-screen"></div>
+<div id="game-dice2" class="game-screen"></div>
+<div id="game-baccarat" class="game-screen"></div>
+<div id="game-crash2" class="game-screen"></div>
+<div id="game-mines2" class="game-screen"></div>
+<div id="game-poker" class="game-screen"></div>
+<div id="game-wheel3" class="game-screen"></div>
+<div id="game-hilo2" class="game-screen"></div>
+<div id="game-keno2" class="game-screen"></div>
 
 <!-- Result History -->
 <section class="action-box" style="margin:12px;">
@@ -412,5 +380,5 @@ function exitToArena() {
 
 <script type="module" src="script.js"></script>
 </body>
-</html>
-00; font-weight:bold; border-radius:6px; wi
+  </html>
+    
