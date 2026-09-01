@@ -303,6 +303,28 @@ window.exitToArena = function() {
     document.getElementById('backBar').style.display = 'none';
 };
 </script>
+  <!-- CUSTOM CASINO POPUP MODAL -->
+<div id="resultModal" class="result-modal-overlay">
+  <div id="resultCard" class="result-card">
+    <button class="close-modal-btn" onclick="closeResultModal()">✕</button>
+    <div id="modalBadge" class="badge-header">🚀</div>
+    <div id="modalTitle" class="result-title">Congratulations</div>
+    
+    <div class="tags-row" id="modalTags" style="display:none;">
+      <span class="res-tag green" id="tagColor">Green</span>
+      <span class="res-tag" id="tagNum">9</span>
+      <span class="res-tag" id="tagSize">Big</span>
+    </div>
+
+    <div class="bonus-box">
+      <div style="font-size:11px; color:#94a3b8;">Amount</div>
+      <div id="modalAmount" class="bonus-amount">+₹441.00</div>
+    </div>
+
+    <div class="auto-close-txt">⏱️ Auto closing in <b id="closeTimer">3</b> seconds</div>
+  </div>
+</div>
+  
 </body>
   </html>
   
