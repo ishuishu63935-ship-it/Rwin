@@ -1,413 +1,112 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RWIN - Home</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
-  }
-
-  body {
-    background-color: #080b11;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-  }
-
-  .app-container {
-    width: 100%;
-    max-width: 480px;
-    padding: 16px;
-    padding-bottom: 90px;
-    background: #0d111a;
-    min-height: 100vh;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  }
-
-  /* HEADER */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0 20px 0;
-  }
-
-  .logo {
-    font-size: 28px;
-    font-weight: 800;
-    background: linear-gradient(90deg, #00e5ff, #0088ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 1.5px;
-    text-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-  }
-
-  .profile-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: #161f30;
-    border: 1.5px solid #00e5ff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
-  }
-
-  /* BANNER */
-  .welcome-banner {
-    background: linear-gradient(135deg, #00c6ff, #0072ff);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3);
-  }
-
-  .welcome-banner h2 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    color: #fff;
-  }
-
-  .welcome-banner p {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 500;
-  }
-
-  /* DASHBOARD CARDS */
-  .card {
-    background: #141a26;
-    border: 1px solid #1e293b;
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 16px;
-  }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #00e5ff;
-    margin-bottom: 14px;
-    border-bottom: 1px solid #1e293b;
-    padding-bottom: 10px;
-  }
-
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 14px;
-  }
-
-  .info-row:not(:last-child) {
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
-  }
-
-  .label {
-    color: #94a3b8;
-    font-weight: 400;
-  }
-
-  .value {
-    font-weight: 600;
-    color: #f8fafc;
-  }
-
-  .status-badge-active {
-    background: rgba(16, 185, 129, 0.15);
-    color: #10b981;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  .status-badge-inactive {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  /* BUY/UPGRADE BUTTON */
-  .btn-upgrade {
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    background: linear-gradient(90deg, #FFD700, #FF8C00);
-    color: #000;
-    font-weight: 700;
-    font-size: 14px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-    transition: transform 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .btn-upgrade:active {
-    transform: scale(0.98);
-  }
-
-  /* FOOTER */
-  .footer-text {
-    text-align: center;
-    font-size: 11px;
-    color: #64748b;
-    margin-top: 25px;
-  }
-
-  /* BOTTOM NAVIGATION BAR */
-  .navbar {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background: #121824;
-    border-top: 1px solid #1e293b;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    z-index: 1000;
-  }
-
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #64748b;
-    font-size: 11px;
-    font-weight: 500;
-    gap: 4px;
-    width: 25%;
-  }
-
-  .nav-item.active {
-    color: #00e5ff;
-    font-weight: 600;
-  }
-
-  .nav-icon {
-    font-size: 20px;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+  body { background-color: #080b11; color: #ffffff; display: flex; justify-content: center; min-height: 100vh; }
+  .app-container { width: 100%; max-width: 480px; padding: 16px; padding-bottom: 90px; background: #0d111a; min-height: 100vh; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 20px 0; }
+  .logo { font-size: 28px; font-weight: 800; background: linear-gradient(90deg, #00e5ff, #0088ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
+  .profile-btn { width: 42px; height: 42px; border-radius: 50%; background: #161f30; border: 1.5px solid #00e5ff; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
+  .welcome-banner { background: linear-gradient(135deg, #00c6ff, #0072ff); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3); }
+  .welcome-banner h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; color: #fff; }
+  .welcome-banner p { font-size: 12px; color: rgba(255, 255, 255, 0.85); font-weight: 500; }
+  .card { background: #141a26; border: 1px solid #1e293b; border-radius: 16px; padding: 18px; margin-bottom: 16px; }
+  .card-header { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: #00e5ff; margin-bottom: 14px; border-bottom: 1px solid #1e293b; padding-bottom: 10px; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 14px; }
+  .info-row:not(:last-child) { border-bottom: 1px dashed rgba(255, 255, 255, 0.05); }
+  .label { color: #94a3b8; font-weight: 400; }
+  .value { font-weight: 600; color: #f8fafc; }
+  .status-badge-active { background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+  .status-badge-inactive { background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+  .btn-upgrade { width: 100%; margin-top: 15px; padding: 12px; background: linear-gradient(90deg, #FFD700, #FF8C00); color: #000; font-weight: 700; font-size: 14px; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-upgrade:active { transform: scale(0.98); }
+  .footer-text { text-align: center; font-size: 11px; color: #64748b; margin-top: 25px; }
+  .navbar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #121824; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #64748b; font-size: 11px; font-weight: 500; gap: 4px; width: 25%; }
+  .nav-item.active { color: #00e5ff; font-weight: 600; }
+  .nav-icon { font-size: 20px; }
 </style>
 </head>
-
 <body>
 
 <div class="app-container">
-
-  <!-- HEADER -->
   <div class="header">
     <div class="logo">RWIN</div>
     <div class="profile-btn" onclick="window.location.href='profile.html'">👤</div>
   </div>
 
-  <!-- WELCOME BANNER -->
   <div class="welcome-banner">
     <h2>🔥 Welcome to RWIN</h2>
     <p>Practice • Learn • Improve</p>
   </div>
 
-  <!-- PROGRESS CARD -->
   <div class="card">
-    <div class="card-header">
-      <span>👑</span> Your Progress
-    </div>
-    <div class="info-row">
-      <span class="label">Level</span>
-      <span class="value" id="homeLevel">Level 1</span>
-    </div>
-    <div class="info-row">
-      <span class="label">XP</span>
-      <span class="value" id="homeXP">0 / 100</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Practice Sessions</span>
-      <span class="value" id="homeSessions">0</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Membership</span>
-      <span class="value" id="homeMembershipBadge" style="color: #00e5ff;">FREE</span>
-    </div>
+    <div class="card-header"><span>👑</span> Your Progress</div>
+    <div class="info-row"><span class="label">Level</span><span class="value" id="homeLevel">Level 1</span></div>
+    <div class="info-row"><span class="label">XP</span><span class="value" id="homeXP">0 / 500</span></div>
+    <div class="info-row"><span class="label">Practice Sessions</span><span class="value" id="homeSessions">12</span></div>
+    <div class="info-row"><span class="label">Membership</span><span class="value" id="homeMembershipBadge" style="color: #00e5ff;">FREE</span></div>
   </div>
 
-  <!-- MEMBERSHIP STATUS CARD -->
   <div class="card">
-    <div class="card-header">
-      <span>💎</span> Membership Status
-    </div>
-    <div class="info-row">
-      <span class="label">Current Plan</span>
-      <span class="value" id="homePlanName">Free Plan</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Status</span>
-      <span id="homePlanStatus" class="status-badge-inactive">INACTIVE</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Practice Coins</span>
-      <span class="value" id="homeBalance" style="color: #00e5ff;">₹10,000</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Days Left</span>
-      <span class="value" id="homeDaysLeft">0 Days</span>
-    </div>
+    <div class="card-header"><span>💎</span> Membership Status</div>
+    <div class="info-row"><span class="label">Current Plan</span><span class="value" id="homePlanName">Free Plan</span></div>
+    <div class="info-row"><span class="label">Status</span><span id="homePlanStatus" class="status-badge-inactive">INACTIVE</span></div>
+    <div class="info-row"><span class="label">Practice Coins</span><span class="value" id="homeBalance" style="color: #00e5ff;">₹10,000</span></div>
+    <div class="info-row"><span class="label">Days Left</span><span class="value" id="homeDaysLeft">0 Days</span></div>
 
-    <!-- UPGRADE / BUY BUTTON -->
     <button class="btn-upgrade" onclick="window.location.href='wallet.html'">
       ⚡ Upgrade / Buy Membership
     </button>
   </div>
 
-  <!-- FOOTER -->
   <div class="footer-text">
     <p>© 2026 RWIN Practice Platform</p>
     <p>Practice • Learn • Improve</p>
   </div>
-
 </div>
 
-<!-- BOTTOM NAVIGATION BAR -->
 <div class="navbar">
-  <a href="home.html" class="nav-item active">
-    <span class="nav-icon">🏠</span>
-    <span>Home</span>
-  </a>
-  <a href="game.html" class="nav-item">
-    <span class="nav-icon">🎮</span>
-    <span>Practice</span>
-  </a>
-  <a href="wallet.html" class="nav-item">
-    <span class="nav-icon">💰</span>
-    <span>Wallet</span>
-  </a>
-  <a href="profile.html" class="nav-item">
-    <span class="nav-icon">👤</span>
-    <span>Profile</span>
-  </a>
+  <a href="home.html" class="nav-item active"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a href="game.html" class="nav-item"><span class="nav-icon">🎮</span><span>Practice</span></a>
+  <a href="wallet.html" class="nav-item"><span class="nav-icon">💰</span><span>Wallet</span></a>
+  <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span><span>Profile</span></a>
 </div>
 
-<!-- SCRIPTS -->
-<script src="script.js"></script>
-
-<script type="module">
-  import { auth, db } from "./firebase.js";
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-
-          const planName = document.getElementById("homePlanName");
-          const planStatus = document.getElementById("homePlanStatus");
-          const daysLeft = document.getElementById("homeDaysLeft");
-          const levelText = document.getElementById("homeLevel");
-          const xpText = document.getElementById("homeXP");
-          const membershipBadge = document.getElementById("homeMembershipBadge");
-          const balanceText = document.getElementById("homeBalance");
-
-          if (userData.coins !== undefined && balanceText) {
-            balanceText.innerText = "₹" + userData.coins.toLocaleString();
-          }
-
-          if (userData.membership === true) {
-            if (planName) planName.innerText = userData.membershipPlan || "Starter";
-            if (membershipBadge) membershipBadge.innerText = (userData.membershipPlan || "PRO").toUpperCase();
-            if (planStatus) {
-              planStatus.innerText = "ACTIVE";
-              planStatus.className = "status-badge-active";
-            }
-            if (daysLeft) daysLeft.innerText = userData.daysLeft ? userData.daysLeft + " Days" : "Active";
-          } else {
-            if (planName) planName.innerText = "Free Plan";
-            if (membershipBadge) membershipBadge.innerText = "FREE";
-            if (planStatus) {
-              planStatus.innerText = "INACTIVE";
-              planStatus.className = "status-badge-inactive";
-            }
-            if (daysLeft) daysLeft.innerText = "0 Days";
-          }
-
-          if (userData.level && levelText) levelText.innerText = "Level " + userData.level;
-          if (userData.xp !== undefined && xpText) xpText.innerText = userData.xp + " / 100";
-        }
-      } catch (e) {
-        console.log("Firebase sync error:", e);
+<script type="module" src="script.js"></script>
+<script>
+  function syncHomeUI() {
+    const raw = localStorage.getItem("rwinGame");
+    if (!raw) return;
+    try {
+      const g = JSON.parse(raw);
+      if (document.getElementById("homeLevel")) document.getElementById("homeLevel").innerText = "Level " + (g.level || 1);
+      if (document.getElementById("homeXP")) document.getElementById("homeXP").innerText = (g.xp || 0) + " / " + ((g.level || 1) * 500);
+      if (document.getElementById("homeBalance")) document.getElementById("homeBalance").innerText = "₹" + (g.balance || 10000).toLocaleString();
+      
+      const isMem = g.membership === true || (g.membershipPlan && g.membershipPlan !== "Free Plan");
+      if (isMem) {
+        document.getElementById("homePlanName").innerText = g.membershipPlan || "Pro VIP";
+        document.getElementById("homePlanStatus").innerText = "ACTIVE";
+        document.getElementById("homePlanStatus").className = "status-badge-active";
+        document.getElementById("homeMembershipBadge").innerText = "VIP";
+        document.getElementById("homeDaysLeft").innerText = "Active";
+      } else {
+        document.getElementById("homePlanName").innerText = "Free Plan";
+        document.getElementById("homePlanStatus").innerText = "INACTIVE";
+        document.getElementById("homePlanStatus").className = "status-badge-inactive";
+        document.getElementById("homeMembershipBadge").innerText = "FREE";
+        document.getElementById("homeDaysLeft").innerText = "0 Days";
       }
-    }
-  });
+    } catch(e) {}
+  }
+  document.addEventListener("DOMContentLoaded", syncHomeUI);
+  setInterval(syncHomeUI, 1000);
 </script>
-<script type="module">
-import { db } from "./firebase.js";
-import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-function getDeviceId() {
-    const raw = navigator.userAgent + screen.width + "x" + screen.height + navigator.language;
-    let hash = 0;
-    for (let i = 0; i < raw.length; i++) {
-        hash = (hash << 5) - hash + raw.charCodeAt(i);
-        hash |= 0;
-    }
-    return 'DEV_HW_' + Math.abs(hash);
-}
-
-// Realtime Listener for Instant Level & Balance Updates
-const hwId = getDeviceId();
-onSnapshot(doc(db, "devices", hwId), (docSnap) => {
-    if (docSnap.exists()) {
-        const data = docSnap.data();
-        const level = data.level || 1;
-        const xp = data.xp || 0;
-        const balance = data.balance !== undefined ? data.balance : 10000;
-
-        // Update Home UI elements dynamically
-        const lvlEl = document.querySelector(".progressCard p:nth-child(1)") || document.getElementById("homeLevel");
-        if(lvlEl) lvlEl.innerText = "Level " + level;
-
-        const xpEl = document.querySelector(".progressCard p:nth-child(2)") || document.getElementById("homeXP");
-        if(xpEl) xpEl.innerText = xp + " / " + (level * 500) + " XP";
-
-        const balEl = document.querySelector(".membershipCard h1") || document.getElementById("homeBalance");
-        if(balEl) balEl.innerText = "₹" + balance.toLocaleString();
-    }
-});
-</script>
- 
 </body>
- </html>
- 
+</html>
