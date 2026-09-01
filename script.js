@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* HARDWARE FINGERPRINT ENGINE */
 function getOrCreateDeviceId() {
@@ -15,15 +15,14 @@ function getOrCreateDeviceId() {
 const $ = (e) => document.querySelector(e);
 
 /* GLOBAL GAME STATE */
-const game = {
+window.game = {
     balance: 10000,
     xp: 0,
     level: 1,
-    membership: false, // Default Free
-    membershipPlan: "Free",
-    membershipExpiry: null,
+    membership: false,
+    membershipPlan: "Free Plan",
     timer: 30,
-    selectedBet: 0,
+    selectedBet: 100,
     selectedColor: null,
     currentCard: 7
 };
@@ -52,7 +51,7 @@ function playSound(type) {
 }
 
 /* XP & LEVEL ENGINE WITH SYNC */
-function addXP(amount) {
+window.addXP = function(amount) {
     game.xp += amount;
     const targetXP = game.level * 500;
     if (game.xp >= targetXP) {
@@ -63,7 +62,7 @@ function addXP(amount) {
     }
     updateLevelUI();
     saveGame();
-}
+};
 
 function updateLevelUI() {
     const badge = $("#userLevelBadge");
@@ -77,8 +76,14 @@ function updateLevelUI() {
     if (bar) bar.style.width = `${progress}%`;
 }
 
-/* CLOUD LOAD & STRICT HARDWARE LOCK */
+/* CLOUD LOAD & LOCAL STORAGE SYNC */
 async function loadGame() {
+    // LocalStorage first for instant UI response
+    const local = localStorage.getItem("rwinGame");
+    if (local) {
+        try { Object.assign(game, JSON.parse(local)); } catch(e){}
+    }
+
     const hwId = getOrCreateDeviceId();
     const deviceRef = doc(db, "devices", hwId);
 
@@ -86,18 +91,23 @@ async function loadGame() {
         const deviceSnap = await getDoc(deviceRef);
         if (deviceSnap.exists()) {
             const devData = deviceSnap.data();
-            game.balance = devData.balance !== undefined ? devData.balance : 10000;
-            game.xp = devData.xp || 0;
-            game.level = devData.level || 1;
-            game.membership = devData.membership || false;
-            game.membershipPlan = devData.membershipPlan || "Free";
+            game.balance = devData.balance !== undefined ? devData.balance : game.balance;
+            game.xp = devData.xp || game.xp;
+            game.level = devData.level || game.level;
+            game.membership = devData.membership || game.membership;
+            game.membershipPlan = devData.membershipPlan || game.membershipPlan;
         } else {
-            game.balance = 10000;
-            await setDoc(deviceRef, { deviceId: hwId, balance: 10000, xp: 0, level: 1, membership: false, membershipPlan: "Free" });
+            await setDoc(deviceRef, { 
+                deviceId: hwId, 
+                balance: game.balance, 
+                xp: game.xp, 
+                level: game.level, 
+                membership: game.membership, 
+                membershipPlan: game.membershipPlan 
+            });
         }
     } catch (e) {
-        const local = localStorage.getItem("rwinGame");
-        if (local) try { Object.assign(game, JSON.parse(local)); } catch(err){}
+        console.log("Firebase Load Fallback to LocalStorage");
     }
 
     updateBalance();
@@ -120,7 +130,14 @@ async function saveGame() {
             lastUpdated: new Date().toISOString()
         });
     } catch (e) {
-        await setDoc(deviceRef, { deviceId: hwId, balance: game.balance, xp: game.xp, level: game.level, membership: game.membership }, { merge: true });
+        await setDoc(deviceRef, { 
+            deviceId: hwId, 
+            balance: game.balance, 
+            xp: game.xp, 
+            level: game.level, 
+            membership: game.membership,
+            membershipPlan: game.membershipPlan 
+        }, { merge: true });
     }
 }
 
@@ -128,21 +145,59 @@ function saveLocal() {
     localStorage.setItem("rwinGame", JSON.stringify(game));
 }
 
-function updateBalance() {
+window.updateBalance = function() {
     const b = document.getElementById("balanceText");
     if (b) b.innerText = "₹" + game.balance.toLocaleString();
+};
+
+/* COLOR PREDICTION GAME ENGINE */
+let colorTimer;
+function initColorPrediction() {
+    if (!$("#timer")) return;
+    setInterval(() => {
+        game.timer--;
+        if ($("#timer")) $("#timer").innerText = game.timer;
+        if (game.timer <= 0) {
+            game.timer = 30;
+            resolveColorRound();
+        }
+    }, 1000);
 }
 
-/* REALTIME TICKER */
-const tickerUsers = ["ProGamer_91", "Priya_VIP", "Aman_Bhai", "Karan_RWIN", "Rohan_xX"];
-const tickerGames = ["Aviator Crash", "Cyber Mines", "Hi-Lo Cards", "Cyber Slots"];
-setInterval(() => {
-    const user = tickerUsers[Math.floor(Math.random() * tickerUsers.length)];
-    const gName = tickerGames[Math.floor(Math.random() * tickerGames.length)];
-    const amt = (Math.floor(Math.random() * 45) + 5) * 100;
-    const tickerEl = $("#liveTickerText");
-    if (tickerEl) tickerEl.innerText = `⚡ ${user} won ₹${amt.toLocaleString()} on ${gName}!`;
-}, 4000);
+window.setBet = (amt) => { 
+    game.selectedBet = amt; 
+    if($("#playStatus")) $("#playStatus").innerText = "Selected Bet Coins: ₹" + amt; 
+};
+
+window.setColor = (col) => { 
+    game.selectedColor = col; 
+    if($("#playStatus")) $("#playStatus").innerText = "Betting on " + col + " (₹" + game.selectedBet + ")";
+};
+
+function resolveColorRound() {
+    if (!game.selectedColor) return;
+    if (game.balance < game.selectedBet) return alert("Low balance for color bet!");
+
+    game.balance -= game.selectedBet;
+    const colors = ["GREEN", "RED", "VIOLET"];
+    const resultColor = colors[Math.floor(Math.random() * colors.length)];
+
+    if (game.selectedColor === resultColor) {
+        const winMultiplier = resultColor === "VIOLET" ? 4.5 : 2.0;
+        const won = Math.floor(game.selectedBet * winMultiplier);
+        game.balance += won;
+        addXP(90);
+        playSound('win');
+        alert(`🎉 COLOR WIN! Result was ${resultColor}. You won ₹${won}!`);
+    } else {
+        playSound('lose');
+        alert(`❌ LOST! Result was ${resultColor}.`);
+    }
+
+    game.selectedColor = null;
+    updateBalance();
+    saveGame();
+}
 
 /* AVIATOR GAME */
 let aviatorTimer, aviatorMulti = 1.00, isFlying = false, aviatorBetAmt = 0;
@@ -298,77 +353,64 @@ window.spinSlots = function() {
     updateBalance(); saveGame();
 };
 
-/* COLOR PREDICTION BETS */
-window.setBet = (amt) => { game.selectedBet = amt; if($("#playStatus")) $("#playStatus").innerText = "Coins Selected: " + amt; };
-window.setColor = (col) => { game.selectedColor = col; };
-
 /* LEVEL & MEMBERSHIP GATEKEEPER FOR GAME OPENING */
-window.checkAndOpenGame = function(gameId, title, reqLevel) {
-    if (game.membershipPlan === "SUPER_VIP_200" || game.level >= reqLevel) {
-        openGame(gameId, title);
-    } else {
-        playSound('lose');
-        alert(`🔒 LOCKED! Reach Level ${reqLevel} OR Upgrade to ₹200 Super VIP Pass to Instant Unlock!`);
-    }
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadGame();
-    
-    /* 🔒 STRICT COIN RESET LOCK */
-    const resetBtn = $("#resetCoinsBtn");
-    if (resetBtn) {
-        resetBtn.onclick = () => {
-            if (!game.membership || game.membership === false || game.membershipPlan === "Free") {
-                playSound('lose');
-                alert("🔒 Free limit over! Unlimited Coins Reset karne ke liye VIP Pass lein.");
-                window.location.href = "wallet.html";
-                return;
-            }
-            playSound('win');
-            game.balance = 10000;
-            updateBalance(); saveGame();
-            alert("🔄 VIP Coins Reset Successful! (₹10,000 Added)");
-        };
-    }
-});
-
-/* DYNAMIC MODULE LOADER & GATEKEEPER */
 let currentLoadedModule = null;
 
 window.checkAndOpenGame = function(gameId, title, reqLevel, isSuperVipOnly = false) {
-    const isSuperVip = game.membershipPlan === "SUPER_VIP_200";
+    const hasActiveMembership = game.membership === true || game.membershipPlan !== "Free Plan";
 
-    // Tier 1 Check: 50+ Super VIP Exclusive Games Lock
-    if (isSuperVipOnly && !isSuperVip) {
+    if (isSuperVipOnly && !hasActiveMembership) {
         playSound('lose');
-        alert("🔒 SUPER VIP ONLY! ₹200 Pass se saare 50+ Exclusive Games unlock karein.");
+        alert("🔒 VIP ONLY! Wallet me jaakar koi bhi Membership Plan buy karein.");
         window.location.href = "wallet.html";
         return;
     }
 
-    // Tier 2 Check: Level Lock for Basic Games (LVL 1 to 20)
-    if (!isSuperVip && game.level < reqLevel) {
+    if (!hasActiveMembership && game.level < reqLevel) {
         playSound('lose');
-        alert(`🔒 LOCKED! Reach Level ${reqLevel} OR Upgrade to ₹200 Super VIP Pass to Instant Unlock!`);
+        alert(`🔒 LOCKED! Reach Level ${reqLevel} OR Upgrade Membership in Wallet to Unlock!`);
         return;
     }
 
-    openGame(gameId, title);
+    if (typeof window.openGame === "function") {
+        window.openGame(gameId, title);
+    }
     loadGameModule(gameId);
 };
 
 function loadGameModule(gameId) {
-    // Memory Clean-up to prevent browser crash
     if (currentLoadedModule) {
         currentLoadedModule.remove();
         currentLoadedModule = null;
     }
 
-    // Load module script on-demand
     const script = document.createElement("script");
     script.src = `games/${gameId}.js`;
     script.id = `module-${gameId}`;
     document.body.appendChild(script);
     currentLoadedModule = script;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadGame();
+    initColorPrediction();
+
+    /* COIN RESET LOCK */
+    const resetBtn = $("#resetCoinsBtn");
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            if (!game.membership && game.membershipPlan === "Free Plan") {
+                playSound('lose');
+                alert("🔒 Free limit over! Unlimited Coins Reset karne ke liye Membership Pass lein.");
+                window.location.href = "wallet.html";
+                return;
+            }
+            playSound('win');
+            game.balance = 10000;
+            updateBalance(); 
+            saveGame();
+            alert("🔄 VIP Coins Reset Successful! (₹10,000 Added)");
+        };
+    }
+});
+            
