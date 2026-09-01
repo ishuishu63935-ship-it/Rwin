@@ -1,1244 +1,354 @@
-/* ========== RWIN V3 ========== */
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
-body{
-background:#050816;
-color:#fff;
-min-height:100vh;
-padding:20px;
-}
-
-.home{
-max-width:420px;
-margin:auto;
-}
-
-/* Header */
-
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-}
-
-.header h2{
-font-size:30px;
-color:#00E5FF;
-}
-
-.header p{
-font-size:14px;
-color:#aaa;
-margin-top:5px;
-}
-
-.avatar{
-width:55px;
-height:55px;
-border-radius:50%;
-background:#00E5FF;
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:26px;
-color:#050816;
-font-weight:bold;
-box-shadow:0 0 20px #00E5FF;
-}
-
-/* Balance */
-
-.balanceCard{
-
-margin-top:15px;
-
-background:linear-gradient(135deg,#00E5FF,#7C3AED);
-
-padding:25px;
-
-border-radius:22px;
-
-}
-
-.balanceCard p{
-
-font-size:15px;
-
-opacity:.9;
-
-}
-
-.balanceCard h1{
-
-font-size:45px;
-
-margin:10px 0;
-
-}
-
-.balanceCard span{
-
-font-size:13px;
-
-}
-
-/* Membership */
-
-.membershipCard{
-
-margin-top:20px;
-
-background:#10182a;
-
-padding:20px;
-
-border-radius:18px;
-
-}
-
-.membershipCard h3{
-
-color:#00E5FF;
-
-}
-
-.membershipCard p{
-
-margin:10px 0;
-
-color:#bbb;
-
-}
-
-.membershipCard button{
-
-width:100%;
-
-height:50px;
-
-border:none;
-
-border-radius:15px;
-
-background:#00E5FF;
-
-color:#050816;
-
-font-weight:bold;
-
-font-size:16px;
-
-}
-
-/* Grid */
-
-.menuGrid{
-
-display:grid;
-
-grid-template-columns:repeat(2,1fr);
-
-gap:15px;
-
-margin-top:25px;
-
-}
-
-.menuBox{
-
-background:#10182a;
-
-padding:25px;
-
-border-radius:18px;
-
-text-align:center;
-
-text-decoration:none;
-
-color:#fff;
-
-font-size:30px;
-
-transition:.3s;
-
-}
-
-.menuBox span{
-
-display:block;
-
-margin-top:12px;
-
-font-size:15px;
-
-}
-
-.menuBox:hover{
-
-transform:translateY(-5px);
-
-box-shadow:0 0 20px rgba(0,229,255,.35);
-
-}
-
-/* Footer */
-
-footer{
-
-margin-top:35px;
-
-text-align:center;
-
-font-size:12px;
-
-color:#777;
-
-padding-bottom:30px;
-
-}
-/* Day 11 */
-
-.membershipCard h1{
-
-color:#00E5FF;
-
-text-shadow:0 0 20px #00E5FF;
-
-animation:glow 1s infinite alternate;
-
-}
-
-@keyframes glow{
-
-from{
-
-text-shadow:0 0 10px #00E5FF;
-
-}
-
-to{
-
-text-shadow:0 0 30px #00E5FF;
-
-}
-
-}
-
-button{
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-button:hover{
-
-transform:scale(1.03);
-
-box-shadow:0 0 20px rgba(0,229,255,.5);
-
-}
-/* Leaderboard */
-
-.leaderCard{
-background:#10182a;
-border-radius:18px;
-padding:18px;
-margin-top:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border:1px solid rgba(255,255,255,.08);
-transition:.3s;
-}
-
-.leaderCard:hover{
-transform:translateY(-3px);
-box-shadow:0 0 20px rgba(0,229,255,.35);
-}
-
-.leaderCard span{
-font-size:30px;
-}
-
-.leaderCard h3{
-font-size:18px;
-}
-
-.leaderCard p{
-color:#00E5FF;
-font-weight:bold;
-}
-/* Settings */
-
-.settingCard{
-
-background:#10182a;
-
-padding:18px;
-
-margin-top:15px;
-
-border-radius:18px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-border:1px solid rgba(255,255,255,.08);
-
-}
-
-.settingCard span{
-
-font-weight:600;
-
-}
-
-.settingCard p{
-
-color:#00E5FF;
-
-}
-
-.settingCard input{
-
-width:22px;
-
-height:22px;
-
-}
-.membershipCard input{
-width:100%;
-height:50px;
-margin:10px 0;
-padding:0 15px;
-border:none;
-border-radius:12px;
-background:#1b2438;
-color:white;
-font-size:16px;
-outline:none;
-}
-/* Home 2.0 */
-
-.container{
-
-max-width:420px;
-
-margin:auto;
-
-padding:20px;
-
-}
-
-.topBar{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:25px;
-
-}
-
-.topBar h1{
-
-color:#00E5FF;
-
-font-size:32px;
-
-}
-
-.topBar p{
-
-color:#aaa;
-
-margin-top:5px;
-
-}
-
-.profileIcon{
-
-width:60px;
-
-height:60px;
-
-border-radius:50%;
-
-background:#00E5FF;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-font-size:28px;
-
-color:#050816;
-
-box-shadow:0 0 25px #00E5FF;
-
-}
-
-.quickActions{
-
-display:grid;
-
-grid-template-columns:repeat(2,1fr);
-
-gap:15px;
-
-margin-top:25px;
-
-}
-
-.actionCard{
-
-background:#10182a;
-
-padding:25px;
-
-border-radius:18px;
-
-text-align:center;
-
-text-decoration:none;
-
-color:white;
-
-font-size:28px;
-
-transition:.3s;
-
-}
-
-.actionCard span{
-
-display:block;
-
-margin-top:10px;
-
-font-size:15px;
-
-}
-
-.actionCard:hover{
-
-transform:translateY(-5px);
-
-box-shadow:0 0 20px rgba(0,229,255,.4);
-
-}
-/* Stats Card */
-
-.statsCard,
-.memberStatus{
-
-background:#10182a;
-
-margin-top:20px;
-
-padding:20px;
-
-border-radius:18px;
-
-}
-
-.statsCard h3,
-.memberStatus h3{
-
-color:#00E5FF;
-
-margin-bottom:15px;
-
-}
-
-.statRow{
-
-display:flex;
-
-justify-content:space-between;
-
-padding:10px 0;
-
-border-bottom:1px solid rgba(255,255,255,.08);
-
-}
-
-.statRow:last-child{
-
-border-bottom:none;
-
-}
-
-.upgradeBtn{
-
-display:block;
-
-margin-top:15px;
-
-text-align:center;
-
-background:#00E5FF;
-
-color:#050816;
-
-padding:12px;
-
-border-radius:12px;
-
-text-decoration:none;
-
-font-weight:bold;
-
-transition:.3s;
-
-}
-
-.upgradeBtn:hover{
-
-transform:scale(1.03);
-
-}
-/* Bottom Navigation */
-
-.bottomNav{
-
-position:fixed;
-
-left:0;
-
-bottom:0;
-
-width:100%;
-
-background:#10182a;
-
-display:flex;
-
-justify-content:space-around;
-
-align-items:center;
-
-padding:12px 0;
-
-border-top:1px solid rgba(255,255,255,.08);
-
-}
-
-.navItem{
-
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
-text-decoration:none;
-
-color:#999;
-
-font-size:14px;
-
-transition:.3s;
-
-}
-
-.navItem span{
-
-margin-top:4px;
-
-font-size:12px;
-
-}
-
-.navItem.active{
-
-color:#00E5FF;
-
-}
-
-.navItem:hover{
-
-color:#00E5FF;
-
-}
-/* Welcome Banner */
-
-.welcomeBanner{
-
-margin-top:20px;
-
-padding:20px;
-
-border-radius:18px;
-
-background:linear-gradient(135deg,#00E5FF,#7C3AED);
-
-text-align:center;
-
-}
-
-.welcomeBanner h2{
-
-font-size:24px;
-
-margin-bottom:10px;
-
-color:white;
-
-}
-
-.welcomeBanner p{
-
-font-size:15px;
-
-color:white;
-
-opacity:.9;
-
-}
-/* Game Page */
-
-.gameContainer{
-
-padding:20px;
-
-}
-
-.timerCard{
-
-margin-top:20px;
-
-background:#1b263b;
-
-padding:20px;
-
-border-radius:15px;
-
-text-align:center;
-
-}
-
-.bigSmall{
-
-display:flex;
-
-gap:15px;
-
-margin-top:20px;
-
-}
-
-.bigBtn{
-
-flex:1;
-
-padding:15px;
-
-background:#00C853;
-
-border:none;
-
-border-radius:10px;
-
-color:white;
-
-font-size:18px;
-
-}
-
-.smallBtn{
-
-flex:1;
-
-padding:15px;
-
-background:#D50000;
-
-border:none;
-
-border-radius:10px;
-
-color:white;
-
-font-size:18px;
-
-}
-/* Color Panel */
-
-.colorPanel,
-.numberPanel{
-
-margin-top:25px;
-
-background:#10182a;
-
-padding:20px;
-
-border-radius:18px;
-
-}
-
-.colorGrid{
-
-display:flex;
-
-gap:10px;
-
-margin-top:15px;
-
-}
-
-.colorGrid button{
-
-flex:1;
-
-padding:15px;
-
-border:none;
-
-border-radius:12px;
-
-font-weight:bold;
-
-color:white;
-
-}
-
-.green{
-
-background:#00C853;
-
-}
-
-.red{
-
-background:#D50000;
-
-}
-
-.violet{
-
-background:#8E24AA;
-
-}
-
-.numberGrid{
-
-display:grid;
-
-grid-template-columns:repeat(5,1fr);
-
-gap:10px;
-
-margin-top:15px;
-
-}
-
-.numberGrid button{
-
-height:55px;
-
-border:none;
-
-border-radius:12px;
-
-background:#1E293B;
-
-color:white;
-
-font-size:18px;
-
-transition:.3s;
-
-}
-
-.numberGrid button:hover{
-
-background:#00E5FF;
-
-color:#000;
-
-}
-/* Stats & Recent */
-
-.historyPanel,
-.recentPanel{
-
-margin-top:25px;
-
-background:#10182a;
-
-padding:20px;
-
-border-radius:18px;
-
-}
-
-.historyCard,
-.recentCard{
-
-background:#1E293B;
-
-padding:15px;
-
-border-radius:12px;
-
-margin-top:12px;
-
-}
-
-.historyCard p,
-.recentCard p{
-
-margin:8px 0;
-
-color:white;
-
-}
-/* Live Status */
-
-.liveStatus{
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-background:#10182a;
-
-padding:12px 18px;
-
-border-radius:50px;
-
-width:max-content;
-
-margin:15px auto;
-
-font-weight:bold;
-
-color:#00E5FF;
-
-}
-
-.liveDot{
-
-width:12px;
-
-height:12px;
-
-border-radius:50%;
-
-background:#00FF66;
-
-animation:pulse 1s infinite;
-
-}
-
-@keyframes pulse{
-
-0%{
-
-transform:scale(1);
-
-opacity:1;
-
-}
-
-50%{
-
-transform:scale(1.5);
-
-opacity:.4;
-
-}
-
-100%{
-
-transform:scale(1);
-
-opacity:1;
-
-}
-
-}
-/* Level Panel */
-
-.levelPanel{
-
-margin-top:25px;
-
-background:#10182a;
-
-padding:20px;
-
-border-radius:18px;
-
-}
-
-.xpBar{
-
-width:100%;
-
-height:12px;
-
-background:#222;
-
-border-radius:50px;
-
-overflow:hidden;
-
-margin:15px 0;
-
-}
-
-.xpFill{
-
-width:20%;
-
-height:100%;
-
-background:linear-gradient(90deg,#00E5FF,#00FF66);
-
-border-radius:50px;
-
-transition:.5s;
-
-}/* Premium Glass Effect */
-
-.balanceCard,
-.timerCard,
-.colorPanel,
-.numberPanel,
-.levelPanel,
-.historyPanel,
-.recentPanel{
-
-backdrop-filter:blur(12px);
-
-background:rgba(16,24,42,.85);
-
-border:1px solid rgba(255,255,255,.08);
-
-box-shadow:0 10px 25px rgba(0,0,0,.25);
-
-transition:.3s;
-
-}
-
-.balanceCard:hover,
-.timerCard:hover,
-.colorPanel:hover,
-.numberPanel:hover,
-.levelPanel:hover,
-.historyPanel:hover,
-.recentPanel:hover{
-
-transform:translateY(-4px);
-
-}
-button{
-
-cursor:pointer;
-
-transition:.25s;
-
-}
-
-button:active{
-
-transform:scale(.95);
-
-}
-body{
-
-background:linear-gradient(180deg,#050816,#0f172a);
-
-font-family:'Poppins',sans-serif;
-
-color:white;
-
-}
-#loginStatus{
-margin-top:10px;
-text-align:center;
-font-size:14px;
-color:#00E5FF;
-min-height:20px;
-}
-
-.loading{
-opacity:.7;
-pointer-events:none;
-}
-/* ==========================
-RWIN Loader
-========================== */
-
-.loader{
-
-width:100%;
-height:100vh;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-background:linear-gradient(180deg,#050816,#0F172A);
-
-}
-
-.loaderContent{
-
-text-align:center;
-
-width:90%;
-max-width:350px;
-
-}
-
-.logo{
-
-font-size:60px;
-
-font-weight:700;
-
-color:#00E5FF;
-
-letter-spacing:4px;
-
-text-shadow:0 0 25px #00E5FF;
-
-animation:logoGlow 1.2s infinite alternate;
-
-}
-
-.loadingText{
-
-margin-top:15px;
-
-color:#B8C5D6;
-
-font-size:16px;
-
-}
-
-.loadingBar{
-
-margin-top:30px;
-
-height:10px;
-
-background:#1E293B;
-
-border-radius:30px;
-
-overflow:hidden;
-
-}
-
-.progress{
-
-width:0%;
-
-height:100%;
-
-background:linear-gradient(90deg,#00E5FF,#00FF99);
-
-animation:loading 2.5s linear forwards;
-
-}
-
-.version{
-
-margin-top:20px;
-
-font-size:14px;
-
-color:#7C8CA3;
-
-letter-spacing:2px;
-
-}
-
-@keyframes loading{
-
-0%{
-width:0%;
+/* ============================================================
+   RWIN - VIP CYBER ARCADE & CASINO ARENA (MASTER STYLESHEET)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-dark: #070a12;
+  --bg-card: #111827;
+  --bg-accent: #0f172a;
+  --border-color: #1f293d;
+  
+  --neon-blue: #00E5FF;
+  --neon-pink: #ec4899;
+  --neon-gold: #f59e0b;
+  --neon-green: #10b981;
+  --neon-purple: #8b5cf6;
+  --neon-red: #ef4444;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  min-height: 100vh;
+  padding-bottom: 85px;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.gameContainer, .app-container {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: var(--bg-dark);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+/* ============================================================
+   HEADER & LEVEL BAR
+   ============================================================ */
+
+.topBar, .header {
+  background: var(--bg-accent);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e293b;
+}
+
+.level-badge {
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+}
+
+.xp-progress-outer {
+  width: 100%;
+  background: #1e293b;
+  height: 6px;
+  border-radius: 10px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.xp-progress-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+  transition: width 0.3s ease;
+}
+
+/* ============================================================
+   BALANCE CARD & WELCOME BANNER
+   ============================================================ */
+
+.balanceCard {
+  background: linear-gradient(135deg, #1e293b, var(--bg-accent));
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 18px;
+  margin: 12px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 229, 255, 0.08);
+}
+
+.balanceCard h1 {
+  color: var(--neon-blue);
+  font-size: 32px;
+  margin: 6px 0;
+  font-weight: 800;
+  text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
 }
 
-100%{
-width:100%;
+.welcome-banner {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin: 12px;
+  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3);
 }
 
+.welcome-banner h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
-
-@keyframes logoGlow{
-
-0%{
 
-text-shadow:0 0 15px #00E5FF;
-
-transform:scale(1);
-
+.welcome-banner p {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
 }
-
-100%{
-
-text-shadow:0 0 35px #00E5FF;
 
-transform:scale(1.04);
+/* ============================================================
+   LIVE TICKER
+   ============================================================ */
 
+.live-ticker {
+  background: rgba(16, 185, 129, 0.1);
+  border-top: 1px solid rgba(16, 185, 129, 0.2);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 8px 14px;
+  font-size: 11px;
+  color: var(--neon-green);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+.ticker-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--neon-green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--neon-green);
+  animation: pulse 1.5s infinite;
 }
-/* ==========================
-LOGIN PAGE
-========================== */
-
-.loginContainer{
-
-width:100%;
-min-height:100vh;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-padding:20px;
 
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.3); }
 }
 
-.loginCard{
+/* ============================================================
+   ARENA GRID & GAME CARDS
+   ============================================================ */
 
-width:100%;
-max-width:380px;
-
-background:rgba(16,24,42,.92);
-
-border:1px solid rgba(255,255,255,.08);
-
-border-radius:25px;
-
-padding:35px 25px;
-
-backdrop-filter:blur(12px);
-
-box-shadow:0 15px 35px rgba(0,0,0,.35);
-
+.arena-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px;
 }
-
-.loginLogo{
 
-text-align:center;
-
-font-size:42px;
-
-color:#00E5FF;
-
-text-shadow:0 0 20px #00E5FF;
-
+.game-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
 }
-
-.loginSub{
-
-text-align:center;
-
-margin:12px 0 30px;
-
-color:#B8C5D6;
 
+.game-card:active {
+  transform: scale(0.96);
+  border-color: var(--neon-blue);
 }
 
-.loginCard input{
+.game-card.hot::after {
+  content: 'HOT 🔥';
+  position: absolute;
+  top: 8px;
+  right: -24px;
+  background: var(--neon-red);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 2px 25px;
+  transform: rotate(45deg);
+}
 
-width:100%;
-
-height:55px;
-
-margin-bottom:18px;
-
-padding:0 18px;
-
-border:none;
-
-border-radius:15px;
-
-background:#1B2438;
-
-color:white;
-
-font-size:16px;
-
-outline:none;
-
+.game-card.locked {
+  opacity: 0.8;
+  border-color: rgba(245, 158, 11, 0.3);
 }
-
-.loginCard button{
-
-width:100%;
-
-height:55px;
-
-margin-top:10px;
-
-border:none;
-
-border-radius:15px;
 
-font-size:16px;
-
-font-weight:700;
-
-background:#00E5FF;
-
-color:#050816;
-
-cursor:pointer;
-
-transition:.3s;
-
+.game-icon {
+  font-size: 38px;
+  margin-bottom: 6px;
 }
-
-.loginCard button:hover{
-
-transform:translateY(-2px);
 
+.game-card h3 {
+  font-size: 14px;
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
 }
 
-.signupBtn{
-
-background:#7C3AED !important;
-
-color:white !important;
-
+.game-card p {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 2px;
 }
-
-.loginFooter{
 
-margin-top:25px;
-
-text-align:center;
-
-font-size:13px;
-
-color:#7C8CA3;
-
-}
+/* ============================================================
+   GAME CONTAINERS & INTERACTION
+   ============================================================ */
+
+.action-box {
+  background: var(--bg-card);
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  margin: 10px 0;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+input[type="number"], input[type="text"] {
+  outline: none;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #fff;
+  border-radius: 8px;
+}
+
+/* ============================================================
+   COLOR PREDICTION, SLOTS, HI-LO UI
+   ============================================================ */
+
+.num-btn {
+  padding: 12px 0;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+}
+.num-btn.green { background: var(--neon-green); }
+.num-btn.red { background: var(--neon-red); }
+.num-btn.violet { background: var(--neon-purple); }
+
+.slots-display {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background: #000;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid var(--neon-gold);
+  margin: 15px 0;
+}
+
+.slot-reel {
+  background: #1f293d;
+  font-size: 40px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.card-display {
+  font-size: 60px;
+  margin: 15px 0;
+  background: #0f172a;
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 12px;
+  border: 2px solid var(--neon-blue);
+}
+
+/* ============================================================
+   LEADERBOARD & NAVIGATION
+   ============================================================ */
+
+.leaderboard-box {
+  background: var(--bg-accent);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.lb-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #1e293b;
+  font-size: 12px;
+}
+
+.bottomNav, .navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: #0d121f;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.navItem, .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 500;
+  gap: 4px;
+  width: 25%;
+}
+
+.navItem.active, .nav-item.active {
+  color: var(--neon-blue);
+  font-weight: 600;
+  }
