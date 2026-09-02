@@ -1,52 +1,64 @@
-/* MODULE: CYBER DERBY HORSE RACE (SUPER VIP LEVEL 90) */
-(function initHorseRace() {
-    console.log("🐎 Cyber Derby Loaded!");
+/* MODULE: CYBER DERBY HORSE RACE */
+(function initHorseRaceModule() {
+    console.log("🐎 Cyber Derby Race Engine Loaded!");
     const container = document.getElementById("game-horserace");
     if(!container) return;
 
     container.innerHTML = `
-        <div class="action-box">
-            <h2 style="color:var(--neon-gold);">🐎 Cyber Derby Horse Race</h2>
-            <p style="font-size:11px; color:#94a3b8;">Super VIP Level 90 Required • Pick your Cyber Stallion for 3X Payout!</p>
-            <div id="horseTrack" style="font-size:28px; margin:15px 0; font-weight:800; color:var(--neon-gold); background:#022c22; padding:15px; border-radius:10px; border:1px solid #10b981;">
-                🐎 #1 Neon Blaze | 🐎 #2 Cyber Flash | 🐎 #3 Gold Runner
+        <div class="action-box" style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:18px; text-align:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span style="font-size:14px; color:var(--neon-gold); font-weight:700;">🐎 Cyber Derby Race</span>
+                <span style="font-size:11px; color:var(--neon-gold);">Super VIP Exclusive</span>
             </div>
-            <input type="number" id="horseBet" value="1000" style="padding:8px; width:50%; text-align:center; border-radius:6px; background:#0f172a; color:#fff; border:1px solid #334155;">
-            <br><br>
-            <button onclick="window.raceHorse(1)" style="padding:10px 14px; background:var(--neon-blue); color:#000; border:none; font-weight:800; border-radius:8px; margin:3px; cursor:pointer;">#1 NEON BLAZE (3X)</button>
-            <button onclick="window.raceHorse(2)" style="padding:10px 14px; background:var(--neon-pink); color:#fff; border:none; font-weight:800; border-radius:8px; margin:3px; cursor:pointer;">#2 CYBER FLASH (3X)</button>
-            <button onclick="window.raceHorse(3)" style="padding:10px 14px; background:var(--neon-gold); color:#000; border:none; font-weight:800; border-radius:8px; margin:3px; cursor:pointer;">#3 GOLD RUNNER (3X)</button>
+
+            <!-- Race Track Visual -->
+            <div style="background:#050811; border:1px solid #334155; border-radius:14px; padding:12px; margin:12px 0; text-align:left;">
+                <div style="margin-bottom:8px; font-size:12px; color:#fff;" id="horseTrack1">🔴 #1 Cyber Thunder: 🐎 ------------------- 🏁</div>
+                <div style="margin-bottom:8px; font-size:12px; color:#fff;" id="horseTrack2">🟢 #2 Neon Runner: 🐎 ------------------- 🏁</div>
+                <div style="font-size:12px; color:#fff;" id="horseTrack3">🔵 #3 Velocity Blade: 🐎 ------------------- 🏁</div>
+            </div>
+
+            <!-- Quick Bet Controls -->
+            <div style="display:flex; gap:6px; margin-bottom:12px;">
+                <input type="number" id="horseBetInput" value="500" style="padding:10px; width:50%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
+                <button onclick="document.getElementById('horseBetInput').value = Math.floor(Number(document.getElementById('horseBetInput').value)*2)" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
+                <button onclick="document.getElementById('horseBetInput').value = window.game.balance" style="padding:8px 12px; background:#1e293b; color:var(--neon-pink); border:1px solid var(--neon-pink); border-radius:8px;">MAX</button>
+            </div>
+
+            <!-- Horse Bet Buttons -->
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
+                <button onclick="window.startDerbyRace(1)" style="padding:12px 4px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; font-size:11px;">#1 THUNDER (3X)</button>
+                <button onclick="window.startDerbyRace(2)" style="padding:12px 4px; background:#10b981; color:#000; font-weight:800; border-radius:8px; font-size:11px;">#2 NEON (3X)</button>
+                <button onclick="window.startDerbyRace(3)" style="padding:12px 4px; background:#3b82f6; color:#fff; font-weight:800; border-radius:8px; font-size:11px;">#3 BLADE (3X)</button>
+            </div>
         </div>
     `;
 
-    window.raceHorse = function(pick) {
-        const bet = Number(document.getElementById("horseBet").value) || 1000;
-        if (game.balance < bet) return alert("Low Balance!");
+    window.startDerbyRace = function(chosenHorse) {
+        const bet = Number(document.getElementById("horseBetInput").value) || 500;
+        if (window.game.balance < bet) {
+            window.showCasinoModal(false, "Low Balance", "0", "⚠️");
+            return;
+        }
 
-        game.balance -= bet;
-        updateBalance();
+        window.game.balance -= bet;
+        window.updateBalance();
+        window.addXP(60);
 
-        const track = document.getElementById("horseTrack");
-        track.innerText = "🏁 RACE STARTED... 🐎💨";
+        const winner = Math.floor(Math.random() * 3) + 1;
 
         setTimeout(() => {
-            const winner = Math.floor(Math.random() * 3) + 1;
-            const names = ["", "#1 Neon Blaze", "#2 Cyber Flash", "#3 Gold Runner"];
-            track.innerText = `🏆 WINNER: ${names[winner]}!`;
-
-            if (pick === winner) {
+            if (chosenHorse === winner) {
                 const won = bet * 3;
-                game.balance += won;
-                addXP(200);
-                playSound('win');
-                if (typeof confetti === 'function') confetti();
-                alert(`🎉 DERBY WIN! Horse ${names[winner]} Won! | Earned ₹${won}`);
+                window.game.balance += won;
+                window.showCasinoModal(true, `Horse #${winner} Won Race!`, "₹" + won, "🐎");
             } else {
-                playSound('lose');
-                alert(`❌ RACE LOST! Winner was ${names[winner]}`);
+                window.showCasinoModal(false, `Horse #${winner} Won Race`, "₹" + bet, "🐎");
             }
-            updateBalance();
-            saveGame();
-        }, 1200);
+
+            window.updateBalance();
+            window.saveGame();
+        }, 400);
     };
 })();
+
