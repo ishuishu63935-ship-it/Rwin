@@ -326,7 +326,72 @@ window.exitToArena = function() {
 </div>
  <!-- THREE.JS 3D ENGINE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  
+  <script>
+  // Purana code (openGame, exitToArena wagairah) yahan rahega...
+
+  window.renderFullGameGrid = function() {
+      const hub = document.getElementById("arenaHub");
+      if (!hub) return;
+
+      const allGames = [
+          // Basic / Progression Suite (1 to 20)
+          { id: "color", title: "Color Prediction", icon: "🎨", lvl: 1, vip: false },
+          { id: "aviator", title: "Aviator Crash", icon: "🚀", lvl: 1, vip: false },
+          { id: "mines", title: "Cyber Mines", icon: "💣", lvl: 2, vip: false },
+          { id: "dragon", title: "Dragon vs Tiger", icon: "🐉", lvl: 2, vip: false },
+          { id: "hilo", title: "Hi-Lo Cards", icon: "🃏", lvl: 3, vip: false },
+          { id: "slots", title: "Cyber Slots", icon: "🎰", lvl: 5, vip: false },
+          { id: "dice2", title: "Cyber Dice 2.0", icon: "🎲", lvl: 6, vip: false },
+          
+          // Super VIP Vault Suite (VIP Pass Exclusive)
+          { id: "plinko", title: "Plinko Drop", icon: "🟢", lvl: 1, vip: true },
+          { id: "roulette", title: "Cyber Roulette", icon: "🎡", lvl: 1, vip: true },
+          { id: "cryptocandle", title: "BTC Crypto Candle", icon: "📈", lvl: 1, vip: true },
+          { id: "penalty", title: "Penalty Shootout", icon: "⚽", lvl: 1, vip: true },
+          { id: "chickencross", title: "Chicken Road Cross", icon: "🐔", lvl: 1, vip: true },
+          { id: "horserace", title: "Cyber Derby Race", icon: "🐎", lvl: 1, vip: true },
+          { id: "wheel", title: "Fortune Wheel 100X", icon: "🌟", lvl: 1, vip: true },
+          { id: "blackjack", title: "Cyber Blackjack", icon: "🃏", lvl: 1, vip: true }
+      ];
+
+      for(let i = 16; i <= 70; i++) {
+          allGames.push({
+              id: `game_${i}`,
+              title: `VIP Arena Game #${i}`,
+              icon: i % 2 === 0 ? "🔥" : "💎",
+              lvl: 1,
+              vip: true
+          });
+      }
+
+      let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">FREE / BASIC GAMES (LEVEL PROGRESSION)</h3><div class="arena-grid">`;
+      let vipHtml = `<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (VIP PASS EXCLUSIVE)</h3><div class="arena-grid">`;
+
+      allGames.forEach(g => {
+          const cardMarkup = `
+              <div class="game-card ${g.vip ? 'locked' : ''}" onclick="checkAndOpenGame('${g.id}', '${g.title}', ${g.lvl}, ${g.vip})">
+                  <div class="game-icon">${g.icon}</div>
+                  <h3>${g.title}</h3>
+                  <p style="color:${g.vip ? 'var(--neon-gold)' : '#94a3b8'};">${g.vip ? '🔒 VIP Pass' : 'LVL ' + g.lvl + ' Req'}</p>
+              </div>
+          `;
+          if (g.vip) vipHtml += cardMarkup;
+          else basicHtml += cardMarkup;
+      });
+
+      basicHtml += `</div>`;
+      vipHtml += `</div>`;
+
+      hub.innerHTML = basicHtml + vipHtml;
+  };
+
+  // Page load hote hi sare 70 games dikhane ke liye:
+  document.addEventListener("DOMContentLoaded", () => {
+      window.renderFullGameGrid();
+  });
+</script>
 </body>
+  
+
   </html>
   
