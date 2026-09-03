@@ -1,78 +1,118 @@
-/* MODULE: 3D CARD FLIP HI-LO STREAK */
+/* MODULE: HI-LO STREAK 3.0 (DELUXE CARD ENGINE) */
 (function initHiLoModule() {
-    console.log("🃏 3D Hi-Lo Streak Engine Loaded!");
+    console.log("🃏 Hi-Lo Streak 3.0 Engine Loaded!");
     const container = document.getElementById("game-hilo");
-    if(!container) return;
+    if (!container) return;
 
-    let streakCount = 0;
+    const cards = [
+        { rank: "2", val: 2 }, { rank: "3", val: 3 }, { rank: "4", val: 4 },
+        { rank: "5", val: 5 }, { rank: "6", val: 6 }, { rank: "7", val: 7 },
+        { rank: "8", val: 8 }, { rank: "9", val: 9 }, { rank: "10", val: 10 },
+        { rank: "J", val: 11 }, { rank: "Q", val: 12 }, { rank: "K", val: 13 }, { rank: "A", val: 14 }
+    ];
+
+    let currentCard = cards[Math.floor(Math.random() * cards.length)];
+    let streak = 0;
+    let hiloBetAmt = 0;
+    let inProgress = false;
 
     container.innerHTML = `
         <div class="action-box" style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:18px; text-align:center;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-size:12px; color:var(--neon-gold); font-weight:700;" id="hiloStreakBadge">🔥 Streak: 0X</span>
-                <span style="font-size:11px; color:#94a3b8;">Level 3 Unlocked</span>
+            <!-- Header Bar -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:#050811; padding:10px 14px; border-radius:12px; border:1px solid #1e293b;">
+                <span style="font-size:14px; color:var(--neon-blue); font-weight:800;">🃏 Hi-Lo Streak</span>
+                <span style="font-size:11px; color:#94a3b8; font-weight:600;">LVL 3 Required</span>
             </div>
 
-            <!-- 3D Card Display -->
-            <div id="card3D" style="perspective: 1000px; margin:15px 0;">
-                <div id="cardInner" style="width:110px; height:150px; margin:auto; background:linear-gradient(135deg, #1e293b, #0f172a); border:2px solid var(--neon-blue); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:55px; font-weight:800; color:#fff; box-shadow:0 0 20px rgba(0,229,255,0.2); transition:transform 0.4s ease;">
-                    <span id="currentCardNum">7</span>
-                </div>
+            <!-- Card & Multiplier Display -->
+            <div style="background:#050811; border:2px solid #1e293b; border-radius:14px; padding:20px; margin:12px 0;">
+                <div style="font-size:11px; color:#94a3b8; margin-bottom:4px;">CURRENT CARD</div>
+                <div id="hiloCardDisplay" style="font-size:64px; font-weight:800; color:var(--neon-blue); text-shadow:0 0 15px rgba(0,229,255,0.4);">${currentCard.rank}</div>
+                <div id="hiloStreakText" style="font-size:13px; color:var(--neon-gold); font-weight:700; margin-top:8px;">Streak: 0 | Multiplier: 1.00X</div>
             </div>
 
-            <!-- Bet Control Buttons -->
-            <div style="display:flex; justify-content:center; gap:6px; margin-bottom:12px;">
-                <input type="number" id="hiloBet" value="200" style="padding:8px; width:45%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                <button onclick="document.getElementById('hiloBet').value = Math.floor(Number(document.getElementById('hiloBet').value)*2)" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
-                <button onclick="document.getElementById('hiloBet').value = window.game.balance" style="padding:8px 12px; background:#1e293b; color:var(--neon-pink); border:1px solid var(--neon-pink); border-radius:8px;">MAX</button>
+            <!-- Quick Bet Controls -->
+            <div style="display:flex; gap:6px; margin-bottom:14px;">
+                <input type="number" id="hiloBetInput" value="300" style="padding:10px; width:50%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
+                <button onclick="document.getElementById('hiloBetInput').value = Math.floor(Number(document.getElementById('hiloBetInput').value)*2); if(window.CasinoAudio) window.CasinoAudio.playChip();" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px; cursor:pointer;">2X</button>
+                <button onclick="document.getElementById('hiloBetInput').value = window.game.balance; if(window.CasinoAudio) window.CasinoAudio.playChip();" style="padding:8px 12px; background:#1e293b; color:var(--neon-pink); border:1px solid var(--neon-pink); border-radius:8px; cursor:pointer;">MAX</button>
             </div>
 
-            <!-- Higher / Lower Action Buttons -->
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <button onclick="window.playHiLo3D('HIGHER')" style="padding:14px; background:var(--neon-green); color:#000; font-weight:800; border-radius:12px; font-size:15px;">⬆️ HIGHER (2X)</button>
-                <button onclick="window.playHiLo3D('LOWER')" style="padding:14px; background:var(--neon-red); color:#fff; font-weight:800; border-radius:12px; font-size:15px;">⬇️ LOWER (2X)</button>
+            <!-- Action Controls -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                <button onclick="window.guessHiLo('HIGHER')" style="padding:14px; background:linear-gradient(135deg, var(--neon-green), #059669); color:#000; font-weight:800; border-radius:12px; border:none; cursor:pointer;">⬆️ HIGHER</button>
+                <button onclick="window.guessHiLo('LOWER')" style="padding:14px; background:linear-gradient(135deg, #ef4444, #b91c1c); color:#fff; font-weight:800; border-radius:12px; border:none; cursor:pointer;">⬇️ LOWER</button>
             </div>
+
+            <button id="cashoutHiloBtn" onclick="window.cashoutHiLo()" style="width:100%; padding:12px; background:linear-gradient(135deg, var(--neon-gold), #d97706); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer; display:none;">💰 CASHOUT (₹0)</button>
         </div>
     `;
 
-    window.playHiLo3D = function(choice) {
-        const bet = Number(document.getElementById("hiloBet").value) || 200;
-        if (window.game.balance < bet) {
-            window.showCasinoModal(false, "Low Balance", "0", "⚠️");
-            return;
+    window.guessHiLo = function(guess) {
+        if (!inProgress) {
+            hiloBetAmt = Number(document.getElementById("hiloBetInput").value) || 300;
+            if (window.game.balance < hiloBetAmt) {
+                window.showCasinoModal(false, "Low Balance", "0", "⚠️");
+                return;
+            }
+            window.game.balance -= hiloBetAmt;
+            window.updateBalance();
+            inProgress = true;
+            streak = 0;
         }
 
-        window.game.balance -= bet;
+        if (window.CasinoAudio) window.CasinoAudio.playChip();
+
+        const nextCard = cards[Math.floor(Math.random() * cards.length)];
+        const display = document.getElementById("hiloCardDisplay");
+        display.innerText = nextCard.rank;
+
+        let isCorrect = false;
+        if (guess === 'HIGHER' && nextCard.val >= currentCard.val) isCorrect = true;
+        if (guess === 'LOWER' && nextCard.val <= currentCard.val) isCorrect = true;
+
+        currentCard = nextCard;
+
+        if (isCorrect) {
+            streak++;
+            const multi = (1 + (streak * 0.5)).toFixed(2);
+            const currentWin = Math.floor(hiloBetAmt * multi);
+
+            document.getElementById("hiloStreakText").innerText = `Streak: ${streak} | Multiplier: ${multi}X`;
+            
+            const coBtn = document.getElementById("cashoutHiloBtn");
+            coBtn.style.display = "block";
+            coBtn.innerText = `💰 CASHOUT (₹${currentWin})`;
+        } else {
+            inProgress = false;
+            streak = 0;
+            document.getElementById("hiloStreakText").innerText = "Streak: 0 | Multiplier: 1.00X";
+            document.getElementById("cashoutHiloBtn").style.display = "none";
+
+            if (window.CasinoAudio) window.CasinoAudio.playTick();
+            window.showCasinoModal(false, "Wrong Guess!", "₹" + hiloBetAmt, "🃏");
+        }
+    };
+
+    window.cashoutHiLo = function() {
+        if (!inProgress || streak === 0) return;
+
+        const multi = (1 + (streak * 0.5));
+        const won = Math.floor(hiloBetAmt * multi);
+
+        window.game.balance += won;
+        window.addXP(70);
         window.updateBalance();
+        window.saveGame();
 
-        const cardInner = document.getElementById("cardInner");
-        cardInner.style.transform = "rotateY(180deg)";
+        inProgress = false;
+        streak = 0;
 
-        setTimeout(() => {
-            const nextCard = Math.floor(Math.random() * 12) + 1;
-            document.getElementById("currentCardNum").innerText = nextCard;
-            cardInner.style.transform = "rotateY(0deg)";
+        document.getElementById("hiloStreakText").innerText = "Streak: 0 | Multiplier: 1.00X";
+        document.getElementById("cashoutHiloBtn").style.display = "none";
 
-            let win = false;
-            if (choice === 'HIGHER' && nextCard >= window.game.currentCard) win = true;
-            if (choice === 'LOWER' && nextCard <= window.game.currentCard) win = true;
-
-            if (win) {
-                streakCount++;
-                const won = Math.floor(bet * (1.95 + (streakCount * 0.1)));
-                window.game.balance += won;
-                window.addXP(70);
-                document.getElementById("hiloStreakBadge").innerText = `🔥 Streak: ${streakCount}X`;
-                window.showCasinoModal(true, `Streak Win (${streakCount}X)!`, "₹" + won, "🃏");
-            } else {
-                streakCount = 0;
-                document.getElementById("hiloStreakBadge").innerText = `🔥 Streak: 0X`;
-                window.showCasinoModal(false, "Streak Broken", "₹" + bet, "🃏");
-            }
-
-            window.game.currentCard = nextCard;
-            window.updateBalance();
-            window.saveGame();
-        }, 200);
+        if (window.CasinoAudio) window.CasinoAudio.playWin();
+        window.showCasinoModal(true, `Cashed Out (${multi.toFixed(2)}X)!`, "₹" + won, "🃏");
     };
 })();
+    
