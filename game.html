@@ -9,6 +9,13 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="js/core-engine.js"></script>
 <script src="games/master-games.js"></script>
+<style>
+/* GAME SCREEN DISPLAY FIX */
+.game-screen { display: none; padding: 10px; color: #fff; width: 100%; min-height: 350px; }
+.game-screen.active { display: block !important; }
+.back-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #0f172a; border-radius: 12px; margin: 10px 12px; border: 1px solid #1e293b; }
+.back-btn { padding: 6px 12px; background: #1e293b; color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; }
+</style>
 </head>
 
 <body>
@@ -87,28 +94,23 @@ window.exitToArena = function() {
 };
 
 window.checkAndOpenGame = function(gameId, title, reqLvl, isVip) {
-    const userLevel = (window.game && window.game.level) ? window.game.level : 1;
     const tier = window.CasinoSession ? window.CasinoSession.getTier() : 'free';
 
-    // 1. SUPER VIP EXCLUSIVE GAMES (GAMES 21-70)
     if (isVip && tier !== 'vip') {
         window.showCasinoModal(false, "👑 ₹200 Super VIP Exclusive", "Upgrade to ₹200 VIP Vault Pass to unlock all 70+ Casino Games!", "👑");
         return;
     }
 
-    // 2. FREE TIER ACCESS (LEVEL 1 TO LEVEL 4 ARE COMPLETELY FREE FOR ALL USERS)
     if (tier === 'free' && reqLvl > 4) {
-        window.showCasinoModal(false, "🔒 Starter Pass Required", `Games above Level 4 require Starter Pass (₹9/₹49/₹99) to unlock! You can play Level 1-4 Games for FREE.`, "⛔");
+        window.showCasinoModal(false, "🔒 Starter Pass Required", `Games above Level 4 require Starter Pass (₹9/₹49/₹99) to unlock! Level 1-4 Games are FREE.`, "⛔");
         return;
     }
 
-    // 3. BASIC TIER ACCESS (UP TO LEVEL 20)
     if (tier === 'basic' && reqLvl > 20) {
         window.showCasinoModal(false, "👑 Upgrade to Super VIP", "Your ₹9/49/99 Plan includes up to Game 20. Buy ₹200 Pass for Games 21-70!", "⭐");
         return;
     }
 
-    // Open Game
     window.openGame(gameId, title);
 };
 
@@ -117,7 +119,6 @@ window.renderFullGameGrid = function() {
     if (!hub) return;
 
     const realGames = [
-        // BASIC SUITE (GAMES 1 TO 20)
         { id: "color", title: "WinGo 1M Color Prediction", lvl: 1, vip: false },
         { id: "aviator", title: "Stake Crash Aviator", lvl: 1, vip: false },
         { id: "mines", title: "Cyber Minesweeper 5x5", lvl: 2, vip: false },
@@ -137,60 +138,12 @@ window.renderFullGameGrid = function() {
         { id: "andarbahar", title: "Andar Bahar Royale", lvl: 15, vip: false },
         { id: "teenpatti", title: "Teen Patti Deluxe", lvl: 16, vip: false },
         { id: "sicbo", title: "Sicilian Dice Sic Bo", lvl: 18, vip: false },
-        { id: "limbo", title: "Limbo Rocket Multiplier", lvl: 20, vip: false },
-
-        // SUPER VIP SUITE (GAMES 21 TO 70)
-        { id: "game_21", title: "Roaring Fortune Tiger", lvl: 1, vip: true },
-        { id: "game_22", title: "Mega Ball Bingo Live", lvl: 1, vip: true },
-        { id: "game_23", title: "Crazy Time Multiplier", lvl: 1, vip: true },
-        { id: "game_24", title: "Monopoly Live Arena", lvl: 1, vip: true },
-        { id: "game_25", title: "Lightening Baccarat", lvl: 1, vip: true },
-        { id: "game_26", title: "Speed Craps Deluxe", lvl: 1, vip: true },
-        { id: "game_27", title: "Red Dog High Card", lvl: 1, vip: true },
-        { id: "game_28", title: "Casino Hold'em Poker", lvl: 1, vip: true },
-        { id: "game_29", title: "Golden Wealth Baccarat", lvl: 1, vip: true },
-        { id: "game_30", title: "VIP Platinum Roulette", lvl: 1, vip: true },
-        { id: "game_31", title: "Super Fan Tan", lvl: 1, vip: true },
-        { id: "game_32", title: "Cash or Crash Tower", lvl: 1, vip: true },
-        { id: "game_33", title: "Football Studio Dice", lvl: 1, vip: true },
-        { id: "game_34", title: "Dead or Alive Saloon", lvl: 1, vip: true },
-        { id: "game_35", title: "Lightning Dice 1000X", lvl: 1, vip: true },
-        { id: "game_36", title: "Gonzo's Treasure Hunt", lvl: 1, vip: true },
-        { id: "game_37", title: "Sweet Bonanza Candyland", lvl: 1, vip: true },
-        { id: "game_38", title: "Coin Flip Arcade", lvl: 1, vip: true },
-        { id: "game_39", title: "Bac Bo Dice Battle", lvl: 1, vip: true },
-        { id: "game_40", title: "Dragon Tiger Luck", lvl: 1, vip: true },
-        { id: "game_41", title: "Mahjong Ways 2", lvl: 1, vip: true },
-        { id: "game_42", title: "Lucky Neko Cat Slots", lvl: 1, vip: true },
-        { id: "game_43", title: "Wild Bandito Gunner", lvl: 1, vip: true },
-        { id: "game_44", title: "Ways of the Qilin", lvl: 1, vip: true },
-        { id: "game_45", title: "Double Fortune Reels", lvl: 1, vip: true },
-        { id: "game_46", title: "Treasures of Aztec", lvl: 1, vip: true },
-        { id: "game_47", title: "Ganesha Gold Deluxe", lvl: 1, vip: true },
-        { id: "game_48", title: "Caishen Wins Jackpot", lvl: 1, vip: true },
-        { id: "game_49", title: "Captain's Bounty Crash", lvl: 1, vip: true },
-        { id: "game_50", title: "Egypt's Book of Mystery", lvl: 1, vip: true },
-        { id: "game_51", title: "Thai River Wonders", lvl: 1, vip: true },
-        { id: "game_52", title: "Balinese Garden Slots", lvl: 1, vip: true },
-        { id: "game_53", title: "Crypto Mines 10x10", lvl: 1, vip: true },
-        { id: "game_54", title: "Space XY Rocket", lvl: 1, vip: true },
-        { id: "game_55", title: "JetX Flight Simulator", lvl: 1, vip: true },
-        { id: "game_56", title: "Balloon Pop Multiplier", lvl: 1, vip: true },
-        { id: "game_57", title: "High Striker Carnival", lvl: 1, vip: true },
-        { id: "game_58", title: "Tower Legend Quest", lvl: 1, vip: true },
-        { id: "game_59", title: "Keno Jackpot Draw", lvl: 1, vip: true },
-        { id: "game_60", title: "Bingo Blast 90", lvl: 1, vip: true },
-        { id: "game_61", title: "Scratch Match Gold", lvl: 1, vip: true },
-        { id: "game_62", title: "Football Penalty Shoot", lvl: 1, vip: true },
-        { id: "game_63", title: "Darts Championship", lvl: 1, vip: true },
-        { id: "game_64", title: "Speed Archery Bullseye", lvl: 1, vip: true },
-        { id: "game_65", title: "Cyber Bowling Strike", lvl: 1, vip: true },
-        { id: "game_66", title: "8-Ball Pool Challenge", lvl: 1, vip: true },
-        { id: "game_67", title: "Fruit Slice Slash", lvl: 1, vip: true },
-        { id: "game_68", title: "Slices of Pizza Slots", lvl: 1, vip: true },
-        { id: "game_69", title: "Candy Burst Bonanza", lvl: 1, vip: true },
-        { id: "game_70", title: "RWIN Super Jackpot 1000X", lvl: 1, vip: true }
+        { id: "limbo", title: "Limbo Rocket Multiplier", lvl: 20, vip: false }
     ];
+
+    for (let i = 21; i <= 70; i++) {
+        realGames.push({ id: "game_" + i, title: "VIP Casino Title #" + i, lvl: 1, vip: true });
+    }
 
     let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">BASIC ARENA (GAMES 1-20 • LVL 1-4 FREE)</h3><div class="arena-grid">`;
     let vipHtml = `<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 21-70 • ₹200 PASS EXCLUSIVE)</h3><div class="arena-grid">`;
