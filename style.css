@@ -1,483 +1,129 @@
-/* ============================================================
-   RWIN - VIP CYBER ARCADE & CASINO ARENA (MASTER STYLESHEET)
-   ============================================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+/* RWIN VIP CASINO - MASTER REALISTIC UI THEME */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
 
 :root {
-  --bg-dark: #070a12;
-  --bg-card: #111827;
-  --bg-accent: #0f172a;
-  --border-color: #1f293d;
-  
-  --neon-blue: #00E5FF;
-  --neon-pink: #ec4899;
-  --neon-gold: #f59e0b;
+  --bg-dark: #090d16;
+  --card-bg: #121824;
+  --card-border: #1e293b;
+  --neon-blue: #00e5ff;
   --neon-green: #10b981;
-  --neon-purple: #8b5cf6;
-  --neon-red: #ef4444;
+  --neon-gold: #f59e0b;
+  --neon-pink: #ec4899;
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
 
 body {
-  background-color: var(--bg-dark);
-  color: #ffffff;
-  min-height: 100vh;
-  padding-bottom: 85px;
-  overflow-x: hidden;
-  display: flex;
-  justify-content: center;
-}
-
-.gameContainer, .app-container {
-  width: 100%;
-  max-width: 480px;
-  min-height: 100vh;
   background: var(--bg-dark);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-  position: relative;
+  color: var(--text-main);
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  border-x: 1px solid #1e293b;
 }
 
-/* ============================================================
-   HEADER & LEVEL BAR
-   ============================================================ */
-
-.topBar, .header {
-  background: var(--bg-accent);
-  padding: 12px 16px;
+/* AUTH & PROFILE CONTAINERS (FIXES BROKEN LOGIN/PROFILE) */
+.auth-container, .profile-container {
+  padding: 24px 16px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  border-bottom: 1px solid #1e293b;
+  justify-content: center;
+  min-height: 80vh;
 }
 
-.level-badge {
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
-}
-
-.xp-progress-outer {
+.auth-card, .profile-card {
   width: 100%;
-  background: #1e293b;
-  height: 6px;
-  border-radius: 10px;
-  margin-top: 6px;
-  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 24px 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  text-align: center;
 }
 
-.xp-progress-inner {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
-  transition: width 0.3s ease;
+.input-field {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  background: #0b0f19;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
 }
 
-/* ============================================================
-   BALANCE CARD & WELCOME BANNER
-   ============================================================ */
+.input-field:focus { border-color: var(--neon-blue); }
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--neon-blue), #0284c7);
+  color: #000;
+  font-weight: 800;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 0 15px rgba(0,229,255,0.25);
+}
+
+/* TOP BAR & BALANCE CARD */
+.topBar { background: #0f172a; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); }
+.level-badge { background: linear-gradient(135deg, #8b5cf6, #ec4899); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; }
 
 .balanceCard {
-  background: linear-gradient(135deg, #1e293b, var(--bg-accent));
-  border: 1px solid #334155;
-  border-radius: 16px;
+  background: linear-gradient(135deg, #131c2e, #0a0f1d);
+  border: 1px solid var(--neon-blue);
+  border-radius: 18px;
   padding: 18px;
   margin: 12px;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 229, 255, 0.08);
+  box-shadow: 0 0 20px rgba(0,229,255,0.12);
 }
+.balanceCard h1 { color: var(--neon-blue); font-size: 32px; font-weight: 800; margin: 4px 0; }
 
-.balanceCard h1 {
-  color: var(--neon-blue);
-  font-size: 32px;
-  margin: 6px 0;
-  font-weight: 800;
-  text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-}
-
-.welcome-banner {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  border-radius: 16px;
-  padding: 20px;
-  text-align: center;
-  margin: 12px;
-  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3);
-}
-
-.welcome-banner h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.welcome-banner p {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* ============================================================
-   LIVE TICKER
-   ============================================================ */
-
-.live-ticker {
-  background: rgba(16, 185, 129, 0.1);
-  border-top: 1px solid rgba(16, 185, 129, 0.2);
-  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
-  padding: 8px 14px;
-  font-size: 11px;
-  color: var(--neon-green);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.ticker-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--neon-green);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--neon-green);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.3); }
-}
-
-/* ============================================================
-   ARENA GRID & GAME CARDS
-   ============================================================ */
-
-.arena-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 12px;
-}
+/* REAL CASINO GAME GRID */
+.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
 
 .game-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
-  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 18px 12px;
   text-align: center;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
   transition: all 0.2s ease;
 }
 
-.game-card:active {
-  transform: scale(0.96);
-  border-color: var(--neon-blue);
-}
+.game-card:active { transform: scale(0.96); border-color: var(--neon-blue); }
+.game-card.locked { border-color: rgba(245, 158, 11, 0.4); }
+.game-icon { font-size: 40px; margin-bottom: 8px; filter: drop-shadow(0 0 8px rgba(255,255,255,0.2)); }
+.game-card h3 { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.game-card p { font-size: 10px; color: var(--text-sub); margin-top: 2px; }
 
-.game-card.hot::after {
-  content: 'HOT 🔥';
-  position: absolute;
-  top: 8px;
-  right: -24px;
-  background: var(--neon-red);
-  color: #fff;
-  font-size: 8px;
-  font-weight: 800;
-  padding: 2px 25px;
-  transform: rotate(45deg);
-}
-
-.game-card.locked {
-  opacity: 0.8;
-  border-color: rgba(245, 158, 11, 0.3);
-}
-
-.game-icon {
-  font-size: 38px;
-  margin-bottom: 6px;
-}
-
-.game-card h3 {
-  font-size: 14px;
-  margin: 0;
-  color: #fff;
-  font-weight: 600;
-}
-
-.game-card p {
-  font-size: 10px;
-  color: #94a3b8;
-  margin-top: 2px;
-}
-
-/* ============================================================
-   GAME CONTAINERS & INTERACTION
-   ============================================================ */
-
-.action-box {
-  background: var(--bg-card);
-  padding: 16px;
-  border-radius: 14px;
-  border: 1px solid var(--border-color);
-  text-align: center;
-  margin: 10px 0;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-
-button:active {
-  transform: scale(0.95);
-}
-
-input[type="number"], input[type="text"] {
-  outline: none;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #fff;
-  border-radius: 8px;
-}
-
-/* ============================================================
-   COLOR PREDICTION, SLOTS, HI-LO UI
-   ============================================================ */
-
-.num-btn {
-  padding: 12px 0;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  color: #fff;
-}
-.num-btn.green { background: var(--neon-green); }
-.num-btn.red { background: var(--neon-red); }
-.num-btn.violet { background: var(--neon-purple); }
-
-.slots-display {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  background: #000;
-  padding: 20px;
-  border-radius: 12px;
-  border: 2px solid var(--neon-gold);
-  margin: 15px 0;
-}
-
-.slot-reel {
-  background: #1f293d;
-  font-size: 40px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: 1px solid #334155;
-}
-
-.card-display {
-  font-size: 60px;
-  margin: 15px 0;
-  background: #0f172a;
-  display: inline-block;
-  padding: 10px 30px;
-  border-radius: 12px;
-  border: 2px solid var(--neon-blue);
-}
-
-/* ============================================================
-   LEADERBOARD & NAVIGATION
-   ============================================================ */
-
-.leaderboard-box {
-  background: var(--bg-accent);
-  border-radius: 14px;
-  padding: 14px;
-  margin: 12px;
-  border: 1px solid var(--border-color);
-}
-
-.lb-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #1e293b;
-  font-size: 12px;
-}
-
-.bottomNav, .navbar {
+/* FOOTER & BOTTOM NAV */
+.bottomNav {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
-  background: #0d121f;
-  border-top: 1px solid #1e293b;
+  background: #0a0f1d;
+  border-top: 1px solid var(--card-border);
   display: flex;
   justify-content: space-around;
   padding: 10px 0;
-  z-index: 1000;
+  z-index: 99;
 }
 
-.navItem, .nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 500;
-  gap: 4px;
-  width: 25%;
-}
-
-.navItem.active, .nav-item.active {
-  color: var(--neon-blue);
-  font-weight: 600;
-  }
-
-/* ============================================================
-   CUSTOM CASINO WIN/LOSE POPUP MODAL (NO BROWSER ALERTS)
-   ============================================================ */
-
-.result-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  animation: fadeIn 0.2s ease-out;
-}
-
-.result-modal-overlay.active {
-  display: flex;
-}
-
-.result-card {
-  width: 88%;
-  max-width: 380px;
-  background: linear-gradient(180deg, #1e293b, #0f172a);
-  border: 2px solid #f59e0b;
-  border-radius: 24px;
-  padding: 24px 20px;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
-  animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.result-card.loss {
-  border-color: #ef4444;
-  box-shadow: 0 0 30px rgba(239, 68, 68, 0.35);
-}
-
-.badge-header {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  border-radius: 50%;
-  margin: -50px auto 10px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
-}
-
-.result-card.loss .badge-header {
-  background: linear-gradient(135deg, #ef4444, #991b1b);
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
-}
-
-.result-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 8px;
-}
-
-.tags-row {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-.res-tag {
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  background: #334155;
-}
-
-.res-tag.green { background: #10b981; }
-.res-tag.red { background: #ef4444; }
-.res-tag.violet { background: #8b5cf6; }
-
-.bonus-box {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 12px;
-  margin: 14px 0;
-}
-
-.bonus-amount {
-  font-size: 28px;
-  font-weight: 800;
-  color: #10b981;
-}
-
-.result-card.loss .bonus-amount {
-  color: #ef4444;
-}
-
-.auto-close-txt {
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 10px;
-}
-
-.close-modal-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #1e293b;
-  color: #fff;
-  border: 1px solid #334155;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-@keyframes popUp {
-  0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
+.navItem { color: var(--text-sub); text-decoration: none; font-size: 11px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.navItem.active { color: var(--neon-blue); font-weight: 700; }
+     
