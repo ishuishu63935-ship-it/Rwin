@@ -1,127 +1,103 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>RWIN Profile</title>
-
+<title>RWIN - VIP Profile</title>
 <link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="js/core-engine.js"></script>
 </head>
 
 <body>
+<div class="gameContainer">
 
-<div class="home">
+<header class="topBar">
+  <h1 style="font-size:16px; margin:0; color:#fff;">👤 VIP User Profile</h1>
+  <span style="font-size:11px; color:var(--neon-green);">● Active Session</span>
+</header>
 
-<div class="profileHeader">
+<div class="profile-container">
+  <div class="profile-card">
+    <div style="font-size:48px; margin-bottom:10px;">👑</div>
+    <h2 id="profileEmail" style="font-size:18px; color:#fff; word-break:break-all; margin-bottom:6px;">mahanlog387@gmail.com</h2>
+    
+    <!-- DYNAMIC TIER BADGE -->
+    <div style="margin:12px 0;">
+      <span style="font-size:11px; color:#94a3b8; display:block; margin-bottom:4px;">ACCOUNT MEMBERSHIP</span>
+      <span id="membershipBadge" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8); padding:6px 16px; border-radius:20px; font-size:12px; font-weight:800; color:#fff; text-transform:uppercase; display:inline-block;">
+        FREE PLAN
+      </span>
+    </div>
 
-<div class="profileAvatar">
-👤
+    <div style="background:#0b0f19; border:1px solid var(--card-border); border-radius:14px; padding:16px; margin:16px 0; text-align:left;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+        <span style="color:#94a3b8;">Virtual Balance:</span>
+        <b style="color:var(--neon-blue);" id="profileBalance">₹10,000 Coins</b>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+        <span style="color:#94a3b8;">VIP Coin Resets:</span>
+        <b style="color:var(--neon-green);" id="resetStatus">Locked (Free Tier)</b>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:13px;">
+        <span style="color:#94a3b8;">Accessible Games:</span>
+        <b style="color:var(--neon-gold);" id="gamesCount">Practice Only</b>
+      </div>
+    </div>
+
+    <button onclick="logoutUser()" style="width:100%; padding:12px; background:#ef4444; color:#fff; border:none; border-radius:12px; font-weight:800; cursor:pointer;">
+      LOGOUT ACCOUNT
+    </button>
+  </div>
 </div>
 
-<h1 id="userDisplayName">Loading...</h1>
-<p id="userEmailDisplay">Checking user...</p>
-
-</div>
-
-<div class="membershipCard">
-
-<h3>Membership</h3>
-<p id="membershipText" style="font-weight: 600;">Checking Status...</p>
-
-</div>
-
-<div class="membershipCard">
-
-<h3>Virtual Balance</h3>
-<h2 id="userCoinsDisplay">10,000 Coins</h2>
-
-</div>
-
-<div class="membershipCard">
-
-<h3>Practice Stats</h3>
-
-<p>Total Sessions : <span id="totalSessions">0</span></p>
-<p>Wins : <span id="totalWins">0</span></p>
-<p>Level : <span id="userLevel">Beginner</span></p>
-
-</div>
-
-<div class="membershipCard">
-
-<button id="logoutBtn" style="cursor: pointer;">
-Logout
-</button>
-
-</div>
-
-<div style="margin-top:20px;text-align:center;">
-
-<a href="home.html" class="menuBox">
-
-🏠<br>Home
-
-</a>
+<nav class="bottomNav">
+  <a href="home.html" class="navItem">🏠 <span>Home</span></a>
+  <a href="game.html" class="navItem">🎮 <span>Arena</span></a>
+  <a href="wallet.html" class="navItem">💰 <span>Wallet</span></a>
+  <a href="profile.html" class="navItem active">👤 <span>Profile</span></a>
+</nav>
 
 </div>
 
-</div>
+<script>
+function renderProfileData() {
+    const userEmail = localStorage.getItem("rwin_user_email") || "mahanlog387@gmail.com";
+    const tier = localStorage.getItem("rwin_membership_tier") || "free";
+    
+    document.getElementById("profileEmail").innerText = userEmail;
 
-<script src="script.js"></script>
-<script type="module">
-  import { auth } from "./firebase.js";
-  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    const badge = document.getElementById("membershipBadge");
+    const resets = document.getElementById("resetStatus");
+    const count = document.getElementById("gamesCount");
 
-  // Check Auth State and Dynamic Data Update
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // 1. Display Logged-in User Info
-      const nameHeading = document.getElementById("userDisplayName");
-      const emailParagraph = document.getElementById("userEmailDisplay");
-      
-      if (nameHeading) {
-        nameHeading.innerText = user.displayName || user.email.split('@')[0];
-      }
-      if (emailParagraph) {
-        emailParagraph.innerText = user.email;
-      }
-
-      // 2. Dynamic Membership Status Check
-      const membershipText = document.getElementById("membershipText");
-      const gameData = JSON.parse(localStorage.getItem("rwinGame")) || {};
-      
-      if (membershipText) {
-        if (gameData.membership === true) {
-          membershipText.innerText = "Premium Active ✅";
-          membershipText.style.color = "#00FF66";
-        } else {
-          membershipText.innerText = "Free Plan 🆓";
-          membershipText.style.color = "#FFD700";
-        }
-      }
-
+    if (tier === "basic") {
+        badge.innerText = "⚡ STARTER PASS ACTIVE (₹9/49/99)";
+        badge.style.background = "linear-gradient(135deg, #10b981, #047857)";
+        resets.innerText = "UNLIMITED (Active)";
+        resets.style.color = "var(--neon-green)";
+        count.innerText = "20 Games Unlocked";
+    } else if (tier === "vip") {
+        badge.innerText = "👑 SUPER VIP VAULT PASS (₹200)";
+        badge.style.background = "linear-gradient(135deg, #f59e0b, #b45309)";
+        resets.innerText = "UNLIMITED (Active)";
+        resets.style.color = "var(--neon-green)";
+        count.innerText = "All 70+ Games Unlocked";
     } else {
-      // If not logged in, redirect to login page
-      window.location.href = "login.html";
+        badge.innerText = "FREE PLAN";
+        badge.style.background = "#334155";
+        resets.innerText = "Locked (Buy Plan)";
+        resets.style.color = "#ef4444";
+        count.innerText = "Practice Only";
     }
-  });
+}
 
-  // 3. Logout Functionality Fix
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      signOut(auth).then(() => {
-        localStorage.clear();
-        window.location.href = "index.html";
-      }).catch((error) => {
-        console.error("Logout Error:", error);
-      });
-    });
-  }
+function logoutUser() {
+    localStorage.removeItem("rwin_user_email");
+    window.location.href = "login.html";
+}
+
+document.addEventListener("DOMContentLoaded", renderProfileData);
 </script>
-  
 </body>
 </html>
