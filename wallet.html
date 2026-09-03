@@ -52,35 +52,35 @@
 <div style="padding: 14px;">
   <h3 style="color:#94a3b8; font-size:12px; margin-bottom:10px; letter-spacing:1px;">SELECT MEMBERSHIP PLAN</h3>
 
-  <!-- PLAN 1: STARTER PASS -->
-  <div class="plan-card active" id="plan-9" onclick="selectPlan(9, 'Starter Plan (₹9)', 'basic')">
+  <!-- PLAN 1: STARTER PASS (16 DAYS VALIDITY) -->
+  <div class="plan-card active" id="plan-9" onclick="selectPlan(9, 'Starter Plan (₹9 • 16 Days)', 'basic')">
     <div>
-      <b style="color:#fff; font-size:14px;">Starter VIP Pass</b>
-      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">20 Games + Unlimited Coin Resets</p>
+      <b style="color:#fff; font-size:14px;">Starter VIP Pass (16 Days Access)</b>
+      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">16 Days Unlimited Resets + 20 Games Unlocked</p>
     </div>
     <div class="plan-price">₹9</div>
   </div>
 
   <!-- PLAN 2: 2 MONTHS PRO -->
-  <div class="plan-card" id="plan-49" onclick="selectPlan(49, 'Pro Pass (₹49)', 'basic')">
+  <div class="plan-card" id="plan-49" onclick="selectPlan(49, 'Pro Pass (₹49 • 2 Months)', 'basic')">
     <div>
       <b style="color:#fff; font-size:14px;">2 Months Pro Pass</b>
-      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">20 Games + Fast Level Up</p>
+      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">60 Days Access + 20 Games + Fast Level Up</p>
     </div>
     <div class="plan-price">₹49</div>
   </div>
 
   <!-- PLAN 3: 6 MONTHS ELITE -->
-  <div class="plan-card" id="plan-99" onclick="selectPlan(99, 'Elite Pass (₹99)', 'basic')">
+  <div class="plan-card" id="plan-99" onclick="selectPlan(99, 'Elite Pass (₹99 • 6 Months)', 'basic')">
     <div>
       <b style="color:#fff; font-size:14px;">6 Months Elite Pass</b>
-      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">20 Games + Priority Support</p>
+      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">180 Days Access + 20 Games + Priority Support</p>
     </div>
     <div class="plan-price">₹99</div>
   </div>
 
   <!-- PLAN 4: SUPER VIP 70+ GAMES -->
-  <div class="plan-card vip-gold-card" id="plan-200" onclick="selectPlan(200, 'Super VIP Pass (₹200)', 'vip')">
+  <div class="plan-card vip-gold-card" id="plan-200" onclick="selectPlan(200, 'Super VIP Pass (₹200 • Lifetime)', 'vip')">
     <div>
       <b style="color:var(--neon-gold); font-size:14px;">🔥 Super VIP Vault Pass</b>
       <p style="font-size:10px; color:#94a3b8; margin-top:2px;">Instant Unlock All 70+ Casino Games</p>
@@ -91,7 +91,7 @@
   <!-- UPI PAYMENT BOX -->
   <div class="action-box" style="background:#0b101d; border:1px solid var(--card-border); border-radius:18px; padding:18px; text-align:center; margin-top:16px;">
     <h3 style="color:var(--neon-blue); font-size:14px; margin-bottom:4px;">💰 Pay via UPI QR</h3>
-    <p style="font-size:11px; color:#94a3b8; margin-bottom:12px;">Selected: <b id="selectedPlanText" style="color:#fff;">Starter Plan (₹9)</b></p>
+    <p style="font-size:11px; color:#94a3b8; margin-bottom:12px;">Selected: <b id="selectedPlanText" style="color:#fff;">Starter Plan (₹9 • 16 Days)</b></p>
 
     <!-- QR CODE -->
     <div style="background:#fff; padding:10px; border-radius:12px; display:inline-block; margin-bottom:10px;">
@@ -109,8 +109,8 @@
       ⚡ Verify & Activate Plan
     </button>
 
-    <p style="font-size:10px; color:#94a3b8; margin-top:12px; line-weight:1.4;">
-      ⚡ UPI app par payment karke 12-Digit UTR/Ref No. yahan daalein. Automated verification dwara Instant Active hoga!
+    <p style="font-size:10px; color:#94a3b8; margin-top:12px; line-height:1.4;">
+      ⚡ UPI app par payment karke 12-Digit UTR/Ref No. yahan daalein. Instant Active hoga!
     </p>
   </div>
 </div>
@@ -126,7 +126,7 @@
 
 <script>
 window.selectedPlanCost = 9;
-window.selectedPlanName = "Starter Plan (₹9)";
+window.selectedPlanName = "Starter Plan (₹9 • 16 Days)";
 window.selectedPlanTier = "basic";
 
 function selectPlan(cost, name, tier) {
@@ -146,7 +146,6 @@ window.verifyUtrPayment = function() {
         return;
     }
 
-    // Save membership tier directly into localStorage
     localStorage.setItem("rwin_membership_tier", window.selectedPlanTier);
 
     if (window.game) {
@@ -155,8 +154,6 @@ window.verifyUtrPayment = function() {
     }
 
     alert(`🎉 PAYMENT VERIFIED!\n${window.selectedPlanName} activated successfully.\n₹10,000 Coins added!`);
-    
-    // Direct redirect to Profile Page to see active badge
     window.location.href = "profile.html";
 };
 </script>
