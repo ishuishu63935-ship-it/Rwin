@@ -5,72 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RWIN - VIP Cyber Arcade & Casino Arena</title>
 <link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<!-- CENTRAL CASINO ENGINE & SOUND FX -->
 <script src="js/core-engine.js"></script>
 <script src="games/master-games.js"></script>
-  
-<style>
-:root {
-  --bg-dark: #070a12;
-  --card-bg: #111827;
-  --neon-blue: #00E5FF;
-  --neon-pink: #ec4899;
-  --neon-gold: #f59e0b;
-  --neon-green: #10b981;
-}
-
-body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 70px; }
-
-.topBar { background: #0f172a; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; }
-.level-badge { background: linear-gradient(135deg, #8b5cf6, #ec4899); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-.xp-progress-outer { width: 100%; background: #1e293b; height: 6px; border-radius: 10px; margin-top: 6px; overflow: hidden; }
-.xp-progress-inner { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); transition: width 0.3s ease; }
-
-.balanceCard { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 16px; padding: 16px; margin: 12px; text-align: center; box-shadow: 0 8px 24px rgba(0,229,255,0.08); }
-.balanceCard h1 { color: var(--neon-blue); font-size: 28px; margin: 4px 0; font-weight: 800; text-shadow: 0 0 10px rgba(0,229,255,0.3); }
-
-.live-ticker { background: rgba(16, 185, 129, 0.1); border-y: 1px solid rgba(10, 185, 129, 0.2); padding: 8px 12px; font-size: 11px; color: var(--neon-green); font-weight: 600; white-space: nowrap; overflow: hidden; display: flex; align-items: center; gap: 8px; }
-.ticker-dot { width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 8px var(--neon-green); animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
-.game-card { background: var(--card-bg); border: 1px solid #1f293d; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; }
-.game-card:active { transform: scale(0.96); border-color: var(--neon-blue); }
-.game-card.hot::after { content: 'HOT 🔥'; position: absolute; top: 8px; right: -24px; background: #ef4444; color: #fff; font-size: 8px; font-weight: 800; padding: 2px 25px; transform: rotate(45deg); }
-.game-card.locked { opacity: 0.85; border-color: rgba(245, 158, 11, 0.3); }
-.game-icon { font-size: 36px; margin-bottom: 6px; }
-.game-card h3 { font-size: 14px; margin: 0; color: #fff; }
-.game-card p { font-size: 10px; color: #94a3b8; margin: 2px 0 0 0; }
-
-.game-screen { display: none; padding: 12px; }
-.game-screen.active { display: block; }
-.back-bar { display: none; align-items: center; justify-content: space-between; background: #1e293b; padding: 10px 15px; border-radius: 12px; margin: 12px; border: 1px solid #334155; }
-.back-btn { background: var(--neon-blue); color: #000; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; }
-
-.aviator-screen { background: #050811; border: 2px solid #1e293b; border-radius: 14px; height: 190px; position: relative; overflow: hidden; }
-.aviator-multi-display { position: absolute; top: 38%; width: 100%; text-align: center; font-size: 40px; font-weight: 800; color: var(--neon-green); text-shadow: 0 0 15px rgba(16,185,129,0.4); }
-.aviator-plane { position: absolute; bottom: 20px; left: 20px; font-size: 34px; transition: all 0.1s linear; }
-
-.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 15px 0; }
-.mine-card { background: #1e293b; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; border: 1px solid #334155; transition: 0.15s; }
-
-.action-box { background: #111827; padding: 16px; border-radius: 14px; border: 1px solid #1f293d; text-align: center; margin: 10px 0; }
-
-.num-btn { padding: 12px 0; border-radius: 8px; font-weight: 700; font-size: 16px; border: none; color: #fff; cursor: pointer; }
-.num-btn.green { background: var(--neon-green); }
-.num-btn.red { background: #ef4444; }
-.num-btn.violet { background: #8b5cf6; }
-
-.slots-display { display: flex; justify-content: center; gap: 10px; background: #000; padding: 20px; border-radius: 12px; border: 2px solid var(--neon-gold); margin: 15px 0; }
-.slot-reel { background: #1f293d; font-size: 45px; padding: 10px 20px; border-radius: 8px; border: 1px solid #334155; }
-
-.card-display { font-size: 70px; margin: 15px 0; background: #0f172a; display: inline-block; padding: 10px 30px; border-radius: 12px; border: 2px solid var(--neon-blue); }
-
-.leaderboard-box { background: #0f172a; border-radius: 14px; padding: 14px; margin: 12px; border: 1px solid #1f293d; }
-.lb-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1e293b; font-size: 12px; }
-</style>
 </head>
 
 <body>
@@ -86,114 +24,30 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
   <div class="xp-progress-outer"><div class="xp-progress-inner" id="xpBar"></div></div>
 </div>
 <div style="text-align:right;">
-  <span style="font-size:11px; color:var(--neon-green);">● Cloud Synced</span>
+  <span style="font-size:11px; color:var(--neon-green);">● Protected Device</span>
 </div>
 </header>
 
 <div class="live-ticker">
   <div class="ticker-dot"></div>
-  <span id="liveTickerText">⚡ User_7891 won ₹2,400 on Aviator Crash!</span>
+  <span id="liveTickerText">⚡ User_9281 won ₹14,500 on Stake Crash!</span>
 </div>
 
 <section class="balanceCard">
   <p style="font-size:11px; color:#94a3b8; margin:0;">Virtual VIP Practice Balance</p>
   <h1 id="balanceText">₹10,000</h1>
-  <button id="resetCoinsBtn" onclick="window.CasinoSession.resetCoins()" style="margin-top:8px; padding:6px 14px; background:var(--neon-blue); color:#000; border:none; border-radius:8px; font-weight:700; cursor:pointer;">♻ Reset VIP Coins</button>
+  <button id="resetCoinsBtn" onclick="window.CasinoSession.resetCoins()" style="margin-top:8px; padding:8px 16px; background:var(--neon-blue); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer;">
+    🔄 Reset VIP Coins
+  </button>
 </section>
 
-<div id="backBar" class="back-bar">
+<div id="backBar" class="back-bar" style="display:none;">
   <button class="back-btn" onclick="exitToArena()">⬅️ Back to Hub</button>
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:14px;">Game</b>
 </div>
 
-<!-- MAIN ARENA HUB -->
+<!-- MAIN ARENA HUB (DYNAMIC 70 REAL GAMES) -->
 <div id="arenaHub"></div>
-
-<!-- BUILT-IN BASIC GAME VIEWS -->
-<div id="game-aviator" class="game-screen">
-  <div class="aviator-screen">
-    <div class="aviator-multi-display" id="aviatorMulti">1.00x</div>
-    <div class="aviator-plane" id="aviatorPlane">✈️</div>
-  </div>
-  <div class="action-box">
-    <input type="number" id="aviatorBet" placeholder="Bet Coins (e.g. 500)" value="500" style="padding:10px; width:90%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:10px;">
-    <button id="startAviatorBtn" onclick="startAviator()" style="padding:12px; background:var(--neon-green); border:none; color:#fff; font-weight:800; border-radius:8px; width:90%; cursor:pointer;">🚀 START FLIGHT</button>
-    <button id="cashoutBtn" onclick="cashoutAviator()" style="padding:12px; background:var(--neon-gold); border:none; color:#000; font-weight:800; border-radius:8px; width:90%; cursor:pointer; display:none;">💰 CASH OUT NOW</button>
-  </div>
-</div>
-
-<div id="game-mines" class="game-screen">
-  <div class="action-box">
-    <p style="margin-bottom:8px; font-size:12px; color:#94a3b8;">💣 Tap Boxes & Cash Out Before Hitting Bomb!</p>
-    <input type="number" id="minesBet" placeholder="Bet Coins" value="300" style="padding:8px; width:45%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff;">
-    <button onclick="startMinesGame()" style="padding:8px 14px; background:var(--neon-blue); border:none; font-weight:700; border-radius:6px; cursor:pointer;">Start Game</button>
-    <button id="minesCashoutBtn" onclick="cashoutMines()" style="padding:8px 14px; background:var(--neon-gold); color:#000; border:none; font-weight:800; border-radius:6px; margin-left:5px; display:none;">💰 Cash Out</button>
-  </div>
-  <div class="mines-grid" id="minesGrid"></div>
-</div>
-
-<div id="game-hilo" class="game-screen">
-  <div class="action-box">
-    <h2 style="color:var(--neon-blue); margin:0;">🃏 High-Low Card Streak</h2>
-    <p style="font-size:11px; color:#94a3b8; margin:4px 0 10px 0;">Guess if the next card is HIGHER or LOWER than current card!</p>
-    <div class="card-display" id="currentCardDisplay">7</div>
-    <br>
-    <input type="number" id="hiloBet" placeholder="Bet Coins" value="200" style="padding:8px; width:60%; text-align:center; border-radius:6px; border:1px solid #334155; background:#0f172a; color:#fff; margin-bottom:12px;">
-    <br>
-    <button onclick="playHiLo('HIGHER')" style="padding:12px 20px; background:var(--neon-green); color:#fff; font-weight:800; border:none; border-radius:8px; margin:4px; cursor:pointer;">⬆️ HIGHER (2X)</button>
-    <button onclick="playHiLo('LOWER')" style="padding:12px 20px; background:#ef4444; color:#fff; font-weight:800; border:none; border-radius:8px; margin:4px; cursor:pointer;">⬇️ LOWER (2X)</button>
-  </div>
-</div>
-
-<div id="game-slots" class="game-screen">
-  <div class="action-box">
-    <h2 style="color:var(--neon-gold); margin:0;">🎰 3-Reel Jackpot Slots</h2>
-    <div class="slots-display">
-      <div class="slot-reel" id="reel1">💎</div>
-      <div class="slot-reel" id="reel2">7️⃣</div>
-      <div class="slot-reel" id="reel3">🎰</div>
-    </div>
-    <button onclick="spinSlots()" style="padding:12px 30px; background:var(--neon-pink); color:#fff; font-weight:800; border:none; border-radius:25px; font-size:15px; cursor:pointer;">SPIN (500 Coins)</button>
-  </div>
-</div>
-
-<div id="game-color" class="game-screen">
-  <section class="action-box"><h2>⏱ Next Round: <span id="timer" style="color:var(--neon-blue);">30</span>s</h2></section>
-
-  <section class="action-box">
-    <h3>💰 Select Bet Coins</h3>
-    <div>
-      <button class="betBtn" onclick="setBet(100)">100</button>
-      <button class="betBtn" onclick="setBet(500)">500</button>
-      <button class="betBtn" onclick="setBet(1000)">1000</button>
-    </div>
-  </section>
-
-  <section class="action-box">
-    <h3>🎨 Select Color</h3>
-    <div style="display:flex; justify-content:center; gap:10px;">
-      <button class="num-btn green" style="padding:10px 20px;" onclick="setColor('GREEN')">GREEN</button>
-      <button class="num-btn red" style="padding:10px 20px;" onclick="setColor('RED')">RED</button>
-      <button class="num-btn violet" style="padding:10px 20px;" onclick="setColor('VIOLET')">VIOLET</button>
-    </div>
-  </section>
-
-  <section class="action-box">
-    <p id="playStatus" style="text-align:center; margin-top:6px; font-size:12px; color:#94a3b8;">Choose Coins + Bet Option</p>
-  </section>
-</div>
-
-<!-- DYNAMIC GAME MODULE CONTAINERS -->
-<div id="game-dragon" class="game-screen"></div>
-<div id="game-dice2" class="game-screen"></div>
-<div id="game-plinko" class="game-screen"></div>
-<div id="game-roulette" class="game-screen"></div>
-<div id="game-cryptocandle" class="game-screen"></div>
-<div id="game-penalty" class="game-screen"></div>
-<div id="game-chickencross" class="game-screen"></div>
-<div id="game-horserace" class="game-screen"></div>
-<div id="game-wheel" class="game-screen"></div>
-<div id="game-blackjack" class="game-screen"></div>
 
 <nav class="bottomNav">
   <a href="home.html" class="navItem">🏠 <span>Home</span></a>
@@ -204,42 +58,26 @@ body { background: var(--bg-dark); color: #fff; font-family: 'Poppins', sans-ser
 
 </div>
 
-<!-- CUSTOM CASINO POPUP MODAL -->
-<div id="resultModal" class="result-modal-overlay">
-  <div id="resultCard" class="result-card">
-    <button class="close-modal-btn" onclick="closeResultModal()">✕</button>
-    <div id="modalBadge" class="badge-header">🚀</div>
-    <div id="modalTitle" class="result-title">Congratulations</div>
-    
-    <div class="tags-row" id="modalTags" style="display:none;">
-      <span class="res-tag green" id="tagColor">Green</span>
-      <span class="res-tag" id="tagNum">9</span>
-      <span class="res-tag" id="tagSize">Big</span>
-    </div>
-
-    <div class="bonus-box">
-      <div style="font-size:11px; color:#94a3b8;">Amount</div>
-      <div id="modalAmount" class="bonus-amount">+₹441.00</div>
-    </div>
-
-    <div class="auto-close-txt">⏱️ Auto closing in <b id="closeTimer">3</b> seconds</div>
-  </div>
-</div>
-
-<!-- THREE.JS 3D ENGINE -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script type="module" src="script.js"></script>
-
 <script>
 window.openGame = function(gameId, title) {
     document.getElementById('arenaHub').style.display = 'none';
     document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
     
-    const targetScreen = document.getElementById('game-' + gameId);
-    if(targetScreen) targetScreen.classList.add('active');
+    let targetScreen = document.getElementById('game-' + gameId);
+    if (!targetScreen) {
+        targetScreen = document.createElement('div');
+        targetScreen.id = 'game-' + gameId;
+        targetScreen.className = 'game-screen';
+        document.querySelector('.gameContainer').appendChild(targetScreen);
+    }
     
+    targetScreen.classList.add('active');
     document.getElementById('backBar').style.display = 'flex';
     document.getElementById('activeGameTitle').innerText = title;
+
+    if (window.loadMasterGameView) {
+        window.loadMasterGameView(gameId);
+    }
 };
 
 window.exitToArena = function() {
@@ -252,18 +90,18 @@ window.checkAndOpenGame = function(gameId, title, reqLvl, isVip) {
     const userLevel = (window.game && window.game.level) ? window.game.level : 1;
     const tier = window.CasinoSession ? window.CasinoSession.getTier() : 'free';
 
-    if (isVip && tier === 'free') {
-        window.showCasinoModal(false, "🔒 VIP Pass Required", "Coin Resets & 70+ Games require ₹200 VIP Pass!", "👑");
+    if (tier === 'free') {
+        window.showCasinoModal(false, "🔒 Membership Required", "Free account balance cannot play locked VIP games. Buy ₹9/49/99 or ₹200 VIP Pass!", "⛔");
         return;
     }
 
     if (isVip && tier !== 'vip') {
-        window.showCasinoModal(false, "🔒 Super VIP Exclusive", "Your current plan includes 20 Games. Upgrade to ₹200 VIP Pass for 70+ Games!", "👑");
+        window.showCasinoModal(false, "🔒 ₹200 Super VIP Exclusive", "Your ₹9/49/99 Plan includes the first 20 Games. Upgrade to ₹200 Pass for all 70+ Games!", "👑");
         return;
     }
 
     if (userLevel < reqLvl) {
-        window.showCasinoModal(false, "Level Locked", `Reach LVL ${reqLvl} to unlock ${title}!`, "⭐");
+        window.showCasinoModal(false, "Level Locked", `Reach LVL ${reqLvl} in arena to unlock ${title}!`, "⭐");
         return;
     }
 
@@ -274,43 +112,94 @@ window.renderFullGameGrid = function() {
     const hub = document.getElementById("arenaHub");
     if (!hub) return;
 
-    const allGames = [
-        { id: "color", title: "Color Prediction", icon: "🎨", lvl: 1, vip: false },
-        { id: "aviator", title: "Aviator Crash", icon: "🚀", lvl: 1, vip: false },
-        { id: "mines", title: "Cyber Mines", icon: "💣", lvl: 2, vip: false },
-        { id: "dragon", title: "Dragon vs Tiger", icon: "🐉", lvl: 2, vip: false },
-        { id: "hilo", title: "Hi-Lo Cards", icon: "🃏", lvl: 3, vip: false },
-        { id: "slots", title: "Cyber Slots", icon: "🎰", lvl: 5, vip: false },
-        { id: "dice2", title: "Cyber Dice 2.0", icon: "🎲", lvl: 6, vip: false },
-        { id: "plinko", title: "Plinko Drop", icon: "🟢", lvl: 1, vip: true },
-        { id: "roulette", title: "Cyber Roulette", icon: "🎡", lvl: 1, vip: true },
-        { id: "cryptocandle", title: "BTC Crypto Candle", icon: "📈", lvl: 1, vip: true },
-        { id: "penalty", title: "Penalty Shootout", icon: "⚽", lvl: 1, vip: true },
-        { id: "chickencross", title: "Chicken Road Cross", icon: "🐔", lvl: 1, vip: true },
-        { id: "horserace", title: "Cyber Derby Race", icon: "🐎", lvl: 1, vip: true },
-        { id: "wheel", title: "Fortune Wheel 100X", icon: "🌟", lvl: 1, vip: true },
-        { id: "blackjack", title: "Cyber Blackjack", icon: "🃏", lvl: 1, vip: true }
+    // 70 REAL UNIQUE CASINO & ARCADE TITLES (NO "GAME #X" PLACEHOLDERS)
+    const realGames = [
+        // BASIC SUITE (GAMES 1 TO 20) - ACCESSIBLE VIA LEVEL PROGRESSION ON ₹9/49/99 TIER
+        { id: "color", title: "WinGo 1M Color Prediction", lvl: 1, vip: false },
+        { id: "aviator", title: "Stake Crash Aviator", lvl: 1, vip: false },
+        { id: "mines", title: "Cyber Minesweeper 5x5", lvl: 2, vip: false },
+        { id: "dragon", title: "Dragon vs Tiger Live", lvl: 2, vip: false },
+        { id: "hilo", title: "Hi-Lo Poker Streak", lvl: 3, vip: false },
+        { id: "slots", title: "Neon 777 Jackpot Slots", lvl: 4, vip: false },
+        { id: "dice2", title: "Cyber Dice Roll 3.0", lvl: 5, vip: false },
+        { id: "roulette", title: "European Roulette Pro", lvl: 6, vip: false },
+        { id: "plinko", title: "Plinko Drop Multiplier", lvl: 7, vip: false },
+        { id: "baccarat", title: "Speed Baccarat VIP", lvl: 8, vip: false },
+        { id: "cryptocandle", title: "BTC Crypto Candle 30s", lvl: 9, vip: false },
+        { id: "penalty", title: "Penalty Shootout Pro", lvl: 10, vip: false },
+        { id: "chickencross", title: "Chicken Road Cross 3D", lvl: 11, vip: false },
+        { id: "horserace", title: "Derby Horse Racing", lvl: 12, vip: false },
+        { id: "wheel", title: "Fortune Wheel 100X", lvl: 13, vip: false },
+        { id: "blackjack", title: "Classic Blackjack 21", lvl: 14, vip: false },
+        { id: "andarbahar", title: "Andar Bahar Royale", lvl: 15, vip: false },
+        { id: "teenpatti", title: "Teen Patti Deluxe", lvl: 16, vip: false },
+        { id: "sicbo", title: "Sicilian Dice Sic Bo", lvl: 18, vip: false },
+        { id: "limbo", title: "Limbo Rocket Multiplier", lvl: 20, vip: false },
+
+        // SUPER VIP SUITE (GAMES 21 TO 70) - STRICTLY ACCESSIBLE ON ₹200 VIP PASS
+        { id: "game_21", title: "Roaring Fortune Tiger", lvl: 1, vip: true },
+        { id: "game_22", title: "Mega Ball Bingo Live", lvl: 1, vip: true },
+        { id: "game_23", title: "Crazy Time Multiplier", lvl: 1, vip: true },
+        { id: "game_24", title: "Monopoly Live Arena", lvl: 1, vip: true },
+        { id: "game_25", title: "Lightening Baccarat", lvl: 1, vip: true },
+        { id: "game_26", title: "Speed Craps Deluxe", lvl: 1, vip: true },
+        { id: "game_27", title: "Red Dog High Card", lvl: 1, vip: true },
+        { id: "game_28", title: "Casino Hold'em Poker", lvl: 1, vip: true },
+        { id: "game_29", title: "Golden Wealth Baccarat", lvl: 1, vip: true },
+        { id: "game_30", title: "VIP Platinum Roulette", lvl: 1, vip: true },
+        { id: "game_31", title: "Super Fan Tan", lvl: 1, vip: true },
+        { id: "game_32", title: "Cash or Crash Tower", lvl: 1, vip: true },
+        { id: "game_33", title: "Football Studio Dice", lvl: 1, vip: true },
+        { id: "game_34", title: "Dead or Alive Saloon", lvl: 1, vip: true },
+        { id: "game_35", title: "Lightning Dice 1000X", lvl: 1, vip: true },
+        { id: "game_36", title: "Gonzo's Treasure Hunt", lvl: 1, vip: true },
+        { id: "game_37", title: "Sweet Bonanza Candyland", lvl: 1, vip: true },
+        { id: "game_38", title: "Coin Flip Arcade", lvl: 1, vip: true },
+        { id: "game_39", title: "Bac Bo Dice Battle", lvl: 1, vip: true },
+        { id: "game_40", title: "Dragon Tiger Luck", lvl: 1, vip: true },
+        { id: "game_41", title: "Mahjong Ways 2", lvl: 1, vip: true },
+        { id: "game_42", title: "Lucky Neko Cat Slots", lvl: 1, vip: true },
+        { id: "game_43", title: "Wild Bandito Gunner", lvl: 1, vip: true },
+        { id: "game_44", title: "Ways of the Qilin", lvl: 1, vip: true },
+        { id: "game_45", title: "Double Fortune Reels", lvl: 1, vip: true },
+        { id: "game_46", title: "Treasures of Aztec", lvl: 1, vip: true },
+        { id: "game_47", title: "Ganesha Gold Deluxe", lvl: 1, vip: true },
+        { id: "game_48", title: "Caishen Wins Jackpot", lvl: 1, vip: true },
+        { id: "game_49", title: "Captain's Bounty Crash", lvl: 1, vip: true },
+        { id: "game_50", title: "Egypt's Book of Mystery", lvl: 1, vip: true },
+        { id: "game_51", title: "Thai River Wonders", lvl: 1, vip: true },
+        { id: "game_52", title: "Balinese Garden Slots", lvl: 1, vip: true },
+        { id: "game_53", title: "Crypto Mines 10x10", lvl: 1, vip: true },
+        { id: "game_54", title: "Space XY Rocket", lvl: 1, vip: true },
+        { id: "game_55", title: "JetX Flight Simulator", lvl: 1, vip: true },
+        { id: "game_56", title: "Balloon Pop Multiplier", lvl: 1, vip: true },
+        { id: "game_57", title: "High Striker Carnival", lvl: 1, vip: true },
+        { id: "game_58", title: "Tower Legend Quest", lvl: 1, vip: true },
+        { id: "game_59", title: "Keno Jackpot Draw", lvl: 1, vip: true },
+        { id: "game_60", title: "Bingo Blast 90", lvl: 1, vip: true },
+        { id: "game_61", title: "Scratch Match Gold", lvl: 1, vip: true },
+        { id: "game_62", title: "Football Penalty Shoot", lvl: 1, vip: true },
+        { id: "game_63", title: "Darts Championship", lvl: 1, vip: true },
+        { id: "game_64", title: "Speed Archery Bullseye", lvl: 1, vip: true },
+        { id: "game_65", title: "Cyber Bowling Strike", lvl: 1, vip: true },
+        { id: "game_66", title: "8-Ball Pool Challenge", lvl: 1, vip: true },
+        { id: "game_67", title: "Fruit Slice Slash", lvl: 1, vip: true },
+        { id: "game_68", title: "Slices of Pizza Slots", lvl: 1, vip: true },
+        { id: "game_69", title: "Candy Burst Bonanza", lvl: 1, vip: true },
+        { id: "game_70", title: "RWIN Super Jackpot 1000X", lvl: 1, vip: true }
     ];
 
-    for(let i = 16; i <= 70; i++) {
-        allGames.push({
-            id: `game_${i}`,
-            title: `VIP Arena Game #${i}`,
-            icon: i % 2 === 0 ? "🔥" : "💎",
-            lvl: 1,
-            vip: true
-        });
-    }
+    let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">BASIC TIER (GAMES 1-20 • ₹9/49/99 UNLOCKED)</h3><div class="arena-grid">`;
+    let vipHtml = `<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 21-70 • ₹200 PASS EXCLUSIVE)</h3><div class="arena-grid">`;
 
-    let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">FREE / BASIC GAMES (LEVEL PROGRESSION)</h3><div class="arena-grid">`;
-    let vipHtml = `<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (VIP PASS EXCLUSIVE)</h3><div class="arena-grid">`;
-
-    allGames.forEach(g => {
+    realGames.forEach(g => {
         const cardMarkup = `
             <div class="game-card ${g.vip ? 'locked' : ''}" onclick="checkAndOpenGame('${g.id}', '${g.title}', ${g.lvl}, ${g.vip})">
-                <div class="game-icon">${g.icon}</div>
+                <div style="font-size:12px; font-weight:800; color:var(--neon-blue); margin-bottom:4px;">CASINO CLASSIC</div>
                 <h3>${g.title}</h3>
-                <p style="color:${g.vip ? 'var(--neon-gold)' : '#94a3b8'};">${g.vip ? '🔒 VIP Pass' : 'LVL ' + g.lvl + ' Req'}</p>
+                <p style="color:${g.vip ? 'var(--neon-gold)' : '#94a3b8'}; margin-top:6px; font-weight:600;">
+                    ${g.vip ? '🔒 ₹200 VIP Pass' : 'LVL ' + g.lvl + ' Req'}
+                </p>
             </div>
         `;
         if (g.vip) vipHtml += cardMarkup;
@@ -320,16 +209,7 @@ window.renderFullGameGrid = function() {
     basicHtml += `</div>`;
     vipHtml += `</div>`;
 
-    const lbMarkup = `
-      <div class="leaderboard-box">
-        <h3 style="font-size:13px; color:var(--neon-gold); margin:0 0 10px 0;">🏆 Top Arena Players Today</h3>
-        <div class="lb-row"><span>1. 👑 CyberKing_99</span><b style="color:var(--neon-green);">₹2,45,000</b></div>
-        <div class="lb-row"><span>2. 🥇 Alex_Pro</span><b style="color:var(--neon-green);">₹1,89,200</b></div>
-        <div class="lb-row"><span>3. 🥈 Rahul_VIP</span><b style="color:var(--neon-green);">₹1,42,000</b></div>
-      </div>
-    `;
-
-    hub.innerHTML = basicHtml + vipHtml + lbMarkup;
+    hub.innerHTML = basicHtml + vipHtml;
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -337,5 +217,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 </body>
-  </html>
-  
+</html>
