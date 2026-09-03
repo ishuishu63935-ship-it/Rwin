@@ -46,7 +46,7 @@
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:14px;">Game</b>
 </div>
 
-<!-- MAIN ARENA HUB (DYNAMIC 70 REAL GAMES) -->
+<!-- MAIN ARENA HUB -->
 <div id="arenaHub"></div>
 
 <nav class="bottomNav">
@@ -90,21 +90,25 @@ window.checkAndOpenGame = function(gameId, title, reqLvl, isVip) {
     const userLevel = (window.game && window.game.level) ? window.game.level : 1;
     const tier = window.CasinoSession ? window.CasinoSession.getTier() : 'free';
 
-    if (tier === 'free') {
-        window.showCasinoModal(false, "🔒 Membership Required", "Free account balance cannot play locked VIP games. Buy ₹9/49/99 or ₹200 VIP Pass!", "⛔");
-        return;
-    }
-
+    // 1. SUPER VIP EXCLUSIVE GAMES (GAMES 21-70)
     if (isVip && tier !== 'vip') {
-        window.showCasinoModal(false, "🔒 ₹200 Super VIP Exclusive", "Your ₹9/49/99 Plan includes the first 20 Games. Upgrade to ₹200 Pass for all 70+ Games!", "👑");
+        window.showCasinoModal(false, "👑 ₹200 Super VIP Exclusive", "Upgrade to ₹200 VIP Vault Pass to unlock all 70+ Casino Games!", "👑");
         return;
     }
 
-    if (userLevel < reqLvl) {
-        window.showCasinoModal(false, "Level Locked", `Reach LVL ${reqLvl} in arena to unlock ${title}!`, "⭐");
+    // 2. FREE TIER ACCESS (LEVEL 1 TO LEVEL 4 ARE COMPLETELY FREE FOR ALL USERS)
+    if (tier === 'free' && reqLvl > 4) {
+        window.showCasinoModal(false, "🔒 Starter Pass Required", `Games above Level 4 require Starter Pass (₹9/₹49/₹99) to unlock! You can play Level 1-4 Games for FREE.`, "⛔");
         return;
     }
 
+    // 3. BASIC TIER ACCESS (UP TO LEVEL 20)
+    if (tier === 'basic' && reqLvl > 20) {
+        window.showCasinoModal(false, "👑 Upgrade to Super VIP", "Your ₹9/49/99 Plan includes up to Game 20. Buy ₹200 Pass for Games 21-70!", "⭐");
+        return;
+    }
+
+    // Open Game
     window.openGame(gameId, title);
 };
 
@@ -112,9 +116,8 @@ window.renderFullGameGrid = function() {
     const hub = document.getElementById("arenaHub");
     if (!hub) return;
 
-    // 70 REAL UNIQUE CASINO & ARCADE TITLES (NO "GAME #X" PLACEHOLDERS)
     const realGames = [
-        // BASIC SUITE (GAMES 1 TO 20) - ACCESSIBLE VIA LEVEL PROGRESSION ON ₹9/49/99 TIER
+        // BASIC SUITE (GAMES 1 TO 20)
         { id: "color", title: "WinGo 1M Color Prediction", lvl: 1, vip: false },
         { id: "aviator", title: "Stake Crash Aviator", lvl: 1, vip: false },
         { id: "mines", title: "Cyber Minesweeper 5x5", lvl: 2, vip: false },
@@ -136,7 +139,7 @@ window.renderFullGameGrid = function() {
         { id: "sicbo", title: "Sicilian Dice Sic Bo", lvl: 18, vip: false },
         { id: "limbo", title: "Limbo Rocket Multiplier", lvl: 20, vip: false },
 
-        // SUPER VIP SUITE (GAMES 21 TO 70) - STRICTLY ACCESSIBLE ON ₹200 VIP PASS
+        // SUPER VIP SUITE (GAMES 21 TO 70)
         { id: "game_21", title: "Roaring Fortune Tiger", lvl: 1, vip: true },
         { id: "game_22", title: "Mega Ball Bingo Live", lvl: 1, vip: true },
         { id: "game_23", title: "Crazy Time Multiplier", lvl: 1, vip: true },
@@ -189,16 +192,19 @@ window.renderFullGameGrid = function() {
         { id: "game_70", title: "RWIN Super Jackpot 1000X", lvl: 1, vip: true }
     ];
 
-    let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">BASIC TIER (GAMES 1-20 • ₹9/49/99 UNLOCKED)</h3><div class="arena-grid">`;
+    let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">BASIC ARENA (GAMES 1-20 • LVL 1-4 FREE)</h3><div class="arena-grid">`;
     let vipHtml = `<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 21-70 • ₹200 PASS EXCLUSIVE)</h3><div class="arena-grid">`;
 
     realGames.forEach(g => {
+        const isFreeGame = (!g.vip && g.lvl <= 4);
         const cardMarkup = `
             <div class="game-card ${g.vip ? 'locked' : ''}" onclick="checkAndOpenGame('${g.id}', '${g.title}', ${g.lvl}, ${g.vip})">
-                <div style="font-size:12px; font-weight:800; color:var(--neon-blue); margin-bottom:4px;">CASINO CLASSIC</div>
+                <div style="font-size:12px; font-weight:800; color:${isFreeGame ? 'var(--neon-green)' : 'var(--neon-blue)'}; margin-bottom:4px;">
+                    ${isFreeGame ? 'FREE PLAY' : 'CASINO CLASSIC'}
+                </div>
                 <h3>${g.title}</h3>
-                <p style="color:${g.vip ? 'var(--neon-gold)' : '#94a3b8'}; margin-top:6px; font-weight:600;">
-                    ${g.vip ? '🔒 ₹200 VIP Pass' : 'LVL ' + g.lvl + ' Req'}
+                <p style="color:${g.vip ? 'var(--neon-gold)' : (isFreeGame ? 'var(--neon-green)' : '#94a3b8')}; margin-top:6px; font-weight:600;">
+                    ${g.vip ? '🔒 ₹200 VIP Pass' : (isFreeGame ? '⚡ FREE UNLOCKED' : '🔒 LVL ' + g.lvl + ' (₹9 Pass)')}
                 </p>
             </div>
         `;
