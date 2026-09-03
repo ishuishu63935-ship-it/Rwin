@@ -1,198 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RWIN - Wallet & Membership</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    body { background: #0b0f17; color: #fff; padding: 15px; padding-bottom: 80px; }
-    .app-container { max-width: 480px; margin: 0 auto; }
-    
-    .card {
-      background: #141a26;
-      border: 1px solid #1e293b;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-    .card-header {
-      font-size: 16px; font-weight: 600; color: #00e5ff;
-      margin-bottom: 14px; border-bottom: 1px solid #1e293b; padding-bottom: 10px;
-    }
-    
-    /* Plans Grid */
-    .plans-grid { display: grid; gap: 12px; margin-bottom: 10px; }
-    .plan-box {
-      background: #1a2232; border: 1px solid #2d3748; border-radius: 12px;
-      padding: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-      transition: 0.2s;
-    }
-    .plan-box.selected { border-color: #00e5ff; background: rgba(0, 229, 255, 0.08); }
-    .plan-title { font-weight: bold; font-size: 15px; color: #fff; }
-    .plan-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-    .plan-price { font-size: 18px; font-weight: 800; color: #00e5ff; }
-
-    /* QR Box */
-    .qr-container { text-align: center; padding: 10px 0; }
-    .qr-box { background: #fff; padding: 10px; border-radius: 12px; display: inline-block; }
-
-    /* UTR Input Styling */
-    .utr-section { text-align: center; margin-top: 15px; }
-    .utr-input {
-      width: 100%; padding: 12px; font-size: 15px; text-align: center;
-      border-radius: 8px; border: 1px solid #00e5ff; background: #0f172a;
-      color: #fff; outline: none; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;
-    }
-    .verify-btn {
-      width: 100%; padding: 12px; font-size: 15px; font-weight: bold;
-      background: #00e5ff; color: #000; border: none; border-radius: 8px;
-      cursor: pointer; transition: 0.2s;
-    }
-
-    /* Bottom Navbar */
-    .navbar {
-      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 100%; max-width: 480px; background: #121824; border-top: 1px solid #1e293b;
-      display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;
-    }
-    .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #64748b; font-size: 11px; width: 25%; }
-    .nav-item.active { color: #00e5ff; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RWIN - VIP Wallet & Store</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="js/core-engine.js"></script>
+<style>
+.plan-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.plan-card.active {
+  border-color: var(--neon-blue);
+  background: rgba(0, 229, 255, 0.08);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+}
+.plan-price {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--neon-blue);
+}
+.vip-gold-card {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: rgba(245, 158, 11, 0.05);
+}
+.vip-gold-card.active {
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+}
+</style>
 </head>
+
 <body>
+<div class="gameContainer">
 
-<div class="app-container">
+<header class="topBar">
+  <h1 style="font-size:16px; margin:0; color:#fff;">💰 VIP Store & Wallet</h1>
+  <span style="font-size:11px; color:var(--neon-green);">● Instant UTR Activation</span>
+</header>
 
-  <!-- MEMBERSHIP PLANS -->
-  <div class="card">
-    <div class="card-header">👑 Select Membership Plan</div>
-    <div class="plans-grid">
-      
-      <!-- ₹9 Plan -->
-      <div class="plan-box selected" onclick="selectPlan('Starter Plan', 9, this)">
-        <div>
-          <div class="plan-title">16 Days Starter Plan</div>
-          <div class="plan-sub">Basic Practice Access & Reset</div>
-        </div>
-        <div class="plan-price">₹9</div>
-      </div>
+<div style="padding: 14px;">
+  <h3 style="color:#94a3b8; font-size:12px; margin-bottom:10px; letter-spacing:1px;">SELECT MEMBERSHIP PLAN</h3>
 
-      <!-- ₹49 Plan -->
-      <div class="plan-box" onclick="selectPlan('Pro Gamer Plan', 49, this)">
-        <div>
-          <div class="plan-title">2 Months Pro Pass</div>
-          <div class="plan-sub">Pro Gamer Package + Fast Level Up</div>
-        </div>
-        <div class="plan-price">₹49</div>
-      </div>
-
-      <!-- ₹99 Plan -->
-      <div class="plan-box" onclick="selectPlan('Elite VIP Pass', 99, this)">
-        <div>
-          <div class="plan-title">6 Months Elite Pass</div>
-          <div class="plan-sub">Unlimited Reset + Premium Support</div>
-        </div>
-        <div class="plan-price">₹99</div>
-      </div>
-
-      <!-- ₹200 Super VIP Pass -->
-      <div class="plan-box" style="border: 1px solid #f59e0b;" onclick="selectPlan('SUPER_VIP_200', 200, this)">
-        <div>
-          <div class="plan-title" style="color:#f59e0b;">🔥 Super VIP Vault Pass</div>
-          <div class="plan-sub">Instant Unlock All 70+ Casino Games</div>
-        </div>
-        <div class="plan-price" style="color:#f59e0b;">₹200</div>
-      </div>
-
+  <!-- PLAN 1: STARTER PASS -->
+  <div class="plan-card active" id="plan-9" onclick="selectPlan(9, 'Starter Plan (₹9)', 'basic')">
+    <div>
+      <b style="color:#fff; font-size:14px;">Starter VIP Pass</b>
+      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">20 Games + Unlimited Coin Resets</p>
     </div>
+    <div class="plan-price">₹9</div>
   </div>
 
-  <!-- PAYMENT QR CARD -->
-  <div class="card">
-    <div class="card-header">💰 Pay via UPI</div>
-    
-    <div class="qr-container">
-      <p style="color:#94a3b8; font-size:12px; margin-bottom:10px;">
-        Selected Plan: <b id="displayPlanName" style="color:#00e5ff;">Starter Plan (₹9)</b>
-      </p>
-      
-      <!-- Dynamic QR Image -->
-      <div class="qr-box">
-        <img id="upiQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl%26pn=RWIN_GAMING%26am=9%26cu=INR" alt="UPI QR Code" style="width:180px; height:180px;">
-      </div>
-      
-      <p style="margin-top:10px; font-weight:bold; color:#00e5ff; font-size:14px;">UPI ID: 7415325460-2@ibl</p>
+  <!-- PLAN 2: 2 MONTHS PRO -->
+  <div class="plan-card" id="plan-49" onclick="selectPlan(49, 'Pro Pass (₹49)', 'basic')">
+    <div>
+      <b style="color:#fff; font-size:14px;">2 Months Pro Pass</b>
+      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">20 Games + Fast Level Up</p>
     </div>
-
-    <!-- UTR INPUT & VERIFY SECTION -->
-    <div class="utr-section">
-      <input 
-        type="text" 
-        id="utrInput" 
-        placeholder="Enter 12-Digit UTR Number" 
-        maxlength="12" 
-        class="utr-input"
-      >
-      <button id="payNowBtn" onclick="verifyPaymentManual()" class="verify-btn">Verify & Activate</button>
-    </div>
-
-    <!-- NOTICE -->
-    <div style="background: rgba(0, 229, 255, 0.1); border: 1px solid #00e5ff; padding: 10px; border-radius: 8px; margin-top: 15px;">
-      <p style="font-size: 11px; color: #00e5ff; text-align: center; line-height: 1.4;">
-        ⚡ UPI app par payment karke 12-Digit UTR/Ref No. yahan daalein. Automated verification dwara Instant Active hoga!
-      </p>
-    </div>
+    <div class="plan-price">₹49</div>
   </div>
+
+  <!-- PLAN 3: 6 MONTHS ELITE -->
+  <div class="plan-card" id="plan-99" onclick="selectPlan(99, 'Elite Pass (₹99)', 'basic')">
+    <div>
+      <b style="color:#fff; font-size:14px;">6 Months Elite Pass</b>
+      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">20 Games + Priority Support</p>
+    </div>
+    <div class="plan-price">₹99</div>
+  </div>
+
+  <!-- PLAN 4: SUPER VIP 70+ GAMES -->
+  <div class="plan-card vip-gold-card" id="plan-200" onclick="selectPlan(200, 'Super VIP Pass (₹200)', 'vip')">
+    <div>
+      <b style="color:var(--neon-gold); font-size:14px;">🔥 Super VIP Vault Pass</b>
+      <p style="font-size:10px; color:#94a3b8; margin-top:2px;">Instant Unlock All 70+ Casino Games</p>
+    </div>
+    <div class="plan-price" style="color:var(--neon-gold);">₹200</div>
+  </div>
+
+  <!-- UPI PAYMENT BOX -->
+  <div class="action-box" style="background:#0b101d; border:1px solid var(--card-border); border-radius:18px; padding:18px; text-align:center; margin-top:16px;">
+    <h3 style="color:var(--neon-blue); font-size:14px; margin-bottom:4px;">💰 Pay via UPI QR</h3>
+    <p style="font-size:11px; color:#94a3b8; margin-bottom:12px;">Selected: <b id="selectedPlanText" style="color:#fff;">Starter Plan (₹9)</b></p>
+
+    <!-- QR CODE -->
+    <div style="background:#fff; padding:10px; border-radius:12px; display:inline-block; margin-bottom:10px;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl%26pn=RWIN%20VIP" alt="UPI QR Code" style="width:160px; height:160px; display:block;">
+    </div>
+
+    <div style="font-size:12px; font-weight:700; color:var(--neon-green); margin-bottom:14px; word-break:break-all;">
+      UPI ID: 7415325460-2@ibl
+    </div>
+
+    <!-- UTR INPUT FORM -->
+    <input type="text" id="utrInput" class="input-field" placeholder="Enter 12-Digit UTR / Ref Number" maxlength="12" style="text-align:center; font-weight:700; letter-spacing:1px;">
+
+    <button onclick="verifyUtrPayment()" class="btn-primary" style="margin-top:8px;">
+      ⚡ Verify & Activate Plan
+    </button>
+
+    <p style="font-size:10px; color:#94a3b8; margin-top:12px; line-weight:1.4;">
+      ⚡ UPI app par payment karke 12-Digit UTR/Ref No. yahan daalein. Automated verification dwara Instant Active hoga!
+    </p>
+  </div>
+</div>
+
+<nav class="bottomNav">
+  <a href="home.html" class="navItem">🏠 <span>Home</span></a>
+  <a href="game.html" class="navItem">🎮 <span>Arena</span></a>
+  <a href="wallet.html" class="navItem active">💰 <span>Wallet</span></a>
+  <a href="profile.html" class="navItem">👤 <span>Profile</span></a>
+</nav>
 
 </div>
 
-<!-- BOTTOM NAVBAR -->
-<div class="navbar">
-  <a href="home.html" class="nav-item"><span>🏠</span><span>Home</span></a>
-  <a href="game.html" class="nav-item"><span>🎮</span><span>Practice</span></a>
-  <a href="wallet.html" class="nav-item active"><span>💰</span><span>Wallet</span></a>
-  <a href="profile.html" class="nav-item"><span>👤</span><span>Profile</span></a>
-</div>
-
-<script type="module" src="script.js"></script>
 <script>
-  const upiId = "7415325460-2@ibl";
-  let activeSelectedPlan = "Starter Plan";
+window.selectedPlanCost = 9;
+window.selectedPlanName = "Starter Plan (₹9)";
+window.selectedPlanTier = "basic";
 
-  function selectPlan(planName, amount, element) {
-    document.querySelectorAll('.plan-box').forEach(box => box.classList.remove('selected'));
-    element.classList.add('selected');
+function selectPlan(cost, name, tier) {
+    window.selectedPlanCost = cost;
+    window.selectedPlanName = name;
+    window.selectedPlanTier = tier;
 
-    activeSelectedPlan = planName;
-    document.getElementById('displayPlanName').innerText = `${planName} (₹${amount})`;
+    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('plan-' + cost).classList.add('active');
+    document.getElementById('selectedPlanText').innerText = name;
+}
 
-    const upiString = `upi://pay?pa=${upiId}&pn=RWIN_GAMING&am=${amount}&cu=INR`;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiString)}`;
-    document.getElementById('upiQrCode').src = qrUrl;
-  }
-
-  function verifyPaymentManual() {
+window.verifyUtrPayment = function() {
     const utr = document.getElementById("utrInput").value.trim();
     if (utr.length < 10) {
-      alert("❌ Please enter a valid 12-digit UTR/Ref Number!");
-      return;
+        alert("Please enter a valid 12-Digit UTR/Ref Number!");
+        return;
     }
 
-    let g = { balance: 10000, xp: 0, level: 1, membership: false, membershipPlan: "Free Plan" };
-    const raw = localStorage.getItem("rwinGame");
-    if (raw) { try { g = JSON.parse(raw); } catch(e){} }
+    // Save membership tier directly into localStorage
+    localStorage.setItem("rwin_membership_tier", window.selectedPlanTier);
 
-    g.membership = true;
-    g.membershipPlan = activeSelectedPlan;
-    g.balance = (g.balance || 0) + 10000; // Bonus on active membership
+    if (window.game) {
+        window.game.balance += 10000;
+        if (window.saveGame) window.saveGame();
+    }
 
-    localStorage.setItem("rwinGame", JSON.stringify(g));
-    alert(`🎉 PAYMENT VERIFIED! ${activeSelectedPlan} activated successfully. ₹10,000 Coins added!`);
-    window.location.href = "game.html";
-  }
+    alert(`🎉 PAYMENT VERIFIED!\n${window.selectedPlanName} activated successfully.\n₹10,000 Coins added!`);
+    
+    // Direct redirect to Profile Page to see active badge
+    window.location.href = "profile.html";
+};
 </script>
-
 </body>
 </html>
