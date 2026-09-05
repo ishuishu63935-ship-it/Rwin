@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RWIN - VIP Arcade & Casino Arena</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -16,8 +17,23 @@
   --border-color: #1e293b;
 }
 
+/* PREVENT TEXT SELECTION ON MOBILE TAP */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+input, select, textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
 body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; }
-.gameContainer { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; position: relative; padding-bottom: 80px; box-sizing: border-box; }
+.gameContainer { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; position: relative; padding-bottom: 80px; }
 
 .topBar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #070a14; border-bottom: 1px solid var(--border-color); }
 .tier-badge { background: linear-gradient(135deg, var(--neon-pink), #be185d); color: #fff; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 12px; text-transform: uppercase; }
@@ -25,21 +41,21 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .balanceCard { background: var(--bg-dark); margin: 10px 14px; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; }
 .balanceCard h1 { font-size: 28px; margin: 2px 0; color: var(--neon-blue); font-weight: 800; }
 
-.game-screen { display: none; padding: 10px; color: #fff; width: 100%; box-sizing: border-box; }
+.game-screen { display: none; padding: 10px; color: #fff; width: 100%; }
 .game-screen.active { display: block !important; }
 .back-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #0f172a; border-radius: 10px; margin: 8px 12px; border: 1px solid var(--border-color); }
-.back-btn { padding: 4px 10px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
 
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
-.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
-.game-card.locked { opacity: 0.85; border-color: rgba(245, 158, 11, 0.4); }
+.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; transition: 0.1s active; }
+.game-card:active { transform: scale(0.97); }
 .game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; }
 
-.bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #070a14; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 999; box-sizing: border-box; }
+.bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #070a14; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 999; }
 .navItem { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
 .navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-/* WINGO & AVIATOR UI STYLES */
+/* GAME SPECIFIC STYLES */
 .wingo-ring { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
 .wingo-chip { padding: 4px 8px; background: var(--border-color); border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
 .wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
@@ -110,114 +126,113 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
-<!-- 100% STATIC RENDERED GRID - NO JS REQUIRED FOR DISPLAY -->
+<!-- 20 GAMES ARENA GRID -->
 <div id="arenaHub">
-  <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2 • 100% UNLOCKED)</h3>
+  <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2)</h3>
   <div class="arena-grid">
     <div class="game-card" onclick="openGame('color', 'WinGo 1M Color Prediction')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #1</div>
       <h3>Color Prediction</h3>
-      <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE UNLOCKED</p>
+      <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE PLAY</p>
     </div>
     <div class="game-card" onclick="openGame('aviator', 'Stake Crash Aviator')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #2</div>
       <h3>Aviator Crash</h3>
-      <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE UNLOCKED</p>
+      <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE PLAY</p>
     </div>
   </div>
 
   <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 3-20 • ₹200 PASS)</h3>
   <div class="arena-grid">
-    <!-- HARDCODED VIP GAMES -->
-    <div class="game-card locked vip-card" onclick="checkAndOpen('vortex', 'Game #3: Vortex Spin')">
+    <div class="game-card" onclick="openGame('vortex', 'Game #3: Vortex Spin')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #3: Vortex Spin</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('teenpatti', 'Game #4: 3 Patti Deluxe')">
+    <div class="game-card" onclick="openGame('teenpatti', 'Game #4: 3 Patti Deluxe')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #4: 3 Patti Deluxe</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('dragon', 'Game #5: Dragon vs Tiger')">
+    <div class="game-card" onclick="openGame('dragon', 'Game #5: Dragon vs Tiger')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #5: Dragon vs Tiger</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('mines', 'Game #6: Cyber Minesweeper')">
+    <div class="game-card" onclick="openGame('mines', 'Game #6: Cyber Minesweeper')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #6: Cyber Minesweeper</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('rummy', 'Game #7: Rummy Pro 13-Card')">
+    <div class="game-card" onclick="openGame('rummy', 'Game #7: Rummy Pro 13-Card')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #7: Rummy Pro 13-Card</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('roulette', 'Game #8: European Roulette')">
+    <div class="game-card" onclick="openGame('roulette', 'Game #8: European Roulette')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #8: European Roulette</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('blackjack', 'Game #9: Classic Blackjack 21')">
+    <div class="game-card" onclick="openGame('blackjack', 'Game #9: Classic Blackjack 21')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #9: Classic Blackjack 21</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('baccarat', 'Game #10: Speed Baccarat')">
+    <div class="game-card" onclick="openGame('baccarat', 'Game #10: Speed Baccarat')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #10: Speed Baccarat</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('andarbahar', 'Game #11: Andar Bahar Royale')">
+    <div class="game-card" onclick="openGame('andarbahar', 'Game #11: Andar Bahar Royale')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #11: Andar Bahar Royale</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('sicbo', 'Game #12: Sic Bo Dice')">
+    <div class="game-card" onclick="openGame('sicbo', 'Game #12: Sic Bo Dice')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #12: Sic Bo Dice</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('slots', 'Game #13: Neon 777 Slots')">
+    <div class="game-card" onclick="openGame('slots', 'Game #13: Neon 777 Slots')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #13: Neon 777 Slots</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('dice', 'Game #14: Cyber Dice Roll')">
+    <div class="game-card" onclick="openGame('dice', 'Game #14: Cyber Dice Roll')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #14: Cyber Dice Roll</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('hilo', 'Game #15: Hi-Lo Poker Streak')">
+    <div class="game-card" onclick="openGame('hilo', 'Game #15: Hi-Lo Poker Streak')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #15: Hi-Lo Poker Streak</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('chickenroad', 'Game #16: Chicken Road Cross')">
+    <div class="game-card" onclick="openGame('chickenroad', 'Game #16: Chicken Road Cross')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #16: Chicken Road Cross</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('plinko', 'Game #17: Plinko Drop Multiplier')">
+    <div class="game-card" onclick="openGame('plinko', 'Game #17: Plinko Drop Multiplier')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #17: Plinko Drop Multiplier</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('limbo', 'Game #18: Limbo Rocket')">
+    <div class="game-card" onclick="openGame('limbo', 'Game #18: Limbo Rocket')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #18: Limbo Rocket</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('horserace', 'Game #19: Derby Horse Racing')">
+    <div class="game-card" onclick="openGame('horserace', 'Game #19: Derby Horse Racing')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #19: Derby Horse Racing</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
-    <div class="game-card locked vip-card" onclick="checkAndOpen('cryptocandle', 'Game #20: BTC Crypto Candle 30s')">
+    <div class="game-card" onclick="openGame('cryptocandle', 'Game #20: BTC Crypto Candle 30s')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
       <h3>Game #20: BTC Crypto Candle 30s</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
     </div>
   </div>
 </div>
@@ -234,7 +249,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <script>
 var gameBalance = 10000;
 var currentTier = localStorage.getItem('rwin_tier') || 'free'; 
-// Tiers: 'free', 'starter_9', 'gold_49', 'platinum_99', 'vip_200'
 
 function updateUIState() {
     const badge = document.getElementById("userTierBadge");
@@ -247,17 +261,6 @@ function updateUIState() {
     }
     const balEl = document.getElementById("balanceText");
     if (balEl) balEl.innerText = "₹" + gameBalance.toLocaleString();
-
-    // Unlock visual states if user is VIP
-    if (currentTier === 'vip_200') {
-        document.querySelectorAll('.vip-card').forEach(card => {
-            card.classList.remove('locked');
-        });
-        document.querySelectorAll('.vip-status').forEach(status => {
-            status.style.color = "var(--neon-green)";
-            status.innerText = "⚡ UNLOCKED";
-        });
-    }
 }
 
 function openUTRModal() {
@@ -312,4 +315,17 @@ function closeModal() {
     document.getElementById("customModal").style.display = "none";
 }
 
-function checkAndOpen(gameI
+function openGame(gameId, title) {
+    document.getElementById('arenaHub').style.display = 'none';
+    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+    
+    let targetScreen = document.getElementById('game-' + gameId);
+    if (!targetScreen) {
+        targetScreen = document.createElement('div');
+        targetScreen.id = 'game-' + gameId;
+        targetScreen.className = 'game-screen';
+        document.querySelector('.gameContainer').appendChild(targetScreen);
+    }
+    
+    targetScreen.classList.add('active');
+    document
