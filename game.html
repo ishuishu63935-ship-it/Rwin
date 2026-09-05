@@ -1,5 +1,5 @@
 
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,29 +14,36 @@
   --neon-pink: #ec4899;
 }
 body { margin: 0; padding: 0; background: #050811; font-family: 'Poppins', sans-serif; color: #fff; }
-.gameContainer { max-width: 480px; margin: 0 auto; background: #050811; min-height: 100vh; position: relative; padding-bottom: 80px; box-sizing: border-box; }
-.topBar { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: #0b101d; border-bottom: 1px solid #1e293b; }
-.level-badge { background: var(--neon-pink); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 12px; }
-.xp-progress-outer { width: 100px; height: 6px; background: #1e293b; border-radius: 4px; overflow: hidden; }
-.xp-progress-inner { width: 30%; height: 100%; background: var(--neon-blue); }
-.live-ticker { background: #0f172a; padding: 8px 14px; font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #1e293b; }
-.ticker-dot { width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 8px var(--neon-green); }
-.balanceCard { background: #0b101d; margin: 12px; border: 1px solid #1e293b; border-radius: 16px; padding: 16px; text-align: center; }
-.balanceCard h1 { font-size: 28px; margin: 4px 0; color: var(--neon-blue); }
-.game-screen { display: none; padding: 12px; color: #fff; width: 100%; box-sizing: border-box; }
+.gameContainer { max-width: 480px; margin: 0 auto; background: #0b101d; min-height: 100vh; position: relative; padding-bottom: 80px; box-sizing: border-box; }
+.topBar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #070a14; border-bottom: 1px solid #1e293b; }
+.balanceCard { background: #050811; margin: 10px 14px; border: 1px solid #1e293b; border-radius: 14px; padding: 12px; text-align: center; }
+.balanceCard h1 { font-size: 26px; margin: 2px 0; color: var(--neon-blue); }
+
+.game-screen { display: none; padding: 10px; color: #fff; width: 100%; box-sizing: border-box; }
 .game-screen.active { display: block !important; }
-.back-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #0f172a; border-radius: 12px; margin: 10px 12px; border: 1px solid #1e293b; }
-.back-btn { padding: 6px 12px; background: #1e293b; color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; }
+.back-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #0f172a; border-radius: 10px; margin: 8px 12px; border: 1px solid #1e293b; }
+.back-btn { padding: 4px 10px; background: #1e293b; color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
+
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
-.game-card { background: #0b101d; border: 1px solid #1e293b; border-radius: 14px; padding: 14px; text-align: center; cursor: pointer; }
-.game-card.locked { opacity: 0.8; border-color: rgba(245, 158, 11, 0.3); }
-.game-card h3 { font-size: 13px; color: #fff; margin: 4px 0 0 0; }
-.bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #0b101d; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 10px 0; z-index: 999; box-sizing: border-box; }
-.navItem { color: #94a3b8; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; }
+.game-card { background: #050811; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; }
+.game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; }
+
+.bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #070a14; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 8px 0; z-index: 999; box-sizing: border-box; }
+.navItem { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
 .navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-#customModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-.modal-box { background: #0b101d; border: 2px solid var(--neon-blue); border-radius: 20px; padding: 24px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); }
+/* 55 CLUB WINGO SPECIAL STYLES */
+.wingo-ring { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
+.wingo-chip { padding: 4px 8px; background: #1e293b; border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
+.wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
+
+/* AVIATOR SPRIBE SPECIAL STYLES */
+.aviator-canvas { background: #000; border: 1px solid #1e293b; border-radius: 12px; width: 100%; height: 160px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.history-strip { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0; margin-bottom: 8px; }
+.history-pill { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: #1e293b; color: #94a3b8; white-space: nowrap; }
+
+#customModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; }
+.modal-box { background: #0b101d; border: 2px solid var(--neon-blue); border-radius: 16px; padding: 20px; text-align: center; width: 80%; max-width: 300px; }
 </style>
 </head>
 
@@ -45,43 +52,30 @@ body { margin: 0; padding: 0; background: #050811; font-family: 'Poppins', sans-
 
 <div id="customModal">
   <div class="modal-box" id="modalBox">
-    <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">🎯</div>
-    <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 6px 0;">RESULT</h3>
-    <p id="modalMsg" style="color:#94a3b8; font-size:13px; margin:0 0 16px 0;">Details</p>
-    <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    <div id="modalIcon" style="font-size:40px; margin-bottom:6px;">🎯</div>
+    <h3 id="modalTitle" style="color:#fff; font-size:16px; margin:0 0 4px 0;">RESULT</h3>
+    <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 14px 0;">Details</p>
+    <button onclick="closeModal()" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
   </div>
 </div>
 
 <header class="topBar">
-<div>
-  <h1 style="font-size:16px; margin:0; color:#fff;">🎮 RWIN VIP Arena</h1>
-  <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-    <span class="level-badge" id="userLevelBadge">LVL 1</span>
-    <span style="font-size:10px; color:#94a3b8;" id="xpText">0 / 500 XP</span>
+  <div>
+    <h1 style="font-size:15px; margin:0; color:#fff;">🎮 RWIN VIP Arena</h1>
+    <span style="font-size:10px; color:#94a3b8;">LVL 1 (0/500 XP)</span>
   </div>
-  <div class="xp-progress-outer"><div class="xp-progress-inner" id="xpBar"></div></div>
-</div>
-<div style="text-align:right;">
-  <span style="font-size:11px; color:var(--neon-green);">● Protected Device</span>
-</div>
+  <span style="font-size:10px; color:var(--neon-green);">● Connected</span>
 </header>
 
-<div class="live-ticker">
-  <div class="ticker-dot"></div>
-  <span id="liveTickerText">⚡ User_9281 won ₹14,500 on Stake Crash!</span>
-</div>
-
 <section class="balanceCard">
-  <p style="font-size:11px; color:#94a3b8; margin:0;">Virtual VIP Practice Balance</p>
+  <p style="font-size:10px; color:#94a3b8; margin:0;">Practice Balance</p>
   <h1 id="balanceText">₹10,000</h1>
-  <button id="resetCoinsBtn" onclick="resetCoins()" style="margin-top:8px; padding:8px 16px; background:var(--neon-blue); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer;">
-    🔄 Reset VIP Coins
-  </button>
+  <button onclick="resetCoins()" style="margin-top:4px; padding:6px 12px; background:var(--neon-blue); color:#000; border:none; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">🔄 Reset VIP Coins</button>
 </section>
 
 <div id="backBar" class="back-bar" style="display:none;">
   <button class="back-btn" onclick="exitToArena()">⬅️ Back to Hub</button>
-  <b id="activeGameTitle" style="color:var(--neon-blue); font-size:14px;">Game</b>
+  <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
 <div id="arenaHub"></div>
@@ -106,7 +100,7 @@ function updateBalance() {
 function resetCoins() {
     window.game.balance = 10000;
     updateBalance();
-    showModal("🔄 Balance Reset", "Virtual practice coins restored to ₹10,000!", "💰", true);
+    showModal("🔄 Balance Reset", "Coins restored to ₹10,000!", "💰", true);
 }
 
 function showModal(title, msg, icon, isWin) {
@@ -121,89 +115,114 @@ function closeModal() {
     document.getElementById("customModal").style.display = "none";
 }
 
-let wingoTimerVal = 30;
+// 55 CLUB WINGO STATE
+let wingoTimer = 30;
 let wingoPeriod = 20260906001;
+let wingoMulti = 1;
 let wingoHistory = [
     { period: "20260906000", num: 7, col: "GREEN", sz: "BIG" },
     { period: "20260906999", num: 2, col: "RED", sz: "SMALL" }
 ];
-let wingoInterval = null;
+let wingoTimerInt = null;
 
 window.loadMasterGameView = function(gameId) {
     const container = document.getElementById("game-" + gameId);
     if (!container) return;
 
+    // 1. EXACT 55 CLUB WINGO UI
     if (gameId === 'color') {
         container.innerHTML = `
-            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:14px; text-align:center;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#050811; padding:10px 14px; border-radius:12px; margin-bottom:12px; border:1px solid #1e293b;">
+            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
+                <!-- Mode Bar -->
+                <div style="display:flex; justify-content:space-between; background:#050811; padding:6px; border-radius:8px; margin-bottom:10px; font-size:10px; font-weight:700;">
+                    <span style="color:var(--neon-pink); border-bottom:2px solid var(--neon-pink);">WinGo 30s</span>
+                    <span style="color:#94a3b8;">WinGo 1Min</span>
+                    <span style="color:#94a3b8;">WinGo 3Min</span>
+                    <span style="color:#94a3b8;">WinGo 5Min</span>
+                </div>
+
+                <!-- Clock Bar -->
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:8px 12px; border-radius:10px; margin-bottom:10px;">
                     <div style="text-align:left;">
-                        <div style="font-size:10px; color:#94a3b8;">PERIOD</div>
-                        <div style="font-size:13px; font-weight:800; color:var(--neon-blue);" id="wingoPeriodEl">${wingoPeriod}</div>
+                        <div style="font-size:9px; color:#94a3b8;">Period</div>
+                        <div style="font-size:12px; font-weight:800; color:var(--neon-blue);" id="wingoPeriodEl">${wingoPeriod}</div>
                     </div>
                     <div style="text-align:right;">
-                        <div style="font-size:10px; color:#94a3b8;">COUNTDOWN</div>
-                        <div style="font-size:22px; font-weight:800; color:var(--neon-green);" id="wingoTimerEl">00:30</div>
+                        <div style="font-size:9px; color:#94a3b8;">Time Remaining</div>
+                        <div style="font-size:18px; font-weight:800; color:#fff; background:#000; padding:2px 8px; border-radius:6px;" id="wingoClockEl">00:30</div>
                     </div>
                 </div>
 
+                <!-- Green / Violet / Red -->
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
-                    <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green (2X)</button>
-                    <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet (4.5X)</button>
-                    <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red (2X)</button>
+                    <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green</button>
+                    <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet</button>
+                    <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red</button>
                 </div>
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
-                    <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BIG (5-9) 2X</button>
-                    <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">SMALL (0-4) 2X</button>
+                <!-- 0-9 Ring Circles -->
+                <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:10px;">
+                    <div onclick="playWinGo(0, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #ef4444, #8b5cf6);">0</div>
+                    <div onclick="playWinGo(1, 9)" class="wingo-ring" style="background:#10b981;">1</div>
+                    <div onclick="playWinGo(2, 9)" class="wingo-ring" style="background:#ef4444;">2</div>
+                    <div onclick="playWinGo(3, 9)" class="wingo-ring" style="background:#10b981;">3</div>
+                    <div onclick="playWinGo(4, 9)" class="wingo-ring" style="background:#ef4444;">4</div>
+                    <div onclick="playWinGo(5, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #10b981, #8b5cf6);">5</div>
+                    <div onclick="playWinGo(6, 9)" class="wingo-ring" style="background:#ef4444;">6</div>
+                    <div onclick="playWinGo(7, 9)" class="wingo-ring" style="background:#10b981;">7</div>
+                    <div onclick="playWinGo(8, 9)" class="wingo-ring" style="background:#ef4444;">8</div>
+                    <div onclick="playWinGo(9, 9)" class="wingo-ring" style="background:#10b981;">9</div>
                 </div>
 
-                <div style="font-size:11px; color:#94a3b8; margin-bottom:6px; text-align:left; font-weight:700;">SELECT NUMBER (9X PAYOUT):</div>
-                <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-bottom:12px;">
-                    <button onclick="playWinGo(0, 9)" style="padding:8px; background:linear-gradient(135deg, #ef4444, #8b5cf6); color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">0</button>
-                    <button onclick="playWinGo(1, 9)" style="padding:8px; background:#10b981; color:#000; font-weight:800; border-radius:6px; border:none; cursor:pointer;">1</button>
-                    <button onclick="playWinGo(2, 9)" style="padding:8px; background:#ef4444; color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">2</button>
-                    <button onclick="playWinGo(3, 9)" style="padding:8px; background:#10b981; color:#000; font-weight:800; border-radius:6px; border:none; cursor:pointer;">3</button>
-                    <button onclick="playWinGo(4, 9)" style="padding:8px; background:#ef4444; color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">4</button>
-                    <button onclick="playWinGo(5, 9)" style="padding:8px; background:linear-gradient(135deg, #10b981, #8b5cf6); color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">5</button>
-                    <button onclick="playWinGo(6, 9)" style="padding:8px; background:#ef4444; color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">6</button>
-                    <button onclick="playWinGo(7, 9)" style="padding:8px; background:#10b981; color:#000; font-weight:800; border-radius:6px; border:none; cursor:pointer;">7</button>
-                    <button onclick="playWinGo(8, 9)" style="padding:8px; background:#ef4444; color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">8</button>
-                    <button onclick="playWinGo(9, 9)" style="padding:8px; background:#10b981; color:#000; font-weight:800; border-radius:6px; border:none; cursor:pointer;">9</button>
+                <!-- Chips Bar -->
+                <div style="display:flex; justify-content:center; gap:6px; margin-bottom:10px;">
+                    <span onclick="setWingoChip(1)" class="wingo-chip active" id="chip-1">X1</span>
+                    <span onclick="setWingoChip(5)" class="wingo-chip" id="chip-5">X5</span>
+                    <span onclick="setWingoChip(10)" class="wingo-chip" id="chip-10">X10</span>
+                    <span onclick="setWingoChip(20)" class="wingo-chip" id="chip-20">X20</span>
+                    <span onclick="setWingoChip(50)" class="wingo-chip" id="chip-50">X50</span>
                 </div>
 
-                <div style="display:flex; gap:6px; margin-bottom:12px;">
-                    <input type="number" id="wingoBet" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                    <button onclick="document.getElementById('wingoBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px; cursor:pointer;">2X</button>
+                <!-- Big / Small Bar -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
+                    <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:20px 0 0 20px; border:none; cursor:pointer;">Big</button>
+                    <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:0 20px 20px 0; border:none; cursor:pointer;">Small</button>
                 </div>
 
-                <div style="background:#050811; border:1px solid #1e293b; border-radius:12px; padding:10px; text-align:left;">
-                    <div style="font-size:11px; font-weight:800; color:var(--neon-gold); margin-bottom:6px;">📊 TREND HISTORY</div>
-                    <div id="wingoHistoryList" style="font-size:11px; color:#cbd5e1;"></div>
+                <!-- History Table -->
+                <div style="background:#050811; border:1px solid #1e293b; border-radius:10px; padding:8px; text-align:left;">
+                    <div style="font-size:10px; font-weight:800; color:var(--neon-gold); margin-bottom:4px;">📊 Game History</div>
+                    <div id="wingoHistList" style="font-size:10px;"></div>
                 </div>
             </div>
         `;
 
-        function renderWingoHistory() {
-            const list = document.getElementById("wingoHistoryList");
+        window.setWingoChip = function(c) {
+            wingoMulti = c;
+            document.querySelectorAll('.wingo-chip').forEach(el => el.classList.remove('active'));
+            document.getElementById('chip-' + c).classList.add('active');
+        };
+
+        function renderWingoHist() {
+            const list = document.getElementById("wingoHistList");
             if (!list) return;
             list.innerHTML = wingoHistory.map(h => `
-                <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #1e293b;">
-                    <span>Period ${h.period}</span>
-                    <b style="color:${h.col === 'GREEN' ? '#10b981' : (h.col === 'RED' ? '#ef4444' : '#8b5cf6')}">${h.num} (${h.col} / ${h.sz})</b>
+                <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #1e293b;">
+                    <span>${h.period}</span>
+                    <b style="color:${h.col === 'GREEN' ? '#10b981' : (h.col === 'RED' ? '#ef4444' : '#8b5cf6')}">${h.num} (${h.sz})</b>
                 </div>
             `).join('');
         }
-        renderWingoHistory();
+        renderWingoHist();
 
-        if (wingoInterval) clearInterval(wingoInterval);
-        wingoInterval = setInterval(() => {
-            wingoTimerVal--;
-            const timerEl = document.getElementById("wingoTimerEl");
-            if (timerEl) timerEl.innerText = `00:${wingoTimerVal.toString().padStart(2, '0')}`;
+        if (wingoTimerInt) clearInterval(wingoTimerInt);
+        wingoTimerInt = setInterval(() => {
+            wingoTimer--;
+            const clock = document.getElementById("wingoClockEl");
+            if (clock) clock.innerText = `00:${wingoTimer.toString().padStart(2, '0')}`;
 
-            if (wingoTimerVal <= 0) {
-                wingoTimerVal = 30;
+            if (wingoTimer <= 0) {
+                wingoTimer = 30;
                 wingoPeriod++;
                 const pEl = document.getElementById("wingoPeriodEl");
                 if (pEl) pEl.innerText = wingoPeriod;
@@ -213,13 +232,13 @@ window.loadMasterGameView = function(gameId) {
                 const resSz = resNum >= 5 ? "BIG" : "SMALL";
                 wingoHistory.unshift({ period: wingoPeriod - 1, num: resNum, col: resCol, sz: resSz });
                 if (wingoHistory.length > 5) wingoHistory.pop();
-                renderWingoHistory();
+                renderWingoHist();
             }
         }, 1000);
 
         window.playWinGo = function(sel, multi) {
-            const bet = Number(document.getElementById("wingoBet").value) || 500;
-            if (window.game.balance < bet) return showModal("Low Balance", "Please reset practice coins to play!", "⚠️", false);
+            const bet = 100 * wingoMulti;
+            if (window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
 
             window.game.balance -= bet; updateBalance();
 
@@ -233,9 +252,9 @@ window.loadMasterGameView = function(gameId) {
                 if (win) {
                     const won = bet * multi;
                     window.game.balance += won;
-                    showModal("ROUND WIN!", `Drawn: ${num} (${col} / ${sz})\nWon ₹${won}`, "🎨", true);
+                    showModal("WIN!", `Drawn: ${num} (${col}/${sz})\nWon ₹${won}`, "🎨", true);
                 } else {
-                    showModal("ROUND LOST", `Drawn: ${num} (${col} / ${sz})`, "💥", false);
+                    showModal("LOST", `Drawn: ${num} (${col}/${sz})`, "💥", false);
                 }
                 updateBalance();
             }, 200);
@@ -243,70 +262,82 @@ window.loadMasterGameView = function(gameId) {
         return;
     }
 
+    // 2. OFFICIAL SPRIBE AVIATOR UI
     if (gameId === 'aviator') {
         container.innerHTML = `
-            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:16px; text-align:center;">
-                <div style="background:#050811; border:2px solid #1e293b; border-radius:14px; height:150px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
-                    <div id="jetMulti" style="font-size:42px; font-weight:800; color:var(--neon-green);">1.00x</div>
+            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
+                <!-- History Strip -->
+                <div class="history-strip">
+                    <span class="history-pill" style="color:#8b5cf6;">1.17x</span>
+                    <span class="history-pill" style="color:#10b981;">2.53x</span>
+                    <span class="history-pill" style="color:#ef4444;">1.02x</span>
+                    <span class="history-pill" style="color:#f59e0b;">10.51x</span>
+                    <span class="history-pill" style="color:#10b981;">1.84x</span>
                 </div>
-                <div style="display:flex; gap:6px; margin-bottom:12px;">
-                    <input type="number" id="aviatorBet" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                    <button onclick="document.getElementById('aviatorBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
+
+                <!-- Flight Canvas Box -->
+                <div class="aviator-canvas">
+                    <div id="jetMulti" style="font-size:38px; font-weight:800; color:#fff; z-index:2;">1.00x</div>
                 </div>
-                <button id="jetBtn" onclick="launchJet()" style="width:100%; padding:14px; background:linear-gradient(135deg, var(--neon-green), #059669); color:#000; font-weight:800; border-radius:12px; border:none; font-size:16px; cursor:pointer;">🚀 LAUNCH JET</button>
+
+                <!-- Dual Bet Buttons -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+                    <div style="background:#050811; padding:8px; border-radius:10px; border:1px solid #1e293b;">
+                        <input type="number" id="avBet1" value="100" style="width:90%; padding:4px; text-align:center; background:#1e293b; border:none; color:#fff; font-weight:700; border-radius:4px; margin-bottom:6px;">
+                        <button id="jetBtn1" onclick="launchJet()" style="width:100%; padding:10px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BET 100</button>
+                    </div>
+                    <div style="background:#050811; padding:8px; border-radius:10px; border:1px solid #1e293b;">
+                        <input type="number" id="avBet2" value="500" style="width:90%; padding:4px; text-align:center; background:#1e293b; border:none; color:#fff; font-weight:700; border-radius:4px; margin-bottom:6px;">
+                        <button onclick="alert('Bet Placed')" style="width:100%; padding:10px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BET 500</button>
+                    </div>
+                </div>
             </div>
         `;
         let flying = false, m = 1.00, timer;
         window.launchJet = function() {
-            const btn = document.getElementById("jetBtn");
-            const bet = Number(document.getElementById("aviatorBet").value) || 500;
+            const btn = document.getElementById("jetBtn1");
+            const bet = Number(document.getElementById("avBet1").value) || 100;
             if (!flying) {
                 if (window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
                 window.game.balance -= bet; updateBalance();
                 flying = true; m = 1.00;
-                btn.innerText = "💰 CASHOUT NOW";
-                btn.style.background = "linear-gradient(135deg, var(--neon-gold), #d97706)";
+                btn.innerText = "CASHOUT";
+                btn.style.background = "#f59e0b";
                 const crashAt = (Math.random() * 3 + 1.1).toFixed(2);
                 timer = setInterval(() => {
                     m += 0.05;
                     document.getElementById("jetMulti").innerText = m.toFixed(2) + "x";
                     if (m >= crashAt) {
                         clearInterval(timer); flying = false;
-                        document.getElementById("jetMulti").innerText = "💥 FLEW AWAY!";
-                        btn.innerText = "🚀 LAUNCH JET";
-                        btn.style.background = "linear-gradient(135deg, var(--neon-green), #059669)";
-                        showModal("JET CRASHED", `Plane flew away at ${m.toFixed(2)}x!`, "🚀", false);
+                        document.getElementById("jetMulti").innerText = "FLEW AWAY!";
+                        btn.innerText = "BET 100";
+                        btn.style.background = "#10b981";
+                        showModal("FLEW AWAY", `Crashed @ ${m.toFixed(2)}x`, "✈️", false);
                     }
                 }, 100);
             } else {
                 clearInterval(timer); flying = false;
                 const won = Math.floor(bet * m); window.game.balance += won; updateBalance();
                 showModal("CASHED OUT!", `Fly High @ ${m.toFixed(2)}x\nWon ₹${won}`, "✈️", true);
-                btn.innerText = "🚀 LAUNCH JET";
-                btn.style.background = "linear-gradient(135deg, var(--neon-green), #059669)";
+                btn.innerText = "BET 100";
+                btn.style.background = "#10b981";
             }
         };
         return;
     }
 
-    if (gameId === 'mines') {
-        container.innerHTML = `
-            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:14px; text-align:center;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span style="font-size:12px; color:#94a3b8;">BOMBS: <b style="color:#ef4444;">3</b></span>
-                    <span style="font-size:14px; font-weight:800; color:var(--neon-green);" id="minesMulti">1.00x</span>
-                </div>
-                <div id="minesGrid" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-bottom:12px;"></div>
-                <div style="display:flex; gap:6px; margin-bottom:10px;">
-                    <input type="number" id="minesBet" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                    <button onclick="document.getElementById('minesBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
-                </div>
-                <button id="startMinesBtn" onclick="startMinesGame()" style="width:100%; padding:12px; background:linear-gradient(135deg, var(--neon-blue), #0284c7); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">START MINES ROUND</button>
+    // UNIVERSAL FALLBACK FOR OTHER GAMES
+    const titleFormatted = gameId.replace(/_/g, ' ').toUpperCase();
+    container.innerHTML = `
+        <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:14px; text-align:center;">
+            <div style="background:#050811; padding:16px; border-radius:10px; margin-bottom:10px;">
+                <div style="font-size:32px;">🎰</div>
+                <div style="font-size:13px; font-weight:800; color:var(--neon-blue);">${titleFormatted}</div>
             </div>
-        `;
-        let mines = [], active = false, mMulti = 1.0;
-        function renderMines() {
-            const g = document.getElementById("minesGrid");
-            g.innerHTML = "";
-            for(let i=0; i<25; i++) {
-                const b = doc
+            <button onclick="playUniversal('${gameId}')" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">PLAY ROUND (2.0X)</button>
+        </div>
+    `;
+    window.playUniversal = function(gId) {
+        if (window.game.balance < 500) return showModal("Low Balance", "Reset coins!", "⚠️", false);
+        window.game.balance -= 500; updateBalance();
+        setTimeout(
