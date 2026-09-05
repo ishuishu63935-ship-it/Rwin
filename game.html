@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +7,8 @@
 <title>RWIN - VIP Cyber Arcade & Casino Arena</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="js/core-engine.js"></script>
 <style>
-/* GUARANTEED DISPLAY & GRID STYLING */
 .game-screen { display: none; padding: 12px; color: #fff; width: 100%; min-height: 420px; }
 .game-screen.active { display: block !important; }
 .back-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #0f172a; border-radius: 12px; margin: 10px 12px; border: 1px solid #1e293b; }
@@ -18,11 +17,25 @@
 .game-card { background: #0b101d; border: 1px solid #1e293b; border-radius: 14px; padding: 14px; text-align: center; cursor: pointer; }
 .game-card.locked { opacity: 0.8; border-color: rgba(245, 158, 11, 0.3); }
 .game-card h3 { font-size: 13px; color: #fff; margin: 4px 0 0 0; }
+
+/* SLEEK IN-APP POPUP MODAL (NO BROWSER ALERT) */
+#customModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+.modal-box { background: #0b101d; border: 2px solid var(--neon-blue); border-radius: 20px; padding: 24px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); }
 </style>
 </head>
 
 <body>
 <div class="gameContainer">
+
+<!-- CUSTOM CASINO POPUP -->
+<div id="customModal">
+  <div class="modal-box" id="modalBox">
+    <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">🎯</div>
+    <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 6px 0;">RESULT</h3>
+    <p id="modalMsg" style="color:#94a3b8; font-size:13px; margin:0 0 16px 0;">Details</p>
+    <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+  </div>
+</div>
 
 <header class="topBar">
 <div>
@@ -46,7 +59,7 @@
 <section class="balanceCard">
   <p style="font-size:11px; color:#94a3b8; margin:0;">Virtual VIP Practice Balance</p>
   <h1 id="balanceText">₹10,000</h1>
-  <button id="resetCoinsBtn" onclick="window.CasinoSession ? window.CasinoSession.resetCoins() : alert('Reset Locked')" style="margin-top:8px; padding:8px 16px; background:var(--neon-blue); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer;">
+  <button id="resetCoinsBtn" onclick="resetCoins()" style="margin-top:8px; padding:8px 16px; background:var(--neon-blue); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer;">
     🔄 Reset VIP Coins
   </button>
 </section>
@@ -56,7 +69,6 @@
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:14px;">Game</b>
 </div>
 
-<!-- MAIN ARENA HUB -->
 <div id="arenaHub"></div>
 
 <nav class="bottomNav">
@@ -71,33 +83,68 @@
 <script>
 window.game = window.game || { balance: 10000, level: 1 };
 
-window.updateBalance = function() {
+function updateBalance() {
     const el = document.getElementById("balanceText");
     if (el) el.innerText = "₹" + window.game.balance.toLocaleString();
-};
+}
 
-// 1. ALL GAMES ENGINE
+function resetCoins() {
+    window.game.balance = 10000;
+    updateBalance();
+    showModal("🔄 Balance Reset", "Virtual practice coins restored to ₹10,000!", "💰", true);
+}
+
+function showModal(title, msg, icon, isWin) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalMsg").innerText = msg;
+    document.getElementById("modalIcon").innerText = icon || (isWin ? "🎉" : "💥");
+    document.getElementById("modalBox").style.borderColor = isWin ? "var(--neon-green)" : "#ef4444";
+    document.getElementById("customModal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("customModal").style.display = "none";
+}
+
+// REAL TIMER & HISTORY STATE FOR WINGO
+let wingoTimerVal = 30;
+let wingoPeriod = 20260906001;
+let wingoHistory = [
+    { period: "20260906000", num: 7, col: "GREEN", sz: "BIG" },
+    { period: "20260906999", num: 2, col: "RED", sz: "SMALL" }
+];
+let wingoInterval = null;
+
 window.loadMasterGameView = function(gameId) {
     const container = document.getElementById("game-" + gameId);
     if (!container) return;
 
-    // WINGO (0-9 + BIG/SMALL)
+    // 1. WINGO COLOR PREDICTION (WITH REAL COUNTDOWN & TREND HISTORY)
     if (gameId === 'color') {
         container.innerHTML = `
             <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:14px; text-align:center;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#050811; padding:10px; border-radius:12px; margin-bottom:12px; border:1px solid #1e293b;">
-                    <span style="font-size:11px; color:#94a3b8;">PERIOD: <b style="color:var(--neon-blue);">20260906001</b></span>
-                    <span style="font-size:18px; font-weight:800; color:var(--neon-green);">00:30</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#050811; padding:10px 14px; border-radius:12px; margin-bottom:12px; border:1px solid #1e293b;">
+                    <div style="text-align:left;">
+                        <div style="font-size:10px; color:#94a3b8;">PERIOD</div>
+                        <div style="font-size:13px; font-weight:800; color:var(--neon-blue);" id="wingoPeriodEl">${wingoPeriod}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:10px; color:#94a3b8;">COUNTDOWN</div>
+                        <div style="font-size:22px; font-weight:800; color:var(--neon-green);" id="wingoTimerEl">00:30</div>
+                    </div>
                 </div>
+
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
                     <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green (2X)</button>
                     <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet (4.5X)</button>
                     <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red (2X)</button>
                 </div>
+
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
                     <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BIG (5-9) 2X</button>
                     <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">SMALL (0-4) 2X</button>
                 </div>
+
                 <div style="font-size:11px; color:#94a3b8; margin-bottom:6px; text-align:left; font-weight:700;">SELECT NUMBER (9X PAYOUT):</div>
                 <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-bottom:12px;">
                     <button onclick="playWinGo(0, 9)" style="padding:8px; background:linear-gradient(135deg, #ef4444, #8b5cf6); color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">0</button>
@@ -111,30 +158,81 @@ window.loadMasterGameView = function(gameId) {
                     <button onclick="playWinGo(8, 9)" style="padding:8px; background:#ef4444; color:#fff; font-weight:800; border-radius:6px; border:none; cursor:pointer;">8</button>
                     <button onclick="playWinGo(9, 9)" style="padding:8px; background:#10b981; color:#000; font-weight:800; border-radius:6px; border:none; cursor:pointer;">9</button>
                 </div>
-                <div style="display:flex; gap:6px;">
+
+                <div style="display:flex; gap:6px; margin-bottom:12px;">
                     <input type="number" id="wingoBet" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
                     <button onclick="document.getElementById('wingoBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px; cursor:pointer;">2X</button>
                 </div>
+
+                <!-- TREND HISTORY CHART -->
+                <div style="background:#050811; border:1px solid #1e293b; border-radius:12px; padding:10px; text-align:left;">
+                    <div style="font-size:11px; font-weight:800; color:var(--neon-gold); margin-bottom:6px;">📊 TREND HISTORY</div>
+                    <div id="wingoHistoryList" style="font-size:11px; color:#cbd5e1;"></div>
+                </div>
             </div>
         `;
+
+        function renderWingoHistory() {
+            const list = document.getElementById("wingoHistoryList");
+            if (!list) return;
+            list.innerHTML = wingoHistory.map(h => `
+                <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #1e293b;">
+                    <span>Period ${h.period}</span>
+                    <b style="color:${h.col === 'GREEN' ? '#10b981' : (h.col === 'RED' ? '#ef4444' : '#8b5cf6')}">${h.num} (${h.col} / ${h.sz})</b>
+                </div>
+            `).join('');
+        }
+        renderWingoHistory();
+
+        // Start Live Ticking Timer
+        if (wingoInterval) clearInterval(wingoInterval);
+        wingoInterval = setInterval(() => {
+            wingoTimerVal--;
+            const timerEl = document.getElementById("wingoTimerEl");
+            if (timerEl) timerEl.innerText = `00:${wingoTimerVal.toString().padStart(2, '0')}`;
+
+            if (wingoTimerVal <= 0) {
+                wingoTimerVal = 30;
+                wingoPeriod++;
+                const pEl = document.getElementById("wingoPeriodEl");
+                if (pEl) pEl.innerText = wingoPeriod;
+
+                const resNum = Math.floor(Math.random() * 10);
+                const resCol = (resNum === 0 || resNum === 5) ? "VIOLET" : (resNum % 2 === 0 ? "RED" : "GREEN");
+                const resSz = resNum >= 5 ? "BIG" : "SMALL";
+                wingoHistory.unshift({ period: wingoPeriod - 1, num: resNum, col: resCol, sz: resSz });
+                if (wingoHistory.length > 5) wingoHistory.pop();
+                renderWingoHistory();
+            }
+        }, 1000);
+
         window.playWinGo = function(sel, multi) {
             const bet = Number(document.getElementById("wingoBet").value) || 500;
-            if (window.game.balance < bet) return alert("Low Balance!");
-            window.game.balance -= bet; window.updateBalance();
+            if (window.game.balance < bet) return showModal("Low Balance", "Please reset practice coins to play!", "⚠️", false);
+
+            window.game.balance -= bet; updateBalance();
+
             const num = Math.floor(Math.random() * 10);
             const col = (num === 0 || num === 5) ? "VIOLET" : (num % 2 === 0 ? "RED" : "GREEN");
             const sz = num >= 5 ? "BIG" : "SMALL";
+
             let win = (typeof sel === 'number' && sel === num) || (sel === col || sel === sz);
+
             setTimeout(() => {
-                if (win) { const won = bet * multi; window.game.balance += won; alert(`🎉 WIN! Drawn: ${num} (${col}/${sz}). Won ₹${won}`); }
-                else { alert(`💥 Lost! Drawn: ${num} (${col}/${sz})`); }
-                window.updateBalance();
+                if (win) {
+                    const won = bet * multi;
+                    window.game.balance += won;
+                    showModal("ROUND WIN!", `Drawn: ${num} (${col} / ${sz})\nWon ₹${won}`, "🎨", true);
+                } else {
+                    showModal("ROUND LOST", `Drawn: ${num} (${col} / ${sz})`, "💥", false);
+                }
+                updateBalance();
             }, 200);
         };
         return;
     }
 
-    // AVIATOR
+    // 2. AVIATOR
     if (gameId === 'aviator') {
         container.innerHTML = `
             <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:16px; text-align:center;">
@@ -153,8 +251,8 @@ window.loadMasterGameView = function(gameId) {
             const btn = document.getElementById("jetBtn");
             const bet = Number(document.getElementById("aviatorBet").value) || 500;
             if (!flying) {
-                if (window.game.balance < bet) return alert("Low Balance!");
-                window.game.balance -= bet; window.updateBalance();
+                if (window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
+                window.game.balance -= bet; updateBalance();
                 flying = true; m = 1.00;
                 btn.innerText = "💰 CASHOUT NOW";
                 btn.style.background = "linear-gradient(135deg, var(--neon-gold), #d97706)";
@@ -167,12 +265,13 @@ window.loadMasterGameView = function(gameId) {
                         document.getElementById("jetMulti").innerText = "💥 FLEW AWAY!";
                         btn.innerText = "🚀 LAUNCH JET";
                         btn.style.background = "linear-gradient(135deg, var(--neon-green), #059669)";
+                        showModal("JET CRASHED", `Plane flew away at ${m.toFixed(2)}x!`, "🚀", false);
                     }
                 }, 100);
             } else {
                 clearInterval(timer); flying = false;
-                const won = Math.floor(bet * m); window.game.balance += won; window.updateBalance();
-                alert(`✈️ Cashed Out @ ${m.toFixed(2)}x! Won ₹${won}`);
+                const won = Math.floor(bet * m); window.game.balance += won; updateBalance();
+                showModal("CASHED OUT!", `Fly High @ ${m.toFixed(2)}x\nWon ₹${won}`, "✈️", true);
                 btn.innerText = "🚀 LAUNCH JET";
                 btn.style.background = "linear-gradient(135deg, var(--neon-green), #059669)";
             }
@@ -180,129 +279,51 @@ window.loadMasterGameView = function(gameId) {
         return;
     }
 
-    // UNIVERSAL ENGINE
-    const titleFormatted = gameId.replace(/_/g, ' ').toUpperCase();
-    container.innerHTML = `
-        <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:16px; text-align:center;">
-            <div style="background:#050811; border:2px solid #1e293b; border-radius:14px; padding:20px; margin-bottom:12px;">
-                <div style="font-size:36px; margin-bottom:6px;">🎰</div>
-                <div style="font-size:15px; font-weight:800; color:var(--neon-blue);">${titleFormatted} ARENA</div>
-                <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Payout: <b style="color:var(--neon-green);">2.20X Multiplier</b></div>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
-                <button onclick="playUniversal('${gameId}', 'OPTION A')" style="padding:12px; background:linear-gradient(135deg, var(--neon-blue), #0284c7); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">OPTION A (2.2X)</button>
-                <button onclick="playUniversal('${gameId}', 'OPTION B')" style="padding:12px; background:linear-gradient(135deg, var(--neon-gold), #d97706); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">OPTION B (2.2X)</button>
-            </div>
-            <div style="display:flex; gap:6px;">
-                <input type="number" id="uniBet_${gameId}" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                <button onclick="document.getElementById('uniBet_${gameId}').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
-            </div>
-        </div>
-    `;
-    window.playUniversal = function(gId, opt) {
-        const bet = Number(document.getElementById(`uniBet_${gId}`).value) || 500;
-        if (window.game.balance < bet) return alert("Low Balance!");
-        window.game.balance -= bet; window.updateBalance();
-        setTimeout(() => {
-            if (Math.random() < 0.48) {
-                const won = Math.floor(bet * 2.2); window.game.balance += won; alert(`🎉 ${opt} WIN! Won ₹${won}`);
-            } else { alert(`💥 ${opt} Lost`); }
-            window.updateBalance();
-        }, 200);
-    };
-};
-
-window.openGame = function(gameId, title) {
-    document.getElementById('arenaHub').style.display = 'none';
-    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
-    
-    let targetScreen = document.getElementById('game-' + gameId);
-    if (!targetScreen) {
-        targetScreen = document.createElement('div');
-        targetScreen.id = 'game-' + gameId;
-        targetScreen.className = 'game-screen';
-        document.querySelector('.gameContainer').appendChild(targetScreen);
-    }
-    
-    targetScreen.classList.add('active');
-    document.getElementById('backBar').style.display = 'flex';
-    document.getElementById('activeGameTitle').innerText = title;
-    window.loadMasterGameView(gameId);
-};
-
-window.exitToArena = function() {
-    document.getElementById('arenaHub').style.display = 'block';
-    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('backBar').style.display = 'none';
-};
-
-window.checkAndOpenGame = function(gameId, title, reqLvl, isVip) {
-    const tier = window.CasinoSession ? window.CasinoSession.getTier() : 'free';
-    if (isVip && tier !== 'vip') return alert("👑 ₹200 Super VIP Exclusive: Upgrade to ₹200 VIP Vault Pass!");
-    if (tier === 'free' && reqLvl > 4) return alert("🔒 Starter Pass Required: Games above Level 4 require Starter Pass (₹9 / 16 Days)!");
-    window.openGame(gameId, title);
-};
-
-// 2. FAIL-SAFE DIRECT GRID RENDERER
-window.renderFullGameGrid = function() {
-    const hub = document.getElementById("arenaHub");
-    if (!hub) return;
-
-    const realGames = [
-        { id: "color", title: "WinGo 1M Color Prediction", lvl: 1, vip: false },
-        { id: "aviator", title: "Stake Crash Aviator", lvl: 1, vip: false },
-        { id: "mines", title: "Cyber Minesweeper 5x5", lvl: 2, vip: false },
-        { id: "dragon", title: "Dragon vs Tiger Live", lvl: 2, vip: false },
-        { id: "hilo", title: "Hi-Lo Poker Streak", lvl: 3, vip: false },
-        { id: "slots", title: "Neon 777 Jackpot Slots", lvl: 4, vip: false },
-        { id: "dice2", title: "Cyber Dice Roll 3.0", lvl: 5, vip: false },
-        { id: "roulette", title: "European Roulette Pro", lvl: 6, vip: false },
-        { id: "plinko", title: "Plinko Drop Multiplier", lvl: 7, vip: false },
-        { id: "baccarat", title: "Speed Baccarat VIP", lvl: 8, vip: false },
-        { id: "cryptocandle", title: "BTC Crypto Candle 30s", lvl: 9, vip: false },
-        { id: "penalty", title: "Penalty Shootout Pro", lvl: 10, vip: false },
-        { id: "chickencross", title: "Chicken Road Cross 3D", lvl: 11, vip: false },
-        { id: "horserace", title: "Derby Horse Racing", lvl: 12, vip: false },
-        { id: "wheel", title: "Fortune Wheel 100X", lvl: 13, vip: false },
-        { id: "blackjack", title: "Classic Blackjack 21", lvl: 14, vip: false },
-        { id: "andarbahar", title: "Andar Bahar Royale", lvl: 15, vip: false },
-        { id: "teenpatti", title: "Teen Patti Deluxe", lvl: 16, vip: false },
-        { id: "sicbo", title: "Sicilian Dice Sic Bo", lvl: 18, vip: false },
-        { id: "limbo", title: "Limbo Rocket Multiplier", lvl: 20, vip: false }
-    ];
-
-    for (let i = 21; i <= 70; i++) {
-        realGames.push({ id: "game_" + i, title: "VIP Casino Title #" + i, lvl: 1, vip: true });
-    }
-
-    let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">BASIC ARENA (GAMES 1-20 • LVL 1-4 FREE)</h3><div class="arena-grid">`;
-    let vipHtml = `<h3 style="color:var(--neon-gold); font-size:12px; margin:16px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 21-70 • ₹200 PASS EXCLUSIVE)</h3><div class="arena-grid">`;
-
-    realGames.forEach(g => {
-        const isFreeGame = (!g.vip && g.lvl <= 4);
-        const cardMarkup = `
-            <div class="game-card ${g.vip ? 'locked' : ''}" onclick="checkAndOpenGame('${g.id}', '${g.title}', ${g.lvl}, ${g.vip})">
-                <div style="font-size:12px; font-weight:800; color:${isFreeGame ? 'var(--neon-green)' : 'var(--neon-blue)'}; margin-bottom:4px;">
-                    ${isFreeGame ? 'FREE PLAY' : 'CASINO CLASSIC'}
+    // 3. CYBER MINES 5X5 GRID
+    if (gameId === 'mines') {
+        container.innerHTML = `
+            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:14px; text-align:center;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span style="font-size:12px; color:#94a3b8;">BOMBS: <b style="color:#ef4444;">3</b></span>
+                    <span style="font-size:14px; font-weight:800; color:var(--neon-green);" id="minesMulti">1.00x</span>
                 </div>
-                <h3>${g.title}</h3>
-                <p style="color:${g.vip ? 'var(--neon-gold)' : (isFreeGame ? 'var(--neon-green)' : '#94a3b8')}; margin-top:6px; font-weight:600;">
-                    ${g.vip ? '🔒 ₹200 VIP Pass' : (isFreeGame ? '⚡ FREE UNLOCKED' : '🔒 LVL ' + g.lvl + ' (₹9 Pass)')}
-                </p>
+                <div id="minesGrid" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-bottom:12px;"></div>
+                <div style="display:flex; gap:6px; margin-bottom:10px;">
+                    <input type="number" id="minesBet" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
+                    <button onclick="document.getElementById('minesBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
+                </div>
+                <button id="startMinesBtn" onclick="startMinesGame()" style="width:100%; padding:12px; background:linear-gradient(135deg, var(--neon-blue), #0284c7); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">START MINES ROUND</button>
             </div>
         `;
-        if (g.vip) vipHtml += cardMarkup;
-        else basicHtml += cardMarkup;
-    });
-
-    basicHtml += `</div>`; vipHtml += `</div>`;
-    hub.innerHTML = basicHtml + vipHtml;
-};
-
-// 3. IMMEDIATE FAIL-SAFE EXECUTION HOOKS
-window.renderFullGameGrid();
-document.addEventListener("DOMContentLoaded", window.renderFullGameGrid);
-window.onload = window.renderFullGameGrid;
-</script>
-</body>
-</html>
+        let mines = [], active = false, mMulti = 1.0;
+        function renderMines() {
+            const g = document.getElementById("minesGrid");
+            g.innerHTML = "";
+            for(let i=0; i<25; i++) {
+                const b = document.createElement("button");
+                b.style.cssText = "height:44px; background:#1e293b; border:1px solid #334155; border-radius:6px; font-size:16px; cursor:pointer;";
+                b.innerText = "❓";
+                b.onclick = () => {
+                    if(!active || b.disabled) return;
+                    b.disabled = true;
+                    if(mines.includes(i)) {
+                        b.innerText = "💣"; b.style.background = "#ef4444"; active = false;
+                        showModal("BOMB HIT", "You stepped on a mine!", "💥", false);
+                    } else {
+                        b.innerText = "💎"; b.style.background = "#10b981"; mMulti += 0.35;
+                        document.getElementById("minesMulti").innerText = mMulti.toFixed(2) + "x";
+                    }
+                };
+                g.appendChild(b);
+            }
+        }
+        renderMines();
+        window.startMinesGame = function() {
+            const bet = Number(document.getElementById("minesBet").value) || 500;
+            if(window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
+            window.game.balance -= bet; updateBalance();
+            mines = []; while(mines.length < 3) { let r = Math.floor(Math.random()*25); if(!mines.includes(r)) mines.push(r); }
+            active = true; mMulti = 1.0; renderMines();
+        };
+        return;
+ 
