@@ -17,7 +17,6 @@
   --border-color: #1e293b;
 }
 
-/* PREVENT TEXT SELECTION ON MOBILE TAP */
 * {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -38,6 +37,12 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .topBar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #070a14; border-bottom: 1px solid var(--border-color); }
 .tier-badge { background: linear-gradient(135deg, var(--neon-pink), #be185d); color: #fff; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 12px; text-transform: uppercase; }
 
+.xp-container { background: #070a14; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); font-size: 11px; }
+.xp-bar-outer { width: 120px; height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; display: inline-block; vertical-align: middle; }
+.xp-bar-inner { width: 0%; height: 100%; background: var(--neon-blue); transition: width 0.3s; }
+
+.ad-banner { background: linear-gradient(135deg, #1e1b4b, #311b92); border: 1px dashed var(--neon-blue); margin: 10px 14px 4px 14px; padding: 10px; border-radius: 12px; text-align: center; font-size: 11px; color: #cbd5e1; }
+
 .balanceCard { background: var(--bg-dark); margin: 10px 14px; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; }
 .balanceCard h1 { font-size: 28px; margin: 2px 0; color: var(--neon-blue); font-weight: 800; }
 
@@ -49,13 +54,13 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
 .game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; transition: 0.1s active; }
 .game-card:active { transform: scale(0.97); }
+.game-card.locked { opacity: 0.7; border-color: rgba(245, 158, 11, 0.3); }
 .game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; }
 
 .bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #070a14; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 999; }
 .navItem { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
 .navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-/* GAME SPECIFIC STYLES */
 .wingo-ring { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
 .wingo-chip { padding: 4px 8px; background: var(--border-color); border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
 .wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
@@ -63,7 +68,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .history-strip { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0; margin-bottom: 8px; }
 .history-pill { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: var(--border-color); color: #94a3b8; white-space: nowrap; }
 
-/* MODALS */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .modal-box { background: var(--card-bg); border: 2px solid var(--neon-blue); border-radius: 18px; padding: 20px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
 </style>
@@ -72,7 +76,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <body>
 <div class="gameContainer">
 
-<!-- SYSTEM POPUP MODAL -->
 <div id="customModal" class="modal-overlay">
   <div class="modal-box" id="modalBox">
     <div id="modalIcon" style="font-size:42px; margin-bottom:6px;">🎯</div>
@@ -82,17 +85,16 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
-<!-- UTR VERIFICATION MODAL -->
 <div id="utrModal" class="modal-overlay">
   <div class="modal-box" style="border-color:var(--neon-gold);">
     <div style="font-size:36px; margin-bottom:4px;">💳</div>
     <h3 style="color:#fff; font-size:16px; margin:0 0 4px 0;">UPGRADE MEMBERSHIP</h3>
-    <p style="color:#94a3b8; font-size:11px; margin:0 0 10px 0;">Select Pass & Pay via UPI, then enter 12-Digit UTR:</p>
+    <p style="color:#94a3b8; font-size:11px; margin:0 0 10px 0;">Pay via UPI, then enter 12-Digit UTR to activate:</p>
     
     <select id="passSelect" style="width:100%; padding:8px; background:#0f172a; color:#fff; border:1px solid var(--border-color); border-radius:6px; margin-bottom:8px; font-size:11px; font-weight:700;">
-      <option value="9">₹9 Starter Pass (16 Days - Reset Coins)</option>
-      <option value="49">₹49 Gold Pass (2 Months - Reset Coins)</option>
-      <option value="99">₹99 Platinum Pass (4 Months - Reset Coins)</option>
+      <option value="9">₹9 Starter Pass (16 Days - Coin Resets + Level Unlocks)</option>
+      <option value="49">₹49 Gold Pass (2 Months - Coin Resets + Level Unlocks)</option>
+      <option value="99">₹99 Platinum Pass (4 Months - Coin Resets + Level Unlocks)</option>
       <option value="200" selected>₹200 Super VIP Pass (6 Months - ALL 20 GAMES UNLOCKED)</option>
     </select>
 
@@ -112,11 +114,24 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
     <h1 style="font-size:15px; margin:0; color:#fff;">🎮 RWIN VIP Arena</h1>
     <span class="tier-badge" id="userTierBadge">FREE TIER</span>
   </div>
-  <button onclick="openUTRModal()" style="padding:5px 10px; background:var(--neon-gold); color:#000; border:none; border-radius:6px; font-weight:800; font-size:10px; cursor:pointer;">👑 Upgrade</button>
+  <button onclick="openUTRModal()" style="padding:5px 10px; background:var(--neon-gold); color:#000; border:none; border-radius:6px; font-weight:800; font-size:10px; cursor:pointer;">👑 Upgrade Pass</button>
 </header>
 
+<div class="xp-container">
+  <span><b style="color:var(--neon-pink);" id="levelText">LVL 1</b></span>
+  <div>
+    <div class="xp-bar-outer"><div class="xp-bar-inner" id="xpBarInner"></div></div>
+    <span style="font-size:9px; color:#94a3b8; margin-left:4px;" id="xpText">0/200 XP</span>
+  </div>
+</div>
+
+<!-- ADVERTISEMENT BANNER PLACEHOLDER -->
+<div class="ad-banner">
+  📢 <b>SPONSOR AD SPACE</b> • Premium VIP Arcade Deals
+</div>
+
 <section class="balanceCard">
-  <p style="font-size:10px; color:#94a3b8; margin:0;">VIP Practice Balance</p>
+  <p style="font-size:10px; color:#94a3b8; margin:0;">Practice Balance</p>
   <h1 id="balanceText">₹10,000</h1>
   <button onclick="resetCoins()" style="margin-top:4px; padding:6px 12px; background:var(--neon-blue); color:#000; border:none; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">🔄 Reset VIP Coins</button>
 </section>
@@ -126,115 +141,23 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
-<!-- 20 GAMES ARENA GRID -->
 <div id="arenaHub">
   <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2)</h3>
   <div class="arena-grid">
     <div class="game-card" onclick="openGame('color', 'WinGo 1M Color Prediction')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #1</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #1 (LVL 1)</div>
       <h3>Color Prediction</h3>
       <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE PLAY</p>
     </div>
     <div class="game-card" onclick="openGame('aviator', 'Stake Crash Aviator')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #2</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #2 (LVL 1)</div>
       <h3>Aviator Crash</h3>
       <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE PLAY</p>
     </div>
   </div>
 
-  <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 3-20 • ₹200 PASS)</h3>
-  <div class="arena-grid">
-    <div class="game-card" onclick="openGame('vortex', 'Game #3: Vortex Spin')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #3: Vortex Spin</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('teenpatti', 'Game #4: 3 Patti Deluxe')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #4: 3 Patti Deluxe</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('dragon', 'Game #5: Dragon vs Tiger')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #5: Dragon vs Tiger</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('mines', 'Game #6: Cyber Minesweeper')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #6: Cyber Minesweeper</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('rummy', 'Game #7: Rummy Pro 13-Card')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #7: Rummy Pro 13-Card</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('roulette', 'Game #8: European Roulette')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #8: European Roulette</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('blackjack', 'Game #9: Classic Blackjack 21')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #9: Classic Blackjack 21</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('baccarat', 'Game #10: Speed Baccarat')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #10: Speed Baccarat</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('andarbahar', 'Game #11: Andar Bahar Royale')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #11: Andar Bahar Royale</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('sicbo', 'Game #12: Sic Bo Dice')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #12: Sic Bo Dice</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('slots', 'Game #13: Neon 777 Slots')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #13: Neon 777 Slots</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('dice', 'Game #14: Cyber Dice Roll')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #14: Cyber Dice Roll</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('hilo', 'Game #15: Hi-Lo Poker Streak')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #15: Hi-Lo Poker Streak</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('chickenroad', 'Game #16: Chicken Road Cross')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #16: Chicken Road Cross</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('plinko', 'Game #17: Plinko Drop Multiplier')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #17: Plinko Drop Multiplier</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('limbo', 'Game #18: Limbo Rocket')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #18: Limbo Rocket</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('horserace', 'Game #19: Derby Horse Racing')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #19: Derby Horse Racing</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-    <div class="game-card" onclick="openGame('cryptocandle', 'Game #20: BTC Crypto Candle 30s')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
-      <h3>Game #20: BTC Crypto Candle 30s</h3>
-      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass / Click to Test</p>
-    </div>
-  </div>
+  <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px; letter-spacing:1px;">🔒 VIP ARENA (GAMES 3-20 • MEMBERSHIP REQUIRED)</h3>
+  <div class="arena-grid" id="vipGrid"></div>
 </div>
 
 <nav class="bottomNav">
@@ -249,6 +172,38 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <script>
 var gameBalance = 10000;
 var currentTier = localStorage.getItem('rwin_tier') || 'free'; 
+var userXP = parseInt(localStorage.getItem('rwin_xp') || '0');
+
+function getLevel() {
+    return Math.floor(userXP / 200) + 1;
+}
+
+function addXP(amount) {
+    userXP += amount;
+    localStorage.setItem('rwin_xp', userXP.toString());
+    updateUIState();
+}
+
+const gamesList = [
+    { id: "vortex", title: "Game #3: Vortex Spin", lvl: 2 },
+    { id: "teenpatti", title: "Game #4: 3 Patti Deluxe", lvl: 3 },
+    { id: "dragon", title: "Game #5: Dragon vs Tiger", lvl: 4 },
+    { id: "mines", title: "Game #6: Cyber Minesweeper", lvl: 5 },
+    { id: "rummy", title: "Game #7: Rummy Pro 13-Card", lvl: 6 },
+    { id: "roulette", title: "Game #8: European Roulette", lvl: 7 },
+    { id: "blackjack", title: "Game #9: Classic Blackjack 21", lvl: 8 },
+    { id: "baccarat", title: "Game #10: Speed Baccarat", lvl: 9 },
+    { id: "andarbahar", title: "Game #11: Andar Bahar Royale", lvl: 10 },
+    { id: "sicbo", title: "Game #12: Sic Bo Dice", lvl: 11 },
+    { id: "slots", title: "Game #13: Neon 777 Slots", lvl: 12 },
+    { id: "dice", title: "Game #14: Cyber Dice Roll", lvl: 13 },
+    { id: "hilo", title: "Game #15: Hi-Lo Poker Streak", lvl: 14 },
+    { id: "chickenroad", title: "Game #16: Chicken Road Cross", lvl: 15 },
+    { id: "plinko", title: "Game #17: Plinko Drop Multiplier", lvl: 16 },
+    { id: "limbo", title: "Game #18: Limbo Rocket", lvl: 17 },
+    { id: "horserace", title: "Game #19: Derby Horse Racing", lvl: 18 },
+    { id: "cryptocandle", title: "Game #20: BTC Crypto Candle 30s", lvl: 20 }
+];
 
 function updateUIState() {
     const badge = document.getElementById("userTierBadge");
@@ -259,8 +214,56 @@ function updateUIState() {
         else if (currentTier === 'starter_9') badge.innerText = "STARTER (16D)";
         else badge.innerText = "FREE TIER";
     }
+
+    const lvl = getLevel();
+    const currentLvlXP = userXP % 200;
+    document.getElementById("levelText").innerText = "LVL " + lvl;
+    document.getElementById("xpText").innerText = currentLvlXP + "/200 XP";
+    document.getElementById("xpBarInner").style.width = ((currentLvlXP / 200) * 100) + "%";
+
     const balEl = document.getElementById("balanceText");
     if (balEl) balEl.innerText = "₹" + gameBalance.toLocaleString();
+
+    renderVipGrid();
+}
+
+function renderVipGrid() {
+    const grid = document.getElementById("vipGrid");
+    if (!grid) return;
+    const userLvl = getLevel();
+    let html = "";
+
+    gamesList.forEach(g => {
+        let isUnlocked = false;
+        let lockReason = "";
+
+        if (currentTier === 'free') {
+            isUnlocked = false;
+            lockReason = "🔒 Membership Required";
+        } else if (currentTier === 'vip_200') {
+            isUnlocked = true;
+            lockReason = "⚡ SUPER VIP UNLOCKED";
+        } else { // Paid Pass (₹9, ₹49, ₹99)
+            if (userLvl >= g.lvl) {
+                isUnlocked = true;
+                lockReason = "⚡ UNLOCKED (LVL " + g.lvl + ")";
+            } else {
+                isUnlocked = false;
+                lockReason = "🔒 Requires LVL " + g.lvl + " (or ₹200 VIP)";
+            }
+        }
+
+        html += `
+            <div class="game-card ${!isUnlocked ? 'locked' : ''}" onclick="checkAndOpen('${g.id}', '${g.title}', ${g.lvl})">
+                <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+                <h3>${g.title}</h3>
+                <p style="color:${isUnlocked ? 'var(--neon-green)' : 'var(--neon-gold)'}; margin-top:4px; font-weight:600; font-size:10px;">
+                    ${lockReason}
+                </p>
+            </div>
+        `;
+    });
+    grid.innerHTML = html;
 }
 
 function openUTRModal() {
@@ -291,12 +294,12 @@ function submitUTRVerification() {
     localStorage.setItem('rwin_tier', currentTier);
     document.getElementById('utrModal').style.display = 'none';
     updateUIState();
-    showModal("PAYMENT VERIFIED!", `Successfully upgraded to ₹${selectedPass} Pass!`, "🎉", true);
+    showModal("PAYMENT VERIFIED!", `Upgraded to ₹${selectedPass} Pass!`, "🎉", true);
 }
 
 function resetCoins() {
     if (currentTier === 'free') {
-        return showModal("MEMBERSHIP REQUIRED", "Free tier gets limited resets. Upgrade to ₹9 Pass for Unlimited Resets!", "🔒", false);
+        return showModal("LOCKED IN FREE TIER", "Practice coin resets are locked for free users. Upgrade to any Paid Pass (starting ₹9) to unlock Unlimited Resets!", "🔒", false);
     }
     gameBalance = 10000;
     updateUIState();
@@ -315,6 +318,19 @@ function closeModal() {
     document.getElementById("customModal").style.display = "none";
 }
 
+function checkAndOpen(gameId, title, reqLvl) {
+    if (currentTier === 'free') {
+        return showModal("MEMBERSHIP REQUIRED", "This game requires a Membership Pass! Click Upgrade to join.", "🔒", false);
+    }
+    if (currentTier !== 'vip_200') {
+        const userLvl = getLevel();
+        if (userLvl < reqLvl) {
+            return showModal("LEVEL LOCKED", `Reach Level ${reqLvl} to play, or Upgrade to ₹200 Super VIP to unlock ALL games instantly!`, "🔒", false);
+        }
+    }
+    openGame(gameId, title);
+}
+
 function openGame(gameId, title) {
     document.getElementById('arenaHub').style.display = 'none';
     document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
@@ -328,4 +344,45 @@ function openGame(gameId, title) {
     }
     
     targetScreen.classList.add('active');
-    document
+    document.getElementById('backBar').style.display = 'flex';
+    document.getElementById('activeGameTitle').innerText = title;
+    loadMasterGameView(gameId, targetScreen);
+}
+
+function exitToArena() {
+    document.getElementById('arenaHub').style.display = 'block';
+    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('backBar').style.display = 'none';
+}
+
+// GAME ENGINE CODE
+let wingoTimer = 30;
+let wingoPeriod = 20260906001;
+let wingoMulti = 1;
+let wingoHistory = [
+    { period: "20260906000", num: 7, col: "GREEN", sz: "BIG" },
+    { period: "20260906999", num: 2, col: "RED", sz: "SMALL" }
+];
+let wingoTimerInt = null;
+
+function loadMasterGameView(gameId, container) {
+    if (gameId === 'color') {
+        container.innerHTML = `
+            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
+                <div style="display:flex; justify-content:space-between; background:#050811; padding:6px; border-radius:8px; margin-bottom:10px; font-size:10px; font-weight:700;">
+                    <span style="color:var(--neon-pink); border-bottom:2px solid var(--neon-pink);">WinGo 30s</span>
+                    <span style="color:#94a3b8;">WinGo 1Min</span>
+                    <span style="color:#94a3b8;">WinGo 3Min</span>
+                    <span style="color:#94a3b8;">WinGo 5Min</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:8px 12px; border-radius:10px; margin-bottom:10px;">
+                    <div style="text-align:left;">
+                        <div style="font-size:9px; color:#94a3b8;">Period</div>
+                        <div style="font-size:12px; font-weight:800; color:var(--neon-blue);" id="wingoPeriodEl">${wingoPeriod}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:9px; color:#94a3b8;">Time Remaining</div>
+                        <div style="font-size:18px; font-weight:800; color:#fff; background:#000; padding:2px 8px; border-radius:6px;" id="wingoClockEl">00:30</div>
+                    </div>
+                </div>
+                <div style="display:grid; grid-templa
