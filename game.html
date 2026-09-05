@@ -39,12 +39,10 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .navItem { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
 .navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-/* 55 CLUB WINGO UI */
+/* WINGO & AVIATOR UI STYLES */
 .wingo-ring { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
 .wingo-chip { padding: 4px 8px; background: var(--border-color); border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
 .wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
-
-/* AVIATOR UI */
 .aviator-canvas { background: #000; border: 1px solid var(--border-color); border-radius: 12px; width: 100%; height: 160px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .history-strip { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0; margin-bottom: 8px; }
 .history-pill { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: var(--border-color); color: #94a3b8; white-space: nowrap; }
@@ -58,7 +56,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <body>
 <div class="gameContainer">
 
-<!-- CUSTOM POPUP MODAL -->
+<!-- SYSTEM POPUP MODAL -->
 <div id="customModal" class="modal-overlay">
   <div class="modal-box" id="modalBox">
     <div id="modalIcon" style="font-size:42px; margin-bottom:6px;">🎯</div>
@@ -68,7 +66,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
-<!-- UTR MEMBERSHIP MODAL -->
+<!-- UTR VERIFICATION MODAL -->
 <div id="utrModal" class="modal-overlay">
   <div class="modal-box" style="border-color:var(--neon-gold);">
     <div style="font-size:36px; margin-bottom:4px;">💳</div>
@@ -112,7 +110,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
-<!-- 20 GAMES ARENA GRID -->
+<!-- 100% STATIC RENDERED GRID - NO JS REQUIRED FOR DISPLAY -->
 <div id="arenaHub">
   <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2 • 100% UNLOCKED)</h3>
   <div class="arena-grid">
@@ -129,7 +127,99 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 
   <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 3-20 • ₹200 PASS)</h3>
-  <div class="arena-grid" id="vipGrid"></div>
+  <div class="arena-grid">
+    <!-- HARDCODED VIP GAMES -->
+    <div class="game-card locked vip-card" onclick="checkAndOpen('vortex', 'Game #3: Vortex Spin')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #3: Vortex Spin</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('teenpatti', 'Game #4: 3 Patti Deluxe')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #4: 3 Patti Deluxe</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('dragon', 'Game #5: Dragon vs Tiger')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #5: Dragon vs Tiger</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('mines', 'Game #6: Cyber Minesweeper')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #6: Cyber Minesweeper</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('rummy', 'Game #7: Rummy Pro 13-Card')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #7: Rummy Pro 13-Card</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('roulette', 'Game #8: European Roulette')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #8: European Roulette</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('blackjack', 'Game #9: Classic Blackjack 21')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #9: Classic Blackjack 21</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('baccarat', 'Game #10: Speed Baccarat')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #10: Speed Baccarat</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('andarbahar', 'Game #11: Andar Bahar Royale')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #11: Andar Bahar Royale</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('sicbo', 'Game #12: Sic Bo Dice')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #12: Sic Bo Dice</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('slots', 'Game #13: Neon 777 Slots')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #13: Neon 777 Slots</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('dice', 'Game #14: Cyber Dice Roll')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #14: Cyber Dice Roll</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('hilo', 'Game #15: Hi-Lo Poker Streak')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #15: Hi-Lo Poker Streak</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('chickenroad', 'Game #16: Chicken Road Cross')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #16: Chicken Road Cross</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('plinko', 'Game #17: Plinko Drop Multiplier')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #17: Plinko Drop Multiplier</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('limbo', 'Game #18: Limbo Rocket')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #18: Limbo Rocket</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('horserace', 'Game #19: Derby Horse Racing')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #19: Derby Horse Racing</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+    <div class="game-card locked vip-card" onclick="checkAndOpen('cryptocandle', 'Game #20: BTC Crypto Candle 30s')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
+      <h3>Game #20: BTC Crypto Candle 30s</h3>
+      <p class="vip-status" style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🔒 ₹200 Pass Required</p>
+    </div>
+  </div>
 </div>
 
 <nav class="bottomNav">
@@ -142,9 +232,9 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 </div>
 
 <script>
-// LOCAL STATE & MEMBERSHIP LOGIC
-window.game = window.game || { balance: 10000 };
-let currentTier = localStorage.getItem('rwin_tier') || 'free'; // 'free', 'starter_9', 'gold_49', 'platinum_99', 'vip_200'
+var gameBalance = 10000;
+var currentTier = localStorage.getItem('rwin_tier') || 'free'; 
+// Tiers: 'free', 'starter_9', 'gold_49', 'platinum_99', 'vip_200'
 
 function updateUIState() {
     const badge = document.getElementById("userTierBadge");
@@ -156,7 +246,18 @@ function updateUIState() {
         else badge.innerText = "FREE TIER";
     }
     const balEl = document.getElementById("balanceText");
-    if (balEl) balEl.innerText = "₹" + window.game.balance.toLocaleString();
+    if (balEl) balEl.innerText = "₹" + gameBalance.toLocaleString();
+
+    // Unlock visual states if user is VIP
+    if (currentTier === 'vip_200') {
+        document.querySelectorAll('.vip-card').forEach(card => {
+            card.classList.remove('locked');
+        });
+        document.querySelectorAll('.vip-status').forEach(status => {
+            status.style.color = "var(--neon-green)";
+            status.innerText = "⚡ UNLOCKED";
+        });
+    }
 }
 
 function openUTRModal() {
@@ -171,7 +272,6 @@ function submitUTRVerification() {
         return showModal("INVALID UTR", "Please enter a valid 12-digit UPI Transaction / UTR number!", "⚠️", false);
     }
 
-    // REALTIME DATABASE SIMULATION & FRAUD CHECK
     const usedUTRs = JSON.parse(localStorage.getItem('rwin_used_utrs') || '[]');
     if (usedUTRs.includes(utr)) {
         return showModal("DUPLICATE UTR", "This UTR number has already been used!", "⛔", false);
@@ -180,20 +280,14 @@ function submitUTRVerification() {
     usedUTRs.push(utr);
     localStorage.setItem('rwin_used_utrs', JSON.stringify(usedUTRs));
 
-    if (selectedPass === '200') {
-        currentTier = 'vip_200';
-    } else if (selectedPass === '99') {
-        currentTier = 'platinum_99';
-    } else if (selectedPass === '49') {
-        currentTier = 'gold_49';
-    } else {
-        currentTier = 'starter_9';
-    }
+    if (selectedPass === '200') currentTier = 'vip_200';
+    else if (selectedPass === '99') currentTier = 'platinum_99';
+    else if (selectedPass === '49') currentTier = 'gold_49';
+    else currentTier = 'starter_9';
 
     localStorage.setItem('rwin_tier', currentTier);
     document.getElementById('utrModal').style.display = 'none';
     updateUIState();
-    renderVipGrid();
     showModal("PAYMENT VERIFIED!", `Successfully upgraded to ₹${selectedPass} Pass!`, "🎉", true);
 }
 
@@ -201,7 +295,7 @@ function resetCoins() {
     if (currentTier === 'free') {
         return showModal("MEMBERSHIP REQUIRED", "Free tier gets limited resets. Upgrade to ₹9 Pass for Unlimited Resets!", "🔒", false);
     }
-    window.game.balance = 10000;
+    gameBalance = 10000;
     updateUIState();
     showModal("🔄 BALANCE RESET", "Virtual practice coins restored to ₹10,000!", "💰", true);
 }
@@ -218,125 +312,4 @@ function closeModal() {
     document.getElementById("customModal").style.display = "none";
 }
 
-// 1. WINGO STATE & LOGIC
-let wingoTimer = 30;
-let wingoPeriod = 20260906001;
-let wingoMulti = 1;
-let wingoHistory = [
-    { period: "20260906000", num: 7, col: "GREEN", sz: "BIG" },
-    { period: "20260906999", num: 2, col: "RED", sz: "SMALL" }
-];
-let wingoTimerInt = null;
-
-window.loadMasterGameView = function(gameId) {
-    const container = document.getElementById("game-" + gameId);
-    if (!container) return;
-
-    if (gameId === 'color') {
-        container.innerHTML = `
-            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
-                <div style="display:flex; justify-content:space-between; background:#050811; padding:6px; border-radius:8px; margin-bottom:10px; font-size:10px; font-weight:700;">
-                    <span style="color:var(--neon-pink); border-bottom:2px solid var(--neon-pink);">WinGo 30s</span>
-                    <span style="color:#94a3b8;">WinGo 1Min</span>
-                    <span style="color:#94a3b8;">WinGo 3Min</span>
-                    <span style="color:#94a3b8;">WinGo 5Min</span>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:8px 12px; border-radius:10px; margin-bottom:10px;">
-                    <div style="text-align:left;">
-                        <div style="font-size:9px; color:#94a3b8;">Period</div>
-                        <div style="font-size:12px; font-weight:800; color:var(--neon-blue);" id="wingoPeriodEl">${wingoPeriod}</div>
-                    </div>
-                    <div style="text-align:right;">
-                        <div style="font-size:9px; color:#94a3b8;">Time Remaining</div>
-                        <div style="font-size:18px; font-weight:800; color:#fff; background:#000; padding:2px 8px; border-radius:6px;" id="wingoClockEl">00:30</div>
-                    </div>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
-                    <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green</button>
-                    <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet</button>
-                    <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red</button>
-                </div>
-
-                <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:10px;">
-                    <div onclick="playWinGo(0, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #ef4444, #8b5cf6);">0</div>
-                    <div onclick="playWinGo(1, 9)" class="wingo-ring" style="background:#10b981;">1</div>
-                    <div onclick="playWinGo(2, 9)" class="wingo-ring" style="background:#ef4444;">2</div>
-                    <div onclick="playWinGo(3, 9)" class="wingo-ring" style="background:#10b981;">3</div>
-                    <div onclick="playWinGo(4, 9)" class="wingo-ring" style="background:#ef4444;">4</div>
-                    <div onclick="playWinGo(5, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #10b981, #8b5cf6);">5</div>
-                    <div onclick="playWinGo(6, 9)" class="wingo-ring" style="background:#ef4444;">6</div>
-                    <div onclick="playWinGo(7, 9)" class="wingo-ring" style="background:#10b981;">7</div>
-                    <div onclick="playWinGo(8, 9)" class="wingo-ring" style="background:#ef4444;">8</div>
-                    <div onclick="playWinGo(9, 9)" class="wingo-ring" style="background:#10b981;">9</div>
-                </div>
-
-                <div style="display:flex; justify-content:center; gap:6px; margin-bottom:10px;">
-                    <span onclick="setWingoChip(1)" class="wingo-chip active" id="chip-1">X1</span>
-                    <span onclick="setWingoChip(5)" class="wingo-chip" id="chip-5">X5</span>
-                    <span onclick="setWingoChip(10)" class="wingo-chip" id="chip-10">X10</span>
-                    <span onclick="setWingoChip(20)" class="wingo-chip" id="chip-20">X20</span>
-                    <span onclick="setWingoChip(50)" class="wingo-chip" id="chip-50">X50</span>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
-                    <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:20px 0 0 20px; border:none; cursor:pointer;">Big</button>
-                    <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:0 20px 20px 0; border:none; cursor:pointer;">Small</button>
-                </div>
-
-                <div style="background:#050811; border:1px solid #1e293b; border-radius:10px; padding:8px; text-align:left;">
-                    <div style="font-size:10px; font-weight:800; color:var(--neon-gold); margin-bottom:4px;">📊 Game History</div>
-                    <div id="wingoHistList" style="font-size:10px;"></div>
-                </div>
-            </div>
-        `;
-
-        window.setWingoChip = function(c) {
-            wingoMulti = c;
-            document.querySelectorAll('.wingo-chip').forEach(el => el.classList.remove('active'));
-            document.getElementById('chip-' + c).classList.add('active');
-        };
-
-        function renderWingoHist() {
-            const list = document.getElementById("wingoHistList");
-            if (!list) return;
-            list.innerHTML = wingoHistory.map(h => `
-                <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #1e293b;">
-                    <span>${h.period}</span>
-                    <b style="color:${h.col === 'GREEN' ? '#10b981' : (h.col === 'RED' ? '#ef4444' : '#8b5cf6')}">${h.num} (${h.sz})</b>
-                </div>
-            `).join('');
-        }
-        renderWingoHist();
-
-        if (wingoTimerInt) clearInterval(wingoTimerInt);
-        wingoTimerInt = setInterval(() => {
-            wingoTimer--;
-            const clock = document.getElementById("wingoClockEl");
-            if (clock) clock.innerText = `00:${wingoTimer.toString().padStart(2, '0')}`;
-
-            if (wingoTimer <= 0) {
-                wingoTimer = 30;
-                wingoPeriod++;
-                const pEl = document.getElementById("wingoPeriodEl");
-                if (pEl) pEl.innerText = wingoPeriod;
-
-                const resNum = Math.floor(Math.random() * 10);
-                const resCol = (resNum === 0 || resNum === 5) ? "VIOLET" : (resNum % 2 === 0 ? "RED" : "GREEN");
-                const resSz = resNum >= 5 ? "BIG" : "SMALL";
-                wingoHistory.unshift({ period: wingoPeriod - 1, num: resNum, col: resCol, sz: resSz });
-                if (wingoHistory.length > 5) wingoHistory.pop();
-                renderWingoHist();
-            }
-        }, 1000);
-
-        window.playWinGo = function(sel, multi) {
-            const bet = 100 * wingoMulti;
-            if (window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
-
-            window.game.balance -= bet; updateUIState();
-
-            const num = Math.floor(Math.random() * 10);
-            const col = (num === 0 || num === 5) ? "VIOLET" : (num % 2 === 0 ? "RED" : "GREEN");
-         
+function checkAndOpen(gameI
