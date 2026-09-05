@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RWIN - VIP Cyber Arcade & Casino Arena</title>
+<title>RWIN - VIP Arcade & Casino Arena</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -12,63 +11,98 @@
   --neon-green: #10b981;
   --neon-gold: #f59e0b;
   --neon-pink: #ec4899;
+  --bg-dark: #050811;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
 }
-body { margin: 0; padding: 0; background: #050811; font-family: 'Poppins', sans-serif; color: #fff; }
-.gameContainer { max-width: 480px; margin: 0 auto; background: #0b101d; min-height: 100vh; position: relative; padding-bottom: 80px; box-sizing: border-box; }
-.topBar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #070a14; border-bottom: 1px solid #1e293b; }
-.balanceCard { background: #050811; margin: 10px 14px; border: 1px solid #1e293b; border-radius: 14px; padding: 12px; text-align: center; }
-.balanceCard h1 { font-size: 26px; margin: 2px 0; color: var(--neon-blue); }
+
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; }
+.gameContainer { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; position: relative; padding-bottom: 80px; box-sizing: border-box; }
+
+.topBar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #070a14; border-bottom: 1px solid var(--border-color); }
+.tier-badge { background: linear-gradient(135deg, var(--neon-pink), #be185d); color: #fff; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 12px; text-transform: uppercase; }
+
+.balanceCard { background: var(--bg-dark); margin: 10px 14px; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; }
+.balanceCard h1 { font-size: 28px; margin: 2px 0; color: var(--neon-blue); font-weight: 800; }
 
 .game-screen { display: none; padding: 10px; color: #fff; width: 100%; box-sizing: border-box; }
 .game-screen.active { display: block !important; }
-.back-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #0f172a; border-radius: 10px; margin: 8px 12px; border: 1px solid #1e293b; }
-.back-btn { padding: 4px 10px; background: #1e293b; color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
+.back-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #0f172a; border-radius: 10px; margin: 8px 12px; border: 1px solid var(--border-color); }
+.back-btn { padding: 4px 10px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
 
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
-.game-card { background: #050811; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; }
-.game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; }
+.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+.game-card.locked { opacity: 0.85; border-color: rgba(245, 158, 11, 0.4); }
+.game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; }
 
-.bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #070a14; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 8px 0; z-index: 999; box-sizing: border-box; }
+.bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #070a14; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 999; box-sizing: border-box; }
 .navItem { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
 .navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-/* 55 CLUB WINGO SPECIAL STYLES */
+/* 55 CLUB WINGO UI */
 .wingo-ring { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
-.wingo-chip { padding: 4px 8px; background: #1e293b; border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
+.wingo-chip { padding: 4px 8px; background: var(--border-color); border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
 .wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
 
-/* AVIATOR SPRIBE SPECIAL STYLES */
-.aviator-canvas { background: #000; border: 1px solid #1e293b; border-radius: 12px; width: 100%; height: 160px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+/* AVIATOR UI */
+.aviator-canvas { background: #000; border: 1px solid var(--border-color); border-radius: 12px; width: 100%; height: 160px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .history-strip { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0; margin-bottom: 8px; }
-.history-pill { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: #1e293b; color: #94a3b8; white-space: nowrap; }
+.history-pill { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: var(--border-color); color: #94a3b8; white-space: nowrap; }
 
-#customModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; }
-.modal-box { background: #0b101d; border: 2px solid var(--neon-blue); border-radius: 16px; padding: 20px; text-align: center; width: 80%; max-width: 300px; }
+/* MODALS */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+.modal-box { background: var(--card-bg); border: 2px solid var(--neon-blue); border-radius: 18px; padding: 20px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
 </style>
 </head>
 
 <body>
 <div class="gameContainer">
 
-<div id="customModal">
+<!-- CUSTOM POPUP MODAL -->
+<div id="customModal" class="modal-overlay">
   <div class="modal-box" id="modalBox">
-    <div id="modalIcon" style="font-size:40px; margin-bottom:6px;">🎯</div>
+    <div id="modalIcon" style="font-size:42px; margin-bottom:6px;">🎯</div>
     <h3 id="modalTitle" style="color:#fff; font-size:16px; margin:0 0 4px 0;">RESULT</h3>
     <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 14px 0;">Details</p>
     <button onclick="closeModal()" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
   </div>
 </div>
 
+<!-- UTR MEMBERSHIP MODAL -->
+<div id="utrModal" class="modal-overlay">
+  <div class="modal-box" style="border-color:var(--neon-gold);">
+    <div style="font-size:36px; margin-bottom:4px;">💳</div>
+    <h3 style="color:#fff; font-size:16px; margin:0 0 4px 0;">UPGRADE MEMBERSHIP</h3>
+    <p style="color:#94a3b8; font-size:11px; margin:0 0 10px 0;">Select Pass & Pay via UPI, then enter 12-Digit UTR:</p>
+    
+    <select id="passSelect" style="width:100%; padding:8px; background:#0f172a; color:#fff; border:1px solid var(--border-color); border-radius:6px; margin-bottom:8px; font-size:11px; font-weight:700;">
+      <option value="9">₹9 Starter Pass (16 Days - Reset Coins)</option>
+      <option value="49">₹49 Gold Pass (2 Months - Reset Coins)</option>
+      <option value="99">₹99 Platinum Pass (4 Months - Reset Coins)</option>
+      <option value="200" selected>₹200 Super VIP Pass (6 Months - ALL 20 GAMES UNLOCKED)</option>
+    </select>
+
+    <div style="background:#050811; padding:8px; border-radius:8px; margin-bottom:10px; font-size:11px; color:var(--neon-gold);">
+      UPI ID: <b style="color:#fff;">rwin@upi</b>
+    </div>
+
+    <input type="number" id="utrInput" placeholder="Enter 12-Digit UTR Number" style="width:90%; padding:10px; text-align:center; background:#0f172a; border:1px solid var(--border-color); color:#fff; border-radius:8px; margin-bottom:10px; font-weight:700; font-size:12px;">
+
+    <button onclick="submitUTRVerification()" style="width:100%; padding:10px; background:linear-gradient(135deg, var(--neon-gold), #d97706); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">VERIFY PAYMENT</button>
+    <button onclick="document.getElementById('utrModal').style.display='none'" style="width:100%; padding:6px; background:transparent; color:#94a3b8; border:none; cursor:pointer; font-size:10px; margin-top:6px;">Cancel</button>
+  </div>
+</div>
+
 <header class="topBar">
   <div>
     <h1 style="font-size:15px; margin:0; color:#fff;">🎮 RWIN VIP Arena</h1>
-    <span style="font-size:10px; color:#94a3b8;">LVL 1 (0/500 XP)</span>
+    <span class="tier-badge" id="userTierBadge">FREE TIER</span>
   </div>
-  <span style="font-size:10px; color:var(--neon-green);">● Connected</span>
+  <button onclick="openUTRModal()" style="padding:5px 10px; background:var(--neon-gold); color:#000; border:none; border-radius:6px; font-weight:800; font-size:10px; cursor:pointer;">👑 Upgrade</button>
 </header>
 
 <section class="balanceCard">
-  <p style="font-size:10px; color:#94a3b8; margin:0;">Practice Balance</p>
+  <p style="font-size:10px; color:#94a3b8; margin:0;">VIP Practice Balance</p>
   <h1 id="balanceText">₹10,000</h1>
   <button onclick="resetCoins()" style="margin-top:4px; padding:6px 12px; background:var(--neon-blue); color:#000; border:none; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">🔄 Reset VIP Coins</button>
 </section>
@@ -78,7 +112,25 @@ body { margin: 0; padding: 0; background: #050811; font-family: 'Poppins', sans-
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
-<div id="arenaHub"></div>
+<!-- 20 GAMES ARENA GRID -->
+<div id="arenaHub">
+  <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2 • 100% UNLOCKED)</h3>
+  <div class="arena-grid">
+    <div class="game-card" onclick="openGame('color', 'WinGo 1M Color Prediction')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #1</div>
+      <h3>Color Prediction</h3>
+      <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE UNLOCKED</p>
+    </div>
+    <div class="game-card" onclick="openGame('aviator', 'Stake Crash Aviator')">
+      <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #2</div>
+      <h3>Aviator Crash</h3>
+      <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE UNLOCKED</p>
+    </div>
+  </div>
+
+  <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px; letter-spacing:1px;">🔒 SUPER VIP VAULT (GAMES 3-20 • ₹200 PASS)</h3>
+  <div class="arena-grid" id="vipGrid"></div>
+</div>
 
 <nav class="bottomNav">
   <a href="home.html" class="navItem">🏠 <span>Home</span></a>
@@ -90,17 +142,68 @@ body { margin: 0; padding: 0; background: #050811; font-family: 'Poppins', sans-
 </div>
 
 <script>
-window.game = window.game || { balance: 10000, level: 1 };
+// LOCAL STATE & MEMBERSHIP LOGIC
+window.game = window.game || { balance: 10000 };
+let currentTier = localStorage.getItem('rwin_tier') || 'free'; // 'free', 'starter_9', 'gold_49', 'platinum_99', 'vip_200'
 
-function updateBalance() {
-    const el = document.getElementById("balanceText");
-    if (el) el.innerText = "₹" + window.game.balance.toLocaleString();
+function updateUIState() {
+    const badge = document.getElementById("userTierBadge");
+    if (badge) {
+        if (currentTier === 'vip_200') badge.innerText = "SUPER VIP (6M)";
+        else if (currentTier === 'platinum_99') badge.innerText = "PLATINUM (4M)";
+        else if (currentTier === 'gold_49') badge.innerText = "GOLD (2M)";
+        else if (currentTier === 'starter_9') badge.innerText = "STARTER (16D)";
+        else badge.innerText = "FREE TIER";
+    }
+    const balEl = document.getElementById("balanceText");
+    if (balEl) balEl.innerText = "₹" + window.game.balance.toLocaleString();
+}
+
+function openUTRModal() {
+    document.getElementById('utrModal').style.display = 'flex';
+}
+
+function submitUTRVerification() {
+    const utr = document.getElementById('utrInput').value.trim();
+    const selectedPass = document.getElementById('passSelect').value;
+
+    if (utr.length !== 12) {
+        return showModal("INVALID UTR", "Please enter a valid 12-digit UPI Transaction / UTR number!", "⚠️", false);
+    }
+
+    // REALTIME DATABASE SIMULATION & FRAUD CHECK
+    const usedUTRs = JSON.parse(localStorage.getItem('rwin_used_utrs') || '[]');
+    if (usedUTRs.includes(utr)) {
+        return showModal("DUPLICATE UTR", "This UTR number has already been used!", "⛔", false);
+    }
+
+    usedUTRs.push(utr);
+    localStorage.setItem('rwin_used_utrs', JSON.stringify(usedUTRs));
+
+    if (selectedPass === '200') {
+        currentTier = 'vip_200';
+    } else if (selectedPass === '99') {
+        currentTier = 'platinum_99';
+    } else if (selectedPass === '49') {
+        currentTier = 'gold_49';
+    } else {
+        currentTier = 'starter_9';
+    }
+
+    localStorage.setItem('rwin_tier', currentTier);
+    document.getElementById('utrModal').style.display = 'none';
+    updateUIState();
+    renderVipGrid();
+    showModal("PAYMENT VERIFIED!", `Successfully upgraded to ₹${selectedPass} Pass!`, "🎉", true);
 }
 
 function resetCoins() {
+    if (currentTier === 'free') {
+        return showModal("MEMBERSHIP REQUIRED", "Free tier gets limited resets. Upgrade to ₹9 Pass for Unlimited Resets!", "🔒", false);
+    }
     window.game.balance = 10000;
-    updateBalance();
-    showModal("🔄 Balance Reset", "Coins restored to ₹10,000!", "💰", true);
+    updateUIState();
+    showModal("🔄 BALANCE RESET", "Virtual practice coins restored to ₹10,000!", "💰", true);
 }
 
 function showModal(title, msg, icon, isWin) {
@@ -115,7 +218,7 @@ function closeModal() {
     document.getElementById("customModal").style.display = "none";
 }
 
-// 55 CLUB WINGO STATE
+// 1. WINGO STATE & LOGIC
 let wingoTimer = 30;
 let wingoPeriod = 20260906001;
 let wingoMulti = 1;
@@ -129,11 +232,9 @@ window.loadMasterGameView = function(gameId) {
     const container = document.getElementById("game-" + gameId);
     if (!container) return;
 
-    // 1. EXACT 55 CLUB WINGO UI
     if (gameId === 'color') {
         container.innerHTML = `
             <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
-                <!-- Mode Bar -->
                 <div style="display:flex; justify-content:space-between; background:#050811; padding:6px; border-radius:8px; margin-bottom:10px; font-size:10px; font-weight:700;">
                     <span style="color:var(--neon-pink); border-bottom:2px solid var(--neon-pink);">WinGo 30s</span>
                     <span style="color:#94a3b8;">WinGo 1Min</span>
@@ -141,7 +242,6 @@ window.loadMasterGameView = function(gameId) {
                     <span style="color:#94a3b8;">WinGo 5Min</span>
                 </div>
 
-                <!-- Clock Bar -->
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:8px 12px; border-radius:10px; margin-bottom:10px;">
                     <div style="text-align:left;">
                         <div style="font-size:9px; color:#94a3b8;">Period</div>
@@ -153,14 +253,12 @@ window.loadMasterGameView = function(gameId) {
                     </div>
                 </div>
 
-                <!-- Green / Violet / Red -->
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
                     <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green</button>
                     <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet</button>
                     <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red</button>
                 </div>
 
-                <!-- 0-9 Ring Circles -->
                 <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:10px;">
                     <div onclick="playWinGo(0, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #ef4444, #8b5cf6);">0</div>
                     <div onclick="playWinGo(1, 9)" class="wingo-ring" style="background:#10b981;">1</div>
@@ -174,7 +272,6 @@ window.loadMasterGameView = function(gameId) {
                     <div onclick="playWinGo(9, 9)" class="wingo-ring" style="background:#10b981;">9</div>
                 </div>
 
-                <!-- Chips Bar -->
                 <div style="display:flex; justify-content:center; gap:6px; margin-bottom:10px;">
                     <span onclick="setWingoChip(1)" class="wingo-chip active" id="chip-1">X1</span>
                     <span onclick="setWingoChip(5)" class="wingo-chip" id="chip-5">X5</span>
@@ -183,13 +280,11 @@ window.loadMasterGameView = function(gameId) {
                     <span onclick="setWingoChip(50)" class="wingo-chip" id="chip-50">X50</span>
                 </div>
 
-                <!-- Big / Small Bar -->
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
                     <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:20px 0 0 20px; border:none; cursor:pointer;">Big</button>
                     <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:0 20px 20px 0; border:none; cursor:pointer;">Small</button>
                 </div>
 
-                <!-- History Table -->
                 <div style="background:#050811; border:1px solid #1e293b; border-radius:10px; padding:8px; text-align:left;">
                     <div style="font-size:10px; font-weight:800; color:var(--neon-gold); margin-bottom:4px;">📊 Game History</div>
                     <div id="wingoHistList" style="font-size:10px;"></div>
@@ -240,104 +335,8 @@ window.loadMasterGameView = function(gameId) {
             const bet = 100 * wingoMulti;
             if (window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
 
-            window.game.balance -= bet; updateBalance();
+            window.game.balance -= bet; updateUIState();
 
             const num = Math.floor(Math.random() * 10);
             const col = (num === 0 || num === 5) ? "VIOLET" : (num % 2 === 0 ? "RED" : "GREEN");
-            const sz = num >= 5 ? "BIG" : "SMALL";
-
-            let win = (typeof sel === 'number' && sel === num) || (sel === col || sel === sz);
-
-            setTimeout(() => {
-                if (win) {
-                    const won = bet * multi;
-                    window.game.balance += won;
-                    showModal("WIN!", `Drawn: ${num} (${col}/${sz})\nWon ₹${won}`, "🎨", true);
-                } else {
-                    showModal("LOST", `Drawn: ${num} (${col}/${sz})`, "💥", false);
-                }
-                updateBalance();
-            }, 200);
-        };
-        return;
-    }
-
-    // 2. OFFICIAL SPRIBE AVIATOR UI
-    if (gameId === 'aviator') {
-        container.innerHTML = `
-            <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
-                <!-- History Strip -->
-                <div class="history-strip">
-                    <span class="history-pill" style="color:#8b5cf6;">1.17x</span>
-                    <span class="history-pill" style="color:#10b981;">2.53x</span>
-                    <span class="history-pill" style="color:#ef4444;">1.02x</span>
-                    <span class="history-pill" style="color:#f59e0b;">10.51x</span>
-                    <span class="history-pill" style="color:#10b981;">1.84x</span>
-                </div>
-
-                <!-- Flight Canvas Box -->
-                <div class="aviator-canvas">
-                    <div id="jetMulti" style="font-size:38px; font-weight:800; color:#fff; z-index:2;">1.00x</div>
-                </div>
-
-                <!-- Dual Bet Buttons -->
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
-                    <div style="background:#050811; padding:8px; border-radius:10px; border:1px solid #1e293b;">
-                        <input type="number" id="avBet1" value="100" style="width:90%; padding:4px; text-align:center; background:#1e293b; border:none; color:#fff; font-weight:700; border-radius:4px; margin-bottom:6px;">
-                        <button id="jetBtn1" onclick="launchJet()" style="width:100%; padding:10px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BET 100</button>
-                    </div>
-                    <div style="background:#050811; padding:8px; border-radius:10px; border:1px solid #1e293b;">
-                        <input type="number" id="avBet2" value="500" style="width:90%; padding:4px; text-align:center; background:#1e293b; border:none; color:#fff; font-weight:700; border-radius:4px; margin-bottom:6px;">
-                        <button onclick="alert('Bet Placed')" style="width:100%; padding:10px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BET 500</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        let flying = false, m = 1.00, timer;
-        window.launchJet = function() {
-            const btn = document.getElementById("jetBtn1");
-            const bet = Number(document.getElementById("avBet1").value) || 100;
-            if (!flying) {
-                if (window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
-                window.game.balance -= bet; updateBalance();
-                flying = true; m = 1.00;
-                btn.innerText = "CASHOUT";
-                btn.style.background = "#f59e0b";
-                const crashAt = (Math.random() * 3 + 1.1).toFixed(2);
-                timer = setInterval(() => {
-                    m += 0.05;
-                    document.getElementById("jetMulti").innerText = m.toFixed(2) + "x";
-                    if (m >= crashAt) {
-                        clearInterval(timer); flying = false;
-                        document.getElementById("jetMulti").innerText = "FLEW AWAY!";
-                        btn.innerText = "BET 100";
-                        btn.style.background = "#10b981";
-                        showModal("FLEW AWAY", `Crashed @ ${m.toFixed(2)}x`, "✈️", false);
-                    }
-                }, 100);
-            } else {
-                clearInterval(timer); flying = false;
-                const won = Math.floor(bet * m); window.game.balance += won; updateBalance();
-                showModal("CASHED OUT!", `Fly High @ ${m.toFixed(2)}x\nWon ₹${won}`, "✈️", true);
-                btn.innerText = "BET 100";
-                btn.style.background = "#10b981";
-            }
-        };
-        return;
-    }
-
-    // UNIVERSAL FALLBACK FOR OTHER GAMES
-    const titleFormatted = gameId.replace(/_/g, ' ').toUpperCase();
-    container.innerHTML = `
-        <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:14px; text-align:center;">
-            <div style="background:#050811; padding:16px; border-radius:10px; margin-bottom:10px;">
-                <div style="font-size:32px;">🎰</div>
-                <div style="font-size:13px; font-weight:800; color:var(--neon-blue);">${titleFormatted}</div>
-            </div>
-            <button onclick="playUniversal('${gameId}')" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">PLAY ROUND (2.0X)</button>
-        </div>
-    `;
-    window.playUniversal = function(gId) {
-        if (window.game.balance < 500) return showModal("Low Balance", "Reset coins!", "⚠️", false);
-        window.game.balance -= 500; updateBalance();
-        setTimeout(
+         
