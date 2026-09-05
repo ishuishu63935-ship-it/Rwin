@@ -1,24 +1,40 @@
 
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RWIN - VIP Cyber Arcade & Casino Arena</title>
-<link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="js/core-engine.js"></script>
 <style>
-.game-screen { display: none; padding: 12px; color: #fff; width: 100%; min-height: 420px; }
+:root {
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-gold: #f59e0b;
+  --neon-pink: #ec4899;
+}
+body { margin: 0; padding: 0; background: #050811; font-family: 'Poppins', sans-serif; color: #fff; }
+.gameContainer { max-width: 480px; margin: 0 auto; background: #050811; min-height: 100vh; position: relative; padding-bottom: 80px; box-sizing: border-box; }
+.topBar { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: #0b101d; border-bottom: 1px solid #1e293b; }
+.level-badge { background: var(--neon-pink); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 12px; }
+.xp-progress-outer { width: 100px; height: 6px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+.xp-progress-inner { width: 30%; height: 100%; background: var(--neon-blue); }
+.live-ticker { background: #0f172a; padding: 8px 14px; font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #1e293b; }
+.ticker-dot { width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 8px var(--neon-green); }
+.balanceCard { background: #0b101d; margin: 12px; border: 1px solid #1e293b; border-radius: 16px; padding: 16px; text-align: center; }
+.balanceCard h1 { font-size: 28px; margin: 4px 0; color: var(--neon-blue); }
+.game-screen { display: none; padding: 12px; color: #fff; width: 100%; box-sizing: border-box; }
 .game-screen.active { display: block !important; }
 .back-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #0f172a; border-radius: 12px; margin: 10px 12px; border: 1px solid #1e293b; }
 .back-btn { padding: 6px 12px; background: #1e293b; color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; }
-.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 80px; }
+.arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
 .game-card { background: #0b101d; border: 1px solid #1e293b; border-radius: 14px; padding: 14px; text-align: center; cursor: pointer; }
 .game-card.locked { opacity: 0.8; border-color: rgba(245, 158, 11, 0.3); }
 .game-card h3 { font-size: 13px; color: #fff; margin: 4px 0 0 0; }
+.bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #0b101d; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 10px 0; z-index: 999; box-sizing: border-box; }
+.navItem { color: #94a3b8; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; }
+.navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-/* SLEEK IN-APP POPUP MODAL (NO BROWSER ALERT) */
 #customModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .modal-box { background: #0b101d; border: 2px solid var(--neon-blue); border-radius: 20px; padding: 24px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); }
 </style>
@@ -27,7 +43,6 @@
 <body>
 <div class="gameContainer">
 
-<!-- CUSTOM CASINO POPUP -->
 <div id="customModal">
   <div class="modal-box" id="modalBox">
     <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">🎯</div>
@@ -106,7 +121,6 @@ function closeModal() {
     document.getElementById("customModal").style.display = "none";
 }
 
-// REAL TIMER & HISTORY STATE FOR WINGO
 let wingoTimerVal = 30;
 let wingoPeriod = 20260906001;
 let wingoHistory = [
@@ -119,7 +133,6 @@ window.loadMasterGameView = function(gameId) {
     const container = document.getElementById("game-" + gameId);
     if (!container) return;
 
-    // 1. WINGO COLOR PREDICTION (WITH REAL COUNTDOWN & TREND HISTORY)
     if (gameId === 'color') {
         container.innerHTML = `
             <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:14px; text-align:center;">
@@ -164,7 +177,6 @@ window.loadMasterGameView = function(gameId) {
                     <button onclick="document.getElementById('wingoBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px; cursor:pointer;">2X</button>
                 </div>
 
-                <!-- TREND HISTORY CHART -->
                 <div style="background:#050811; border:1px solid #1e293b; border-radius:12px; padding:10px; text-align:left;">
                     <div style="font-size:11px; font-weight:800; color:var(--neon-gold); margin-bottom:6px;">📊 TREND HISTORY</div>
                     <div id="wingoHistoryList" style="font-size:11px; color:#cbd5e1;"></div>
@@ -184,7 +196,6 @@ window.loadMasterGameView = function(gameId) {
         }
         renderWingoHistory();
 
-        // Start Live Ticking Timer
         if (wingoInterval) clearInterval(wingoInterval);
         wingoInterval = setInterval(() => {
             wingoTimerVal--;
@@ -232,7 +243,6 @@ window.loadMasterGameView = function(gameId) {
         return;
     }
 
-    // 2. AVIATOR
     if (gameId === 'aviator') {
         container.innerHTML = `
             <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:16px; text-align:center;">
@@ -279,7 +289,6 @@ window.loadMasterGameView = function(gameId) {
         return;
     }
 
-    // 3. CYBER MINES 5X5 GRID
     if (gameId === 'mines') {
         container.innerHTML = `
             <div style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:14px; text-align:center;">
@@ -300,30 +309,4 @@ window.loadMasterGameView = function(gameId) {
             const g = document.getElementById("minesGrid");
             g.innerHTML = "";
             for(let i=0; i<25; i++) {
-                const b = document.createElement("button");
-                b.style.cssText = "height:44px; background:#1e293b; border:1px solid #334155; border-radius:6px; font-size:16px; cursor:pointer;";
-                b.innerText = "❓";
-                b.onclick = () => {
-                    if(!active || b.disabled) return;
-                    b.disabled = true;
-                    if(mines.includes(i)) {
-                        b.innerText = "💣"; b.style.background = "#ef4444"; active = false;
-                        showModal("BOMB HIT", "You stepped on a mine!", "💥", false);
-                    } else {
-                        b.innerText = "💎"; b.style.background = "#10b981"; mMulti += 0.35;
-                        document.getElementById("minesMulti").innerText = mMulti.toFixed(2) + "x";
-                    }
-                };
-                g.appendChild(b);
-            }
-        }
-        renderMines();
-        window.startMinesGame = function() {
-            const bet = Number(document.getElementById("minesBet").value) || 500;
-            if(window.game.balance < bet) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
-            window.game.balance -= bet; updateBalance();
-            mines = []; while(mines.length < 3) { let r = Math.floor(Math.random()*25); if(!mines.includes(r)) mines.push(r); }
-            active = true; mMulti = 1.0; renderMines();
-        };
-        return;
- 
+                const b = doc
