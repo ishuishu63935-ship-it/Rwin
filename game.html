@@ -8,8 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="js/core-engine.js"></script>
+<script src="games/master-games.js"></script>
 <style>
-/* ABSOLUTE FIX FOR GAME DISPLAY */
+/* GAME SCREEN DISPLAY & LAYOUT FIX */
 .game-screen { display: none; padding: 12px; color: #fff; width: 100%; min-height: 400px; }
 .game-screen.active { display: block !important; }
 .back-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #0f172a; border-radius: 12px; margin: 10px 12px; border: 1px solid #1e293b; }
@@ -65,134 +66,6 @@
 </div>
 
 <script>
-// EMBEDDED FAIL-SAFE GAME RENDERER (PREVENTS BLANK SCREENS)
-window.loadMasterGameView = function(gameId) {
-    const container = document.getElementById("game-" + gameId);
-    if (!container) return;
-
-    if (!window.game) window.game = { balance: 10000, level: 1 };
-
-    // 1. COLOR PREDICTION (WINGO)
-    if (gameId === 'color') {
-        container.innerHTML = `
-            <div class="action-box" style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:18px; text-align:center;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#050811; padding:10px; border-radius:12px; margin-bottom:12px;">
-                    <span style="font-size:11px; color:#94a3b8;">PERIOD: <b style="color:var(--neon-blue);">2026090401</b></span>
-                    <span style="font-size:18px; font-weight:800; color:var(--neon-green);" id="wingoTimer">00:30</span>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
-                    <button onclick="playColor('GREEN')" style="padding:12px; background:var(--neon-green); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">GREEN (2X)</button>
-                    <button onclick="playColor('VIOLET')" style="padding:12px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">VIOLET (4.5X)</button>
-                    <button onclick="playColor('RED')" style="padding:12px; background:#ef4444; color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">RED (2X)</button>
-                </div>
-                <div style="display:flex; gap:6px; margin-bottom:12px;">
-                    <input type="number" id="colorBet" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                    <button onclick="document.getElementById('colorBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
-                </div>
-            </div>
-        `;
-        window.playColor = function(col) {
-            const bet = Number(document.getElementById("colorBet").value) || 500;
-            if (window.game.balance < bet) return alert("Low Balance!");
-            window.game.balance -= bet;
-            window.updateBalance();
-            const win = Math.random() < 0.48;
-            setTimeout(() => {
-                if (win) { window.game.balance += bet * 2; alert("🎉 WON ₹" + (bet * 2)); }
-                else { alert("💥 Round Lost"); }
-                window.updateBalance();
-            }, 300);
-        };
-        return;
-    }
-
-    // 2. AVIATOR CRASH
-    if (gameId === 'aviator') {
-        container.innerHTML = `
-            <div class="action-box" style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:18px; text-align:center;">
-                <div style="background:#050811; border:2px solid #1e293b; border-radius:14px; height:160px; position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
-                    <div id="jetMulti" style="font-size:42px; font-weight:800; color:var(--neon-green);">1.00x</div>
-                </div>
-                <div style="display:flex; gap:6px; margin-bottom:12px;">
-                    <input type="number" id="aviatorBet" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                    <button onclick="document.getElementById('aviatorBet').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
-                </div>
-                <button id="jetBtn" onclick="launchJet()" style="width:100%; padding:14px; background:linear-gradient(135deg, var(--neon-green), #059669); color:#000; font-weight:800; border-radius:12px; border:none; font-size:16px;">🚀 LAUNCH JET</button>
-            </div>
-        `;
-        let flying = false;
-        let m = 1.00;
-        let timer;
-        window.launchJet = function() {
-            const btn = document.getElementById("jetBtn");
-            const bet = Number(document.getElementById("aviatorBet").value) || 500;
-            if (!flying) {
-                if (window.game.balance < bet) return alert("Low Balance!");
-                window.game.balance -= bet;
-                window.updateBalance();
-                flying = true;
-                m = 1.00;
-                btn.innerText = "💰 CASHOUT NOW";
-                btn.style.background = "linear-gradient(135deg, var(--neon-gold), #d97706)";
-                const crashAt = (Math.random() * 3 + 1.1).toFixed(2);
-                timer = setInterval(() => {
-                    m += 0.05;
-                    document.getElementById("jetMulti").innerText = m.toFixed(2) + "x";
-                    if (m >= crashAt) {
-                        clearInterval(timer);
-                        flying = false;
-                        document.getElementById("jetMulti").innerText = "💥 FLEW AWAY!";
-                        btn.innerText = "🚀 LAUNCH JET";
-                        btn.style.background = "linear-gradient(135deg, var(--neon-green), #059669)";
-                    }
-                }, 100);
-            } else {
-                clearInterval(timer);
-                flying = false;
-                const won = Math.floor(bet * m);
-                window.game.balance += won;
-                window.updateBalance();
-                alert(`✈️ Cashed Out @ ${m.toFixed(2)}x! Won ₹${won}`);
-                btn.innerText = "🚀 LAUNCH JET";
-                btn.style.background = "linear-gradient(135deg, var(--neon-green), #059669)";
-            }
-        };
-        return;
-    }
-
-    // 3. UNIVERSAL ARENA ENGINE FOR ALL 70 GAMES
-    container.innerHTML = `
-        <div class="action-box" style="background:#0b101d; border:1px solid #1e293b; border-radius:18px; padding:18px; text-align:center;">
-            <div style="background:#050811; border:2px solid #1e293b; border-radius:14px; padding:25px; margin-bottom:12px;">
-                <div style="font-size:48px; margin-bottom:6px;">🎰</div>
-                <div style="font-size:16px; font-weight:800; color:var(--neon-blue);">${gameId.toUpperCase()} ARENA</div>
-                <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Multiplier: <b style="color:var(--neon-green);">2.50X</b></div>
-            </div>
-            <div style="display:flex; gap:6px; margin-bottom:12px;">
-                <input type="number" id="genBet_${gameId}" value="500" style="padding:10px; width:60%; text-align:center; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; font-weight:700;">
-                <button onclick="document.getElementById('genBet_${gameId}').value *= 2" style="padding:8px 12px; background:#1e293b; color:var(--neon-gold); border:1px solid var(--neon-gold); border-radius:8px;">2X</button>
-            </div>
-            <button onclick="playGeneric('${gameId}')" style="width:100%; padding:14px; background:linear-gradient(135deg, var(--neon-blue), #0284c7); color:#000; font-weight:800; border-radius:12px; border:none; font-size:15px;">PLAY ROUND (2.5X)</button>
-        </div>
-    `;
-    window.playGeneric = function(gId) {
-        const bet = Number(document.getElementById(`genBet_${gId}`).value) || 500;
-        if (window.game.balance < bet) return alert("Low Balance!");
-        window.game.balance -= bet;
-        window.updateBalance();
-        setTimeout(() => {
-            if (Math.random() < 0.48) {
-                const won = Math.floor(bet * 2.5);
-                window.game.balance += won;
-                alert("🎉 WON ₹" + won);
-            } else {
-                alert("💥 Round Lost");
-            }
-            window.updateBalance();
-        }, 250);
-    };
-};
-
 window.openGame = function(gameId, title) {
     document.getElementById('arenaHub').style.display = 'none';
     document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
@@ -209,7 +82,9 @@ window.openGame = function(gameId, title) {
     document.getElementById('backBar').style.display = 'flex';
     document.getElementById('activeGameTitle').innerText = title;
 
-    window.loadMasterGameView(gameId);
+    if (window.loadMasterGameView) {
+        window.loadMasterGameView(gameId);
+    }
 };
 
 window.exitToArena = function() {
@@ -238,7 +113,7 @@ window.renderFullGameGrid = function() {
     const hub = document.getElementById("arenaHub");
     if (!hub) return;
 
-    // 70 REAL UNIQUE CASINO TITLES
+    // FULL 70 REAL UNIQUE CASINO TITLES
     const realGames = [
         { id: "color", title: "WinGo 1M Color Prediction", lvl: 1, vip: false },
         { id: "aviator", title: "Stake Crash Aviator", lvl: 1, vip: false },
@@ -269,7 +144,47 @@ window.renderFullGameGrid = function() {
         { id: "game_27", title: "Red Dog High Card", lvl: 1, vip: true },
         { id: "game_28", title: "Casino Hold'em Poker", lvl: 1, vip: true },
         { id: "game_29", title: "Golden Wealth Baccarat", lvl: 1, vip: true },
-        { id: "game_30", title: "VIP Platinum Roulette", lvl: 1, vip: true }
+        { id: "game_30", title: "VIP Platinum Roulette", lvl: 1, vip: true },
+        { id: "game_31", title: "Super Fan Tan", lvl: 1, vip: true },
+        { id: "game_32", title: "Cash or Crash Tower", lvl: 1, vip: true },
+        { id: "game_33", title: "Football Studio Dice", lvl: 1, vip: true },
+        { id: "game_34", title: "Dead or Alive Saloon", lvl: 1, vip: true },
+        { id: "game_35", title: "Lightning Dice 1000X", lvl: 1, vip: true },
+        { id: "game_36", title: "Gonzo's Treasure Hunt", lvl: 1, vip: true },
+        { id: "game_37", title: "Sweet Bonanza Candyland", lvl: 1, vip: true },
+        { id: "game_38", title: "Coin Flip Arcade", lvl: 1, vip: true },
+        { id: "game_39", title: "Bac Bo Dice Battle", lvl: 1, vip: true },
+        { id: "game_40", title: "Dragon Tiger Luck", lvl: 1, vip: true },
+        { id: "game_41", title: "Mahjong Ways 2", lvl: 1, vip: true },
+        { id: "game_42", title: "Lucky Neko Cat Slots", lvl: 1, vip: true },
+        { id: "game_43", title: "Wild Bandito Gunner", lvl: 1, vip: true },
+        { id: "game_44", title: "Ways of the Qilin", lvl: 1, vip: true },
+        { id: "game_45", title: "Double Fortune Reels", lvl: 1, vip: true },
+        { id: "game_46", title: "Treasures of Aztec", lvl: 1, vip: true },
+        { id: "game_47", title: "Ganesha Gold Deluxe", lvl: 1, vip: true },
+        { id: "game_48", title: "Caishen Wins Jackpot", lvl: 1, vip: true },
+        { id: "game_49", title: "Captain's Bounty Crash", lvl: 1, vip: true },
+        { id: "game_50", title: "Egypt's Book of Mystery", lvl: 1, vip: true },
+        { id: "game_51", title: "Thai River Wonders", lvl: 1, vip: true },
+        { id: "game_52", title: "Balinese Garden Slots", lvl: 1, vip: true },
+        { id: "game_53", title: "Crypto Mines 10x10", lvl: 1, vip: true },
+        { id: "game_54", title: "Space XY Rocket", lvl: 1, vip: true },
+        { id: "game_55", title: "JetX Flight Simulator", lvl: 1, vip: true },
+        { id: "game_56", title: "Balloon Pop Multiplier", lvl: 1, vip: true },
+        { id: "game_57", title: "High Striker Carnival", lvl: 1, vip: true },
+        { id: "game_58", title: "Tower Legend Quest", lvl: 1, vip: true },
+        { id: "game_59", title: "Keno Jackpot Draw", lvl: 1, vip: true },
+        { id: "game_60", title: "Bingo Blast 90", lvl: 1, vip: true },
+        { id: "game_61", title: "Scratch Match Gold", lvl: 1, vip: true },
+        { id: "game_62", title: "Football Penalty Shoot", lvl: 1, vip: true },
+        { id: "game_63", title: "Darts Championship", lvl: 1, vip: true },
+        { id: "game_64", title: "Speed Archery Bullseye", lvl: 1, vip: true },
+        { id: "game_65", title: "Cyber Bowling Strike", lvl: 1, vip: true },
+        { id: "game_66", title: "8-Ball Pool Challenge", lvl: 1, vip: true },
+        { id: "game_67", title: "Fruit Slice Slash", lvl: 1, vip: true },
+        { id: "game_68", title: "Slices of Pizza Slots", lvl: 1, vip: true },
+        { id: "game_69", title: "Candy Burst Bonanza", lvl: 1, vip: true },
+        { id: "game_70", title: "RWIN Super Jackpot 1000X", lvl: 1, vip: true }
     ];
 
     let basicHtml = `<h3 style="color:#94a3b8; font-size:12px; margin:10px 12px 4px 12px; letter-spacing:1px;">BASIC ARENA (GAMES 1-20 • LVL 1-4 FREE)</h3><div class="arena-grid">`;
@@ -303,5 +218,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 </body>
-  </html>
-  
+</html>
