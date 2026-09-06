@@ -23,7 +23,7 @@
   box-sizing: border-box;
 }
 
-input, select { -webkit-user-select: auto; user-select: auto; }
+input, select, button { -webkit-user-select: auto; user-select: auto; }
 
 body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; }
 .gameContainer { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; position: relative; padding-bottom: 80px; }
@@ -44,7 +44,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
 
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
-.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; position: relative; z-index: 10; }
+.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; position: relative; }
 .game-card:active { transform: scale(0.97); }
 .game-card.locked { opacity: 0.75; border-color: rgba(245, 158, 11, 0.3); }
 .game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; pointer-events: none; }
@@ -54,7 +54,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .navItem { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
 .navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-.wingo-ring { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
+.wingo-ring { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
 .wingo-chip { padding: 4px 8px; background: var(--border-color); border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
 .wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
 .aviator-canvas { background: #000; border: 1px solid var(--border-color); border-radius: 12px; width: 100%; height: 160px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -105,11 +105,10 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
-<!-- HARDCODED 20 GAMES GRID -->
 <div id="arenaHub">
   <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2)</h3>
   <div class="arena-grid">
-    <div class="game-card" onclick="openGame('color', 'Color Prediction')">
+    <div class="game-card" onclick="openGame('color', 'WinGo Color Prediction')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #1 (LVL 1)</div>
       <h3>Color Prediction</h3>
       <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE PLAY</p>
@@ -216,6 +215,8 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
+<div id="activeGameArea"></div>
+
 <nav class="bottomNav">
   <a href="home.html" class="navItem">🏠 <span>Home</span></a>
   <a href="game.html" class="navItem active">🎮 <span>Arena</span></a>
@@ -226,16 +227,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 </div>
 
 <script>
-// POPUNDER AD SCRIPT (Triggers on first click anywhere)
-var popunderTriggered = false;
-document.addEventListener('click', function() {
-    if (!popunderTriggered) {
-        popunderTriggered = true;
-        // Replace with your Popunder Ad URL
-        window.open('https://rwin.space/wallet.html', '_blank');
-    }
-});
-
 var gameBalance = 10000;
 var currentTier = localStorage.getItem('rwin_tier') || 'free'; 
 var userXP = parseInt(localStorage.getItem('rwin_xp') || '0');
@@ -270,7 +261,6 @@ function updateUIState() {
     const balEl = document.getElementById("balanceText");
     if (balEl) balEl.innerText = "₹" + gameBalance.toLocaleString();
 
-    // Update Lock Tags dynamically based on Tier & Level
     const gameList = [
         { id: "vortex", lvl: 2 }, { id: "teenpatti", lvl: 3 }, { id: "dragon", lvl: 4 },
         { id: "mines", lvl: 5 }, { id: "rummy", lvl: 6 }, { id: "roulette", lvl: 7 },
@@ -336,4 +326,14 @@ function checkAndOpen(gameId, title, reqLvl) {
     }
     if (currentTier !== 'vip_200') {
         const userLvl = getLevel();
-        if (userL
+        if (userLvl < reqLvl) {
+            return showModal("LEVEL LOCKED", `Reach Level ${reqLvl} to play, or Upgrade to ₹200 Super VIP to unlock ALL games!`, "🔒", false);
+        }
+    }
+    openGame(gameId, title);
+}
+
+function openGame(gameId, title) {
+    document.getElementById('arenaHub').style.display = 'none';
+    document.getElementById('backBar').style.display = 'flex';
+    docume
