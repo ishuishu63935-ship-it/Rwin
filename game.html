@@ -52,14 +52,11 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 
 .game-view { display: none; padding: 12px; }
 
-/* CUSTOM GAME ENGINE STYLES */
+/* 55 CLUB WINGO SPECIAL STYLES */
 .wingo-ring { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; color: #fff; margin: 0 auto; }
+.wingo-ring:active { transform: scale(0.9); }
 .wingo-chip { padding: 4px 8px; background: var(--border-color); border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
 .wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
-
-.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 10px 0; }
-.mine-tile { height: 42px; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 1px solid var(--border-color); }
-.mine-tile.revealed { background: #0f172a; border-color: var(--neon-blue); }
 
 .card-box { background: #0f172a; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin: 6px 0; text-align: center; font-size: 20px; font-weight: 800; }
 
@@ -76,7 +73,9 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
     <div id="modalIcon" style="font-size:42px; margin-bottom:6px;">🎯</div>
     <h3 id="modalTitle" style="color:#fff; font-size:16px; margin:0 0 4px 0;">RESULT</h3>
     <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 14px 0;">Details</p>
-    <button onclick="closeModal()" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
+    <div id="modalActionBtn">
+      <button onclick="closeModal()" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
   </div>
 </div>
 
@@ -123,97 +122,97 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
     </button>
   </div>
 
-  <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px;">🔒 VIP ARENA (GAMES 3-20 • DETAILED ENGINES)</h3>
+  <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px;">🔒 VIP ARENA (GAMES 3-20 • MEMBERSHIP REQUIRED)</h3>
   <div class="arena-grid">
     <button class="game-card" onclick="openGame('vortex', 'Vortex Fortune Wheel')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #3</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #3</div>
       <h3>Vortex Spin</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎡 Multiplier Wheel</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('teenpatti', '3 Patti Deluxe')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #4</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #4</div>
       <h3>3 Patti Deluxe</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🃏 3-Card Show</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('dragon', 'Dragon vs Tiger')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #5</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #5</div>
       <h3>Dragon vs Tiger</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🐉 Card Duel</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('mines', 'Cyber Minesweeper')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #6</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #6</div>
       <h3>Cyber Mines</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">💣 5x5 Gem Grid</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('rummy', 'Rummy Pro 13-Card')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #7</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #7</div>
       <h3>Rummy Pro</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎴 13-Card Meld</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('roulette', 'European Roulette')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #8</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #8</div>
       <h3>European Roulette</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎰 Spin Table</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('blackjack', 'Classic Blackjack 21')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #9</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #9</div>
       <h3>Blackjack 21</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">♠️ Hit or Stand</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('baccarat', 'Speed Baccarat')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #10</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #10</div>
       <h3>Speed Baccarat</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">💎 Player / Banker</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('andarbahar', 'Andar Bahar Royale')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #11</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #11</div>
       <h3>Andar Bahar</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 Joker Match</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('sicbo', 'Sic Bo Dice')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #12</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #12</div>
       <h3>Sic Bo Dice</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎲 3-Dice Roll</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('slots', 'Neon 777 Slots')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #13</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #13</div>
       <h3>Neon 777 Slots</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">7️⃣ 3-Reel Machine</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('dice', 'Cyber Dice Roll')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #14</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #14</div>
       <h3>Cyber Dice Roll</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎯 Target Under 50</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('hilo', 'Hi-Lo Poker Streak')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #15</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #15</div>
       <h3>Hi-Lo Poker Streak</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">📈 High or Low</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('chickenroad', 'Chicken Road Cross')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #16</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #16</div>
       <h3>Chicken Road</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🐔 Safe Lane Cross</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('plinko', 'Plinko Drop Multiplier')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #17</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #17</div>
       <h3>Plinko Drop</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🟢 Bucket Drop</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('limbo', 'Limbo Rocket')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #18</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #18</div>
       <h3>Limbo Rocket</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🚀 Target Rocket</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('horserace', 'Derby Horse Racing')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #19</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #19</div>
       <h3>Derby Horse Racing</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🐎 4-Horse Derby</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
     <button class="game-card" onclick="openGame('cryptocandle', 'BTC Crypto Candle 30s')">
-      <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #20</div>
+      <div style="font-size:10px; font-weight:800; color:var(--neon-gold);">🔒 GAME #20</div>
       <h3>BTC Crypto Candle</h3>
-      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">📊 Call / Put Trade</p>
+      <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 VIP PASS</p>
     </button>
   </div>
 </div>
@@ -236,11 +235,15 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
         <div style="font-size:18px; font-weight:800; color:#fff; background:#000; padding:2px 8px; border-radius:6px;" id="wingoClockEl">00:30</div>
       </div>
     </div>
+
+    <!-- COLOR BET BUTTONS -->
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
       <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green (2X)</button>
       <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet (4.5X)</button>
       <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red (2X)</button>
     </div>
+
+    <!-- 0-9 NUMBER RINGS -->
     <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:10px;">
       <div onclick="playWinGo(0, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #ef4444, #8b5cf6);">0</div>
       <div onclick="playWinGo(1, 9)" class="wingo-ring" style="background:#10b981;">1</div>
@@ -253,6 +256,8 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
       <div onclick="playWinGo(8, 9)" class="wingo-ring" style="background:#ef4444;">8</div>
       <div onclick="playWinGo(9, 9)" class="wingo-ring" style="background:#10b981;">9</div>
     </div>
+
+    <!-- CHIP MULTIPLIERS -->
     <div style="display:flex; justify-content:center; gap:6px; margin-bottom:10px;">
       <span onclick="setWingoChip(1)" class="wingo-chip active" id="chip-1">X1</span>
       <span onclick="setWingoChip(5)" class="wingo-chip" id="chip-5">X5</span>
@@ -260,10 +265,14 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
       <span onclick="setWingoChip(20)" class="wingo-chip" id="chip-20">X20</span>
       <span onclick="setWingoChip(50)" class="wingo-chip" id="chip-50">X50</span>
     </div>
+
+    <!-- BIG / SMALL BUTTONS -->
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
       <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:20px 0 0 20px; border:none; cursor:pointer;">Big (2X)</button>
       <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:0 20px 20px 0; border:none; cursor:pointer;">Small (2X)</button>
     </div>
+
+    <!-- LIVE HISTORY LOG -->
     <div style="background:#050811; border:1px solid #1e293b; border-radius:10px; padding:8px; text-align:left;">
       <div style="font-size:10px; font-weight:800; color:var(--neon-gold); margin-bottom:4px;">📊 Game History</div>
       <div id="wingoHistList" style="font-size:10px;"></div>
@@ -281,28 +290,9 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
-<!-- GAME #3: VORTEX WHEEL -->
-<div id="view-vortex" class="game-view">
-  <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:16px; text-align:center;">
-    <div id="wheelDisplay" style="font-size:60px; margin:10px 0;">🎡</div>
-    <div style="font-size:14px; font-weight:800; color:var(--neon-gold);" id="wheelResultText">VORTEX MULTIPLIER WHEEL</div>
-    <button onclick="spinVortex()" style="width:100%; margin-top:14px; padding:12px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">SPIN WHEEL (BET ₹200)</button>
-  </div>
-</div>
-
-<!-- GAME #4: 3 PATTI DELUXE -->
-<div id="view-teenpatti" class="game-view">
-  <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:14px; text-align:center;">
-    <div style="font-size:11px; color:#94a3b8;">Dealer Cards</div>
-    <div class="card-box" id="dealerTP">❓ ❓ ❓</div>
-    <div style="font-size:11px; color:#94a3b8; margin-top:10px;">Your Cards</div>
-    <div class="card-box" id="playerTP" style="color:var(--neon-blue);">♠️A ♥️K ♦️Q</div>
-    <button onclick="playTeenPatti()" style="width:100%; margin-top:10px; padding:12px; background:var(--neon-gold); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">DEAL & SHOW (BET ₹300)</button>
-  </div>
-</div>
-
-<!-- GAME #5: DRAGON VS TIGER -->
-<div id="view-dragon" class="game-view">
-  <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:14px; text-align:center;">
-    <div style="display:grid; grid-template-
-
+<!-- VIP GAME VIEWS (3-20) -->
+<div id="view-vortex" class="game-view"><div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:16px; text-align:center;"><div style="font-size:50px;">🎡</div><h3>VORTEX SPIN</h3><button onclick="playVipGame('Vortex Spin')" style="padding:10px 20px; background:var(--neon-blue); color:#000; border:none; border-radius:8px; font-weight:800;">SPIN WHEEL (BET ₹200)</button></div></div>
+<div id="view-teenpatti" class="game-view"><div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:16px; text-align:center;"><div style="font-size:50px;">🃏</div><h3>3 PATTI DELUXE</h3><button onclick="playVipGame('3 Patti')" style="padding:10px 20px; background:var(--neon-gold); color:#000; border:none; border-radius:8px; font-weight:800;">DEAL HAND (BET ₹300)</button></div></div>
+<div id="view-dragon" class="game-view"><div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:16px; text-align:center;"><div style="font-size:50px;">🐉</div><h3>DRAGON VS TIGER</h3><button onclick="playVipGame('Dragon vs Tiger')" style="padding:10px 20px; background:#ef4444; color:#fff; border:none; border-radius:8px; font-weight:800;">PLAY ROUND (BET ₹200)</button></div></div>
+<div id="view-mines" class="game-view"><div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:16px; text-align:center;"><div style="font-size:50px;">💣</div><h3>CYBER MINES</h3><button onclick="playVipGame('Cyber Mines')" style="padding:10px 20px; background:var(--neon-green); color:#000; border:none; border-radius:8px; font-weight:800;">START GRID (BET ₹200)</button></div></div>
+<div id="view-rummy" class="game-view"><div style="back
