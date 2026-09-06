@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>RWIN - VIP Arcade & Casino Arena</title>
+<title>RWIN - VIP Arcade Arena</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -19,17 +18,12 @@
 
 * {
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
 }
 
-input, select, textarea {
-  -webkit-user-select: auto;
-  user-select: auto;
-}
+input, select { -webkit-user-select: auto; user-select: auto; }
 
 body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; }
 .gameContainer { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; position: relative; padding-bottom: 80px; }
@@ -52,7 +46,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
 
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
-.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; transition: 0.1s active; }
+.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; }
 .game-card:active { transform: scale(0.97); }
 .game-card.locked { opacity: 0.7; border-color: rgba(245, 158, 11, 0.3); }
 .game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; }
@@ -85,36 +79,12 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
-<div id="utrModal" class="modal-overlay">
-  <div class="modal-box" style="border-color:var(--neon-gold);">
-    <div style="font-size:36px; margin-bottom:4px;">💳</div>
-    <h3 style="color:#fff; font-size:16px; margin:0 0 4px 0;">UPGRADE MEMBERSHIP</h3>
-    <p style="color:#94a3b8; font-size:11px; margin:0 0 10px 0;">Pay via UPI, then enter 12-Digit UTR to activate:</p>
-    
-    <select id="passSelect" style="width:100%; padding:8px; background:#0f172a; color:#fff; border:1px solid var(--border-color); border-radius:6px; margin-bottom:8px; font-size:11px; font-weight:700;">
-      <option value="9">₹9 Starter Pass (16 Days - Coin Resets + Level Unlocks)</option>
-      <option value="49">₹49 Gold Pass (2 Months - Coin Resets + Level Unlocks)</option>
-      <option value="99">₹99 Platinum Pass (4 Months - Coin Resets + Level Unlocks)</option>
-      <option value="200" selected>₹200 Super VIP Pass (6 Months - ALL 20 GAMES UNLOCKED)</option>
-    </select>
-
-    <div style="background:#050811; padding:8px; border-radius:8px; margin-bottom:10px; font-size:11px; color:var(--neon-gold);">
-      UPI ID: <b style="color:#fff;">rwin@upi</b>
-    </div>
-
-    <input type="number" id="utrInput" placeholder="Enter 12-Digit UTR Number" style="width:90%; padding:10px; text-align:center; background:#0f172a; border:1px solid var(--border-color); color:#fff; border-radius:8px; margin-bottom:10px; font-weight:700; font-size:12px;">
-
-    <button onclick="submitUTRVerification()" style="width:100%; padding:10px; background:linear-gradient(135deg, var(--neon-gold), #d97706); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">VERIFY PAYMENT</button>
-    <button onclick="document.getElementById('utrModal').style.display='none'" style="width:100%; padding:6px; background:transparent; color:#94a3b8; border:none; cursor:pointer; font-size:10px; margin-top:6px;">Cancel</button>
-  </div>
-</div>
-
 <header class="topBar">
   <div>
     <h1 style="font-size:15px; margin:0; color:#fff;">🎮 RWIN VIP Arena</h1>
     <span class="tier-badge" id="userTierBadge">FREE TIER</span>
   </div>
-  <button onclick="openUTRModal()" style="padding:5px 10px; background:var(--neon-gold); color:#000; border:none; border-radius:6px; font-weight:800; font-size:10px; cursor:pointer;">👑 Upgrade Pass</button>
+  <button onclick="window.location.href='wallet.html'" style="padding:5px 10px; background:var(--neon-gold); color:#000; border:none; border-radius:6px; font-weight:800; font-size:10px; cursor:pointer;">👑 Upgrade Pass</button>
 </header>
 
 <div class="xp-container">
@@ -125,9 +95,8 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
-<!-- ADVERTISEMENT BANNER PLACEHOLDER -->
 <div class="ad-banner">
-  📢 <b>SPONSOR AD SPACE</b> • Premium VIP Arcade Deals
+  📢 <b>SPONSOR AD SPACE</b> • Live VIP Gaming Ads Launching
 </div>
 
 <section class="balanceCard">
@@ -206,6 +175,7 @@ const gamesList = [
 ];
 
 function updateUIState() {
+    currentTier = localStorage.getItem('rwin_tier') || 'free';
     const badge = document.getElementById("userTierBadge");
     if (badge) {
         if (currentTier === 'vip_200') badge.innerText = "SUPER VIP (6M)";
@@ -243,18 +213,18 @@ function renderVipGrid() {
         } else if (currentTier === 'vip_200') {
             isUnlocked = true;
             lockReason = "⚡ SUPER VIP UNLOCKED";
-        } else { // Paid Pass (₹9, ₹49, ₹99)
+        } else {
             if (userLvl >= g.lvl) {
                 isUnlocked = true;
                 lockReason = "⚡ UNLOCKED (LVL " + g.lvl + ")";
             } else {
                 isUnlocked = false;
-                lockReason = "🔒 Requires LVL " + g.lvl + " (or ₹200 VIP)";
+                lockReason = "🔒 Requires LVL " + g.lvl;
             }
         }
 
         html += `
-            <div class="game-card ${!isUnlocked ? 'locked' : ''}" onclick="checkAndOpen('${g.id}', '${g.title}', ${g.lvl})">
+            <div class="game-card ${!isUnlocked ? 'locked' : ''}" onclick="checkAndOpen('${g.id}', '${g.title}')">
                 <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">CASINO CLASSIC</div>
                 <h3>${g.title}</h3>
                 <p style="color:${isUnlocked ? 'var(--neon-green)' : 'var(--neon-gold)'}; margin-top:4px; font-weight:600; font-size:10px;">
@@ -264,37 +234,6 @@ function renderVipGrid() {
         `;
     });
     grid.innerHTML = html;
-}
-
-function openUTRModal() {
-    document.getElementById('utrModal').style.display = 'flex';
-}
-
-function submitUTRVerification() {
-    const utr = document.getElementById('utrInput').value.trim();
-    const selectedPass = document.getElementById('passSelect').value;
-
-    if (utr.length !== 12) {
-        return showModal("INVALID UTR", "Please enter a valid 12-digit UPI Transaction / UTR number!", "⚠️", false);
-    }
-
-    const usedUTRs = JSON.parse(localStorage.getItem('rwin_used_utrs') || '[]');
-    if (usedUTRs.includes(utr)) {
-        return showModal("DUPLICATE UTR", "This UTR number has already been used!", "⛔", false);
-    }
-
-    usedUTRs.push(utr);
-    localStorage.setItem('rwin_used_utrs', JSON.stringify(usedUTRs));
-
-    if (selectedPass === '200') currentTier = 'vip_200';
-    else if (selectedPass === '99') currentTier = 'platinum_99';
-    else if (selectedPass === '49') currentTier = 'gold_49';
-    else currentTier = 'starter_9';
-
-    localStorage.setItem('rwin_tier', currentTier);
-    document.getElementById('utrModal').style.display = 'none';
-    updateUIState();
-    showModal("PAYMENT VERIFIED!", `Upgraded to ₹${selectedPass} Pass!`, "🎉", true);
 }
 
 function resetCoins() {
@@ -318,10 +257,16 @@ function closeModal() {
     document.getElementById("customModal").style.display = "none";
 }
 
-function checkAndOpen(gameId, title, reqLvl) {
+function checkAndOpen(gameId, title) {
     if (currentTier === 'free') {
-        return showModal("MEMBERSHIP REQUIRED", "This game requires a Membership Pass! Click Upgrade to join.", "🔒", false);
+        alert("🔒 Membership Required! Redirecting to Wallet...");
+        window.location.href = "wallet.html";
+        return;
     }
+    
+    const gameObj = gamesList.find(g => g.id === gameId);
+    const reqLvl = gameObj ? gameObj.lvl : 1;
+
     if (currentTier !== 'vip_200') {
         const userLvl = getLevel();
         if (userLvl < reqLvl) {
@@ -355,7 +300,7 @@ function exitToArena() {
     document.getElementById('backBar').style.display = 'none';
 }
 
-// GAME ENGINE CODE
+// GAME ENGINE
 let wingoTimer = 30;
 let wingoPeriod = 20260906001;
 let wingoMulti = 1;
@@ -385,4 +330,32 @@ function loadMasterGameView(gameId, container) {
                         <div style="font-size:18px; font-weight:800; color:#fff; background:#000; padding:2px 8px; border-radius:6px;" id="wingoClockEl">00:30</div>
                     </div>
                 </div>
-                <div style="display:grid; grid-templa
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
+                    <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green</button>
+                    <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet</button>
+                    <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red</button>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:10px;">
+                    <div onclick="playWinGo(0, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #ef4444, #8b5cf6);">0</div>
+                    <div onclick="playWinGo(1, 9)" class="wingo-ring" style="background:#10b981;">1</div>
+                    <div onclick="playWinGo(2, 9)" class="wingo-ring" style="background:#ef4444;">2</div>
+                    <div onclick="playWinGo(3, 9)" class="wingo-ring" style="background:#10b981;">3</div>
+                    <div onclick="playWinGo(4, 9)" class="wingo-ring" style="background:#ef4444;">4</div>
+                    <div onclick="playWinGo(5, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #10b981, #8b5cf6);">5</div>
+                    <div onclick="playWinGo(6, 9)" class="wingo-ring" style="background:#ef4444;">6</div>
+                    <div onclick="playWinGo(7, 9)" class="wingo-ring" style="background:#10b981;">7</div>
+                    <div onclick="playWinGo(8, 9)" class="wingo-ring" style="background:#ef4444;">8</div>
+                    <div onclick="playWinGo(9, 9)" class="wingo-ring" style="background:#10b981;">9</div>
+                </div>
+                <div style="display:flex; justify-content:center; gap:6px; margin-bottom:10px;">
+                    <span onclick="setWingoChip(1)" class="wingo-chip active" id="chip-1">X1</span>
+                    <span onclick="setWingoChip(5)" class="wingo-chip" id="chip-5">X5</span>
+                    <span onclick="setWingoChip(10)" class="wingo-chip" id="chip-10">X10</span>
+                    <span onclick="setWingoChip(20)" class="wingo-chip" id="chip-20">X20</span>
+                    <span onclick="setWingoChip(50)" class="wingo-chip" id="chip-50">X50</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
+                    <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:20px 0 0 20px; border:none; cursor:pointer;">Big</button>
+                    <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:0 20px 20px 0; border:none; cursor:pointer;">Small</button>
+                </div>
+                <div style="background:#050811; border:1
