@@ -42,8 +42,8 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
 
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
-.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; position: relative; }
-.game-card:active { transform: scale(0.96); }
+.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; position: relative; z-index: 10; }
+.game-card:active { transform: scale(0.95); }
 .game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; pointer-events: none; }
 .game-card div, .game-card p { pointer-events: none; }
 
@@ -55,12 +55,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .wingo-chip { padding: 4px 8px; background: var(--border-color); border: 1px solid #334155; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; color: #94a3b8; }
 .wingo-chip.active { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
 .aviator-canvas { background: #000; border: 1px solid var(--border-color); border-radius: 12px; width: 100%; height: 160px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.history-strip { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0; margin-bottom: 8px; }
-.history-pill { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: var(--border-color); color: #94a3b8; white-space: nowrap; }
-
-.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 10px 0; }
-.mine-tile { height: 42px; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 1px solid var(--border-color); }
-.mine-tile.revealed { background: #0f172a; border-color: var(--neon-blue); }
 
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .modal-box { background: var(--card-bg); border: 2px solid var(--neon-blue); border-radius: 18px; padding: 20px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
@@ -75,7 +69,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
     <div id="modalIcon" style="font-size:42px; margin-bottom:6px;">🎯</div>
     <h3 id="modalTitle" style="color:#fff; font-size:16px; margin:0 0 4px 0;">RESULT</h3>
     <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 14px 0;">Details</p>
-    <button onclick="closeModal()" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
+    <button onclick="window.closeModal()" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
   </div>
 </div>
 
@@ -98,11 +92,11 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <section class="balanceCard">
   <p style="font-size:10px; color:#94a3b8; margin:0;">Practice Balance</p>
   <h1 id="balanceText">₹10,000</h1>
-  <button onclick="resetCoins()" style="margin-top:4px; padding:6px 12px; background:var(--neon-blue); color:#000; border:none; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">🔄 Reset VIP Coins</button>
+  <button onclick="window.resetCoins()" style="margin-top:4px; padding:6px 12px; background:var(--neon-blue); color:#000; border:none; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">🔄 Reset VIP Coins</button>
 </section>
 
 <div id="backBar" class="back-bar" style="display:none;">
-  <button class="back-btn" onclick="exitToArena()">⬅️ Back to Hub</button>
+  <button class="back-btn" onclick="window.exitToArena()">⬅️ Back to Hub</button>
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
@@ -110,12 +104,12 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <div id="arenaHub">
   <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2)</h3>
   <div class="arena-grid">
-    <div class="game-card" onclick="openGame('color', 'WinGo 30s Color Prediction')">
+    <div class="game-card" onclick="window.openGame('color', 'WinGo 30s Color Prediction')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #1 (LVL 1)</div>
       <h3>Color Prediction</h3>
       <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE PLAY</p>
     </div>
-    <div class="game-card" onclick="openGame('aviator', 'Aviator Crash Rocket')">
+    <div class="game-card" onclick="window.openGame('aviator', 'Aviator Crash Rocket')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-green); margin-bottom:2px;">GAME #2 (LVL 1)</div>
       <h3>Aviator Crash</h3>
       <p style="color:var(--neon-green); margin-top:4px; font-weight:600; font-size:10px;">⚡ FREE PLAY</p>
@@ -124,92 +118,92 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 
   <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px; letter-spacing:1px;">🔒 VIP ARENA (GAMES 3-20 • MEMBERSHIP REQUIRED)</h3>
   <div class="arena-grid">
-    <div class="game-card" onclick="openGame('vortex', 'Vortex Fortune Wheel')">
+    <div class="game-card" onclick="window.openGame('vortex', 'Vortex Fortune Wheel')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #3</div>
       <h3>Vortex Spin</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🎡 Fortune Wheel</p>
     </div>
-    <div class="game-card" onclick="openGame('teenpatti', '3 Patti Deluxe')">
+    <div class="game-card" onclick="window.openGame('teenpatti', '3 Patti Deluxe')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #4</div>
       <h3>3 Patti Deluxe</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🃏 3-Card Poker</p>
     </div>
-    <div class="game-card" onclick="openGame('dragon', 'Dragon vs Tiger')">
+    <div class="game-card" onclick="window.openGame('dragon', 'Dragon vs Tiger')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #5</div>
       <h3>Dragon vs Tiger</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🐉 Card Duel</p>
     </div>
-    <div class="game-card" onclick="openGame('mines', 'Cyber Minesweeper')">
+    <div class="game-card" onclick="window.openGame('mines', 'Cyber Minesweeper')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #6</div>
       <h3>Cyber Mines</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">💣 5x5 Mine Grid</p>
     </div>
-    <div class="game-card" onclick="openGame('rummy', 'Rummy Pro 13-Card')">
+    <div class="game-card" onclick="window.openGame('rummy', 'Rummy Pro 13-Card')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #7</div>
       <h3>Rummy Pro</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🎴 13-Card Meld</p>
     </div>
-    <div class="game-card" onclick="openGame('roulette', 'European Roulette')">
+    <div class="game-card" onclick="window.openGame('roulette', 'European Roulette')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #8</div>
       <h3>European Roulette</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🎰 Spin Wheel</p>
     </div>
-    <div class="game-card" onclick="openGame('blackjack', 'Classic Blackjack 21')">
+    <div class="game-card" onclick="window.openGame('blackjack', 'Classic Blackjack 21')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #9</div>
       <h3>Blackjack 21</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">♠️ Hit or Stand</p>
     </div>
-    <div class="game-card" onclick="openGame('baccarat', 'Speed Baccarat')">
+    <div class="game-card" onclick="window.openGame('baccarat', 'Speed Baccarat')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #10</div>
       <h3>Speed Baccarat</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">💎 Player / Banker</p>
     </div>
-    <div class="game-card" onclick="openGame('andarbahar', 'Andar Bahar Royale')">
+    <div class="game-card" onclick="window.openGame('andarbahar', 'Andar Bahar Royale')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #11</div>
       <h3>Andar Bahar</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">👑 Joker Match</p>
     </div>
-    <div class="game-card" onclick="openGame('sicbo', 'Sic Bo Dice')">
+    <div class="game-card" onclick="window.openGame('sicbo', 'Sic Bo Dice')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #12</div>
       <h3>Sic Bo Dice</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🎲 3-Dice Roll</p>
     </div>
-    <div class="game-card" onclick="openGame('slots', 'Neon 777 Slots')">
+    <div class="game-card" onclick="window.openGame('slots', 'Neon 777 Slots')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #13</div>
       <h3>Neon 777 Slots</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">7️⃣ 3-Reel Slots</p>
     </div>
-    <div class="game-card" onclick="openGame('dice', 'Cyber Dice Roll')">
+    <div class="game-card" onclick="window.openGame('dice', 'Cyber Dice Roll')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #14</div>
       <h3>Cyber Dice Roll</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🎯 Roll Under 50</p>
     </div>
-    <div class="game-card" onclick="openGame('hilo', 'Hi-Lo Poker Streak')">
+    <div class="game-card" onclick="window.openGame('hilo', 'Hi-Lo Poker Streak')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #15</div>
       <h3>Hi-Lo Poker Streak</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">📈 High or Low</p>
     </div>
-    <div class="game-card" onclick="openGame('chickenroad', 'Chicken Road Cross')">
+    <div class="game-card" onclick="window.openGame('chickenroad', 'Chicken Road Cross')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #16</div>
       <h3>Chicken Road</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🐔 Lane Cross</p>
     </div>
-    <div class="game-card" onclick="openGame('plinko', 'Plinko Drop Multiplier')">
+    <div class="game-card" onclick="window.openGame('plinko', 'Plinko Drop Multiplier')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #17</div>
       <h3>Plinko Drop</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🟢 Peg Drop</p>
     </div>
-    <div class="game-card" onclick="openGame('limbo', 'Limbo Rocket')">
+    <div class="game-card" onclick="window.openGame('limbo', 'Limbo Rocket')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #18</div>
       <h3>Limbo Rocket</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🚀 Multiplier Rocket</p>
     </div>
-    <div class="game-card" onclick="openGame('horserace', 'Derby Horse Racing')">
+    <div class="game-card" onclick="window.openGame('horserace', 'Derby Horse Racing')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #19</div>
       <h3>Derby Horse Racing</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">🐎 4-Horse Track</p>
     </div>
-    <div class="game-card" onclick="openGame('cryptocandle', 'BTC Crypto Candle 30s')">
+    <div class="game-card" onclick="window.openGame('cryptocandle', 'BTC Crypto Candle 30s')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue); margin-bottom:2px;">GAME #20</div>
       <h3>BTC Crypto Candle</h3>
       <p style="color:var(--neon-gold); margin-top:4px; font-weight:600; font-size:10px;">📊 Up / Down Trade</p>
@@ -217,7 +211,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
-<!-- DYNAMIC PLAYABLE GAME CONTAINER -->
 <div id="activeGameArea" style="display:none; padding:10px;"></div>
 
 <nav class="bottomNav">
@@ -230,85 +223,79 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 </div>
 
 <script>
-var gameBalance = 10000;
-var currentTier = localStorage.getItem('rwin_tier') || 'free'; 
-var userXP = parseInt(localStorage.getItem('rwin_xp') || '0');
+window.gameBalance = 10000;
+window.currentTier = localStorage.getItem('rwin_tier') || 'free'; 
+window.userXP = parseInt(localStorage.getItem('rwin_xp') || '0');
 
-function getLevel() { return Math.floor(userXP / 200) + 1; }
+window.getLevel = function() { return Math.floor(window.userXP / 200) + 1; };
 
-function addXP(amount) {
-    userXP += amount;
-    localStorage.setItem('rwin_xp', userXP.toString());
-    updateUIState();
-}
+window.addXP = function(amount) {
+    window.userXP += amount;
+    localStorage.setItem('rwin_xp', window.userXP.toString());
+    window.updateUIState();
+};
 
-function updateUIState() {
-    currentTier = localStorage.getItem('rwin_tier') || 'free';
+window.updateUIState = function() {
+    window.currentTier = localStorage.getItem('rwin_tier') || 'free';
     const badge = document.getElementById("userTierBadge");
     if (badge) {
-        if (currentTier === 'vip_200') badge.innerText = "SUPER VIP (6M)";
-        else if (currentTier === 'platinum_99') badge.innerText = "PLATINUM (4M)";
-        else if (currentTier === 'gold_49') badge.innerText = "GOLD (2M)";
-        else if (currentTier === 'starter_9') badge.innerText = "STARTER (16D)";
+        if (window.currentTier === 'vip_200') badge.innerText = "SUPER VIP (6M)";
+        else if (window.currentTier === 'platinum_99') badge.innerText = "PLATINUM (4M)";
+        else if (window.currentTier === 'gold_49') badge.innerText = "GOLD (2M)";
+        else if (window.currentTier === 'starter_9') badge.innerText = "STARTER (16D)";
         else badge.innerText = "FREE TIER";
     }
 
-    const lvl = getLevel();
-    const currentLvlXP = userXP % 200;
+    const lvl = window.getLevel();
+    const currentLvlXP = window.userXP % 200;
     const lEl = document.getElementById("levelText"); if (lEl) lEl.innerText = "LVL " + lvl;
     const xEl = document.getElementById("xpText"); if (xEl) xEl.innerText = currentLvlXP + "/200 XP";
     const bar = document.getElementById("xpBarInner"); if (bar) bar.style.width = ((currentLvlXP / 200) * 100) + "%";
 
     const balEl = document.getElementById("balanceText");
-    if (balEl) balEl.innerText = "₹" + gameBalance.toLocaleString();
-}
+    if (balEl) balEl.innerText = "₹" + window.gameBalance.toLocaleString();
+};
 
-function resetCoins() {
-    gameBalance = 10000;
-    updateUIState();
-    showModal("🔄 BALANCE RESET", "VIP practice coins restored to ₹10,000!", "💰", true);
-}
+window.resetCoins = function() {
+    window.gameBalance = 10000;
+    window.updateUIState();
+    window.showModal("🔄 BALANCE RESET", "VIP practice coins restored to ₹10,000!", "💰", true);
+};
 
-function showModal(title, msg, icon, isWin) {
+window.showModal = function(title, msg, icon, isWin) {
     document.getElementById("modalTitle").innerText = title;
     document.getElementById("modalMsg").innerText = msg;
     document.getElementById("modalIcon").innerText = icon || (isWin ? "🎉" : "💥");
     document.getElementById("modalBox").style.borderColor = isWin ? "var(--neon-green)" : "#ef4444";
     document.getElementById("customModal").style.display = "flex";
-}
+};
 
-function closeModal() {
+window.closeModal = function() {
     document.getElementById("customModal").style.display = "none";
-}
+};
 
-function openGame(gameId, title) {
-    document.getElementById('arenaHub').style.display = 'none';
-    document.getElementById('backBar').style.display = 'flex';
-    document.getElementById('activeGameTitle').innerText = title;
-    
-    const container = document.getElementById('activeGameArea');
-    container.style.display = 'block';
-    loadMasterGameView(gameId, container);
-}
+window.openGame = function(gameId, title) {
+    try {
+        document.getElementById('arenaHub').style.display = 'none';
+        document.getElementById('backBar').style.display = 'flex';
+        document.getElementById('activeGameTitle').innerText = title;
+        
+        const container = document.getElementById('activeGameArea');
+        container.style.display = 'block';
+        window.loadMasterGameView(gameId, container);
+    } catch(err) {
+        alert("Game Launch Error: " + err.message);
+    }
+};
 
-function exitToArena() {
+window.exitToArena = function() {
     document.getElementById('arenaHub').style.display = 'block';
     document.getElementById('activeGameArea').style.display = 'none';
     document.getElementById('activeGameArea').innerHTML = '';
     document.getElementById('backBar').style.display = 'none';
-}
+};
 
-// FULL ENGINE FOR ALL 20 GAMES
-let wingoTimer = 30;
-let wingoPeriod = 20260906001;
-let wingoMulti = 1;
-let wingoHistory = [
-    { period: "20260906000", num: 7, col: "GREEN", sz: "BIG" },
-    { period: "20260906999", num: 2, col: "RED", sz: "SMALL" }
-];
-let wingoTimerInt = null;
-
-function loadMasterGameView(gameId, container) {
+window.loadMasterGameView = function(gameId, container) {
     if (gameId === 'color') {
         container.innerHTML = `
             <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
@@ -316,19 +303,22 @@ function loadMasterGameView(gameId, container) {
                     <span style="color:var(--neon-pink); border-bottom:2px solid var(--neon-pink);">WinGo 30s</span>
                     <span style="color:#94a3b8;">WinGo 1Min</span>
                     <span style="color:#94a3b8;">WinGo 3Min</span>
-                    <span style="color:#94a3b8;">WinGo 5Min</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:8px 12px; border-radius:10px; margin-bottom:10px;">
                     <div style="text-align:left;">
                         <div style="font-size:9px; color:#94a3b8;">Period</div>
-                        <div style="font-size:12px; font-weight:800; color:var(--neon-blue);" id="wingoPeriodEl">${wingoPeriod}</div>
+                        <div style="font-size:12px; font-weight:800; color:var(--neon-blue);">20260907001</div>
                     </div>
                     <div style="text-align:right;">
                         <div style="font-size:9px; color:#94a3b8;">Time Remaining</div>
-                        <div style="font-size:18px; font-weight:800; color:#fff; background:#000; padding:2px 8px; border-radius:6px;" id="wingoClockEl">00:30</div>
+                        <div style="font-size:18px; font-weight:800; color:#fff; background:#000; padding:2px 8px; border-radius:6px;">00:25</div>
                     </div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
-                    <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green</button>
-                    <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet</button>
-                    <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:no
+                    <button onclick="window.playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green</button>
+                    <button onclick="window.playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet</button>
+                    <button onclick="window.playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red</button>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
+                    <button onclick="window.playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:20px 0 0 20px; border:none; cursor:pointer;">Big</button>
+                    <button onclick="window.playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:0 20px 20px 0; border:none; c
