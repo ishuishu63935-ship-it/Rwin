@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,19 +39,19 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .balanceCard { background: var(--bg-dark); margin: 10px 14px; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; }
 .balanceCard h1 { font-size: 28px; margin: 2px 0; color: var(--neon-blue); font-weight: 800; }
 
-.back-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #0f172a; border-radius: 10px; margin: 8px 12px; border: 1px solid var(--border-color); }
+.back-bar { display: none; justify-content: space-between; align-items: center; padding: 8px 12px; background: #0f172a; border-radius: 10px; margin: 8px 12px; border: 1px solid var(--border-color); }
 .back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; }
 
 .arena-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
-.game-card-btn { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; width: 100%; color: #fff; font-family: inherit; }
-.game-card-btn:active { transform: scale(0.95); background: #0f172a; }
-.game-card-btn h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; }
+.game-card { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer; width: 100%; color: #fff; font-family: inherit; }
+.game-card:active { transform: scale(0.95); background: #0f172a; }
+.game-card h3 { font-size: 12px; color: #fff; margin: 4px 0 0 0; font-weight: 700; }
 
 .bottomNav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #070a14; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 999; }
 .navItem { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
 .navItem.active { color: var(--neon-blue); font-weight: 700; }
 
-.aviator-canvas { background: #000; border: 1px solid var(--border-color); border-radius: 12px; width: 100%; height: 160px; display: flex; align-items: center; justify-content: center; }
+.game-view { display: none; padding: 12px; }
 
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .modal-box { background: var(--card-bg); border: 2px solid var(--neon-blue); border-radius: 18px; padding: 20px; text-align: center; width: 85%; max-width: 320px; }
@@ -65,7 +66,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
     <div id="modalIcon" style="font-size:42px; margin-bottom:6px;">🎯</div>
     <h3 id="modalTitle" style="color:#fff; font-size:16px; margin:0 0 4px 0;">RESULT</h3>
     <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 14px 0;">Details</p>
-    <button id="closeModalBtn" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
+    <button onclick="closeModal()" style="width:100%; padding:10px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">CONTINUE</button>
   </div>
 </div>
 
@@ -88,118 +89,118 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <section class="balanceCard">
   <p style="font-size:10px; color:#94a3b8; margin:0;">Practice Balance</p>
   <h1 id="balanceText">₹10,000</h1>
-  <button id="resetCoinsBtn" style="margin-top:4px; padding:6px 12px; background:var(--neon-blue); color:#000; border:none; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">🔄 Reset VIP Coins</button>
+  <button onclick="resetCoins()" style="margin-top:4px; padding:6px 12px; background:var(--neon-blue); color:#000; border:none; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">🔄 Reset VIP Coins</button>
 </section>
 
-<div id="backBar" class="back-bar" style="display:none;">
-  <button class="back-btn" id="exitGameBtn">⬅️ Back to Hub</button>
+<div id="backBar" class="back-bar">
+  <button class="back-btn" onclick="goBack()">⬅️ Back to Hub</button>
   <b id="activeGameTitle" style="color:var(--neon-blue); font-size:13px;">Game</b>
 </div>
 
-<!-- ARENA HUB (CLEAN DATA ATTRIBUTES FOR GUARANTEED TAP ACTION) -->
+<!-- ARENA HUB GRID -->
 <div id="arenaHub">
-  <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px; letter-spacing:1px;">⚡ FREE PLAY (GAMES 1 & 2)</h3>
+  <h3 style="color:#94a3b8; font-size:11px; margin:8px 12px 4px 12px;">⚡ FREE PLAY (GAMES 1 & 2)</h3>
   <div class="arena-grid">
-    <button class="game-card-btn" data-game="color" data-title="WinGo Color Prediction">
+    <button class="game-card" onclick="openGame('color', 'WinGo Color Prediction')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-green);">GAME #1 (LVL 1)</div>
       <h3>Color Prediction</h3>
       <p style="color:var(--neon-green); margin:4px 0 0 0; font-size:10px;">⚡ FREE PLAY</p>
     </button>
-    <button class="game-card-btn" data-game="aviator" data-title="Aviator Crash Rocket">
+    <button class="game-card" onclick="openGame('aviator', 'Aviator Crash Rocket')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-green);">GAME #2 (LVL 1)</div>
       <h3>Aviator Crash</h3>
       <p style="color:var(--neon-green); margin:4px 0 0 0; font-size:10px;">⚡ FREE PLAY</p>
     </button>
   </div>
 
-  <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px; letter-spacing:1px;">🔒 VIP ARENA (GAMES 3-20 • MEMBERSHIP REQUIRED)</h3>
+  <h3 style="color:var(--neon-gold); font-size:11px; margin:12px 12px 4px 12px;">🔒 VIP ARENA (GAMES 3-20 • MEMBERSHIP REQUIRED)</h3>
   <div class="arena-grid">
-    <button class="game-card-btn" data-game="vortex" data-title="Vortex Fortune Wheel">
+    <button class="game-card" onclick="openGame('generic', 'Vortex Spin')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #3</div>
       <h3>Vortex Spin</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎡 Fortune Wheel</p>
     </button>
-    <button class="game-card-btn" data-game="teenpatti" data-title="3 Patti Deluxe">
+    <button class="game-card" onclick="openGame('generic', '3 Patti Deluxe')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #4</div>
       <h3>3 Patti Deluxe</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🃏 3-Card Poker</p>
     </button>
-    <button class="game-card-btn" data-game="dragon" data-title="Dragon vs Tiger">
+    <button class="game-card" onclick="openGame('generic', 'Dragon vs Tiger')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #5</div>
       <h3>Dragon vs Tiger</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🐉 Card Duel</p>
     </button>
-    <button class="game-card-btn" data-game="mines" data-title="Cyber Minesweeper">
+    <button class="game-card" onclick="openGame('generic', 'Cyber Minesweeper')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #6</div>
       <h3>Cyber Mines</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">💣 5x5 Mine Grid</p>
     </button>
-    <button class="game-card-btn" data-game="rummy" data-title="Rummy Pro 13-Card">
+    <button class="game-card" onclick="openGame('generic', 'Rummy Pro 13-Card')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #7</div>
       <h3>Rummy Pro</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎴 13-Card Meld</p>
     </button>
-    <button class="game-card-btn" data-game="roulette" data-title="European Roulette">
+    <button class="game-card" onclick="openGame('generic', 'European Roulette')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #8</div>
       <h3>European Roulette</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎰 Spin Wheel</p>
     </button>
-    <button class="game-card-btn" data-game="blackjack" data-title="Classic Blackjack 21">
+    <button class="game-card" onclick="openGame('generic', 'Classic Blackjack 21')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #9</div>
       <h3>Blackjack 21</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">♠️ Hit or Stand</p>
     </button>
-    <button class="game-card-btn" data-game="baccarat" data-title="Speed Baccarat">
+    <button class="game-card" onclick="openGame('generic', 'Speed Baccarat')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #10</div>
       <h3>Speed Baccarat</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">💎 Player / Banker</p>
     </button>
-    <button class="game-card-btn" data-game="andarbahar" data-title="Andar Bahar Royale">
+    <button class="game-card" onclick="openGame('generic', 'Andar Bahar Royale')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #11</div>
       <h3>Andar Bahar</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">👑 Joker Match</p>
     </button>
-    <button class="game-card-btn" data-game="sicbo" data-title="Sic Bo Dice">
+    <button class="game-card" onclick="openGame('generic', 'Sic Bo Dice')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #12</div>
       <h3>Sic Bo Dice</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎲 3-Dice Roll</p>
     </button>
-    <button class="game-card-btn" data-game="slots" data-title="Neon 777 Slots">
+    <button class="game-card" onclick="openGame('generic', 'Neon 777 Slots')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #13</div>
       <h3>Neon 777 Slots</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">7️⃣ 3-Reel Slots</p>
     </button>
-    <button class="game-card-btn" data-game="dice" data-title="Cyber Dice Roll">
+    <button class="game-card" onclick="openGame('generic', 'Cyber Dice Roll')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #14</div>
       <h3>Cyber Dice Roll</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🎯 Roll Under 50</p>
     </button>
-    <button class="game-card-btn" data-game="hilo" data-title="Hi-Lo Poker Streak">
+    <button class="game-card" onclick="openGame('generic', 'Hi-Lo Poker Streak')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #15</div>
       <h3>Hi-Lo Poker Streak</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">📈 High or Low</p>
     </button>
-    <button class="game-card-btn" data-game="chickenroad" data-title="Chicken Road Cross">
+    <button class="game-card" onclick="openGame('generic', 'Chicken Road Cross')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #16</div>
       <h3>Chicken Road</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🐔 Lane Cross</p>
     </button>
-    <button class="game-card-btn" data-game="plinko" data-title="Plinko Drop Multiplier">
+    <button class="game-card" onclick="openGame('generic', 'Plinko Drop Multiplier')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #17</div>
       <h3>Plinko Drop</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🟢 Peg Drop</p>
     </button>
-    <button class="game-card-btn" data-game="limbo" data-title="Limbo Rocket">
+    <button class="game-card" onclick="openGame('generic', 'Limbo Rocket')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #18</div>
       <h3>Limbo Rocket</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🚀 Multiplier Rocket</p>
     </button>
-    <button class="game-card-btn" data-game="horserace" data-title="Derby Horse Racing">
+    <button class="game-card" onclick="openGame('generic', 'Derby Horse Racing')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #19</div>
       <h3>Derby Horse Racing</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">🐎 4-Horse Track</p>
     </button>
-    <button class="game-card-btn" data-game="cryptocandle" data-title="BTC Crypto Candle 30s">
+    <button class="game-card" onclick="openGame('generic', 'BTC Crypto Candle 30s')">
       <div style="font-size:10px; font-weight:800; color:var(--neon-blue);">GAME #20</div>
       <h3>BTC Crypto Candle</h3>
       <p style="color:var(--neon-gold); margin:4px 0 0 0; font-size:10px;">📊 Up / Down Trade</p>
@@ -207,7 +208,47 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 </div>
 
-<div id="activeGameArea" style="display:none; padding:10px;"></div>
+<!-- GAME VIEW 1: WINGO -->
+<div id="view-color" class="game-view">
+  <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
+    <div style="display:flex; justify-content:space-between; background:#050811; padding:6px; border-radius:8px; margin-bottom:10px; font-size:10px; font-weight:700;">
+      <span style="color:var(--neon-pink); border-bottom:2px solid var(--neon-pink);">WinGo 30s</span>
+      <span style="color:#94a3b8;">WinGo 1Min</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
+      <button onclick="playWinGo('GREEN', 2)" style="padding:12px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green (2X)</button>
+      <button onclick="playWinGo('VIOLET', 4.5)" style="padding:12px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet (4.5X)</button>
+      <button onclick="playWinGo('RED', 2)" style="padding:12px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red (2X)</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+      <button onclick="playWinGo('BIG', 2)" style="padding:12px; background:#f59e0b; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Big (2X)</button>
+      <button onclick="playWinGo('SMALL', 2)" style="padding:12px; background:#3b82f6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Small (2X)</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME VIEW 2: AVIATOR -->
+<div id="view-aviator" class="game-view">
+  <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
+    <div style="background:#000; border:1px solid #1e293b; border-radius:12px; height:160px; display:flex; align-items:center; justify-content:center;">
+      <div id="jetMulti" style="font-size:38px; font-weight:800; color:#fff;">1.00x</div>
+    </div>
+    <button id="jetBtn" onclick="launchJet()" style="width:100%; margin-top:10px; padding:12px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BET 100 & LAUNCH</button>
+  </div>
+</div>
+
+<!-- GAME VIEW 3-20: GENERIC MULTIPLIER -->
+<div id="view-generic" class="game-view">
+  <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:16px; text-align:center;">
+    <div style="font-size:40px; margin-bottom:6px;">🎰</div>
+    <div id="genericGameTitle" style="font-size:16px; font-weight:800; color:var(--neon-blue);">CASINO GAME</div>
+    <div style="font-size:11px; color:#94a3b8; margin:6px 0 14px 0;">Multiplier: <b style="color:var(--neon-green);">2.20X</b></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <button onclick="playGeneric('OPTION A')" style="padding:12px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">OPTION A (2.2X)</button>
+      <button onclick="playGeneric('OPTION B')" style="padding:12px; background:var(--neon-gold); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">OPTION B (2.2X)</button>
+    </div>
+  </div>
+</div>
 
 <nav class="bottomNav">
   <a href="home.html" class="navItem">🏠 <span>Home</span></a>
@@ -218,7 +259,103 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 
 </div>
 
-<script src="js/script.js?v=999"></script>
+<script>
+var balance = 10000;
+var flying = false, m = 1.00, timer = null;
+
+function openGame(viewId, title) {
+  document.getElementById('arenaHub').style.display = 'none';
+  document.getElementById('backBar').style.display = 'flex';
+  document.getElementById('activeGameTitle').innerText = title;
+  
+  var views = document.querySelectorAll('.game-view');
+  for (var i = 0; i < views.length; i++) { views[i].style.display = 'none'; }
+  
+  if (viewId === 'generic') {
+    document.getElementById('genericGameTitle').innerText = title;
+  }
+  
+  var target = document.getElementById('view-' + viewId);
+  if (target) { target.style.display = 'block'; }
+}
+
+function goBack() {
+  document.getElementById('arenaHub').style.display = 'block';
+  document.getElementById('backBar').style.display = 'none';
+  
+  var views = document.querySelectorAll('.game-view');
+  for (var i = 0; i < views.length; i++) { views[i].style.display = 'none'; }
+  
+  if (timer) clearInterval(timer);
+  flying = false;
+}
+
+function closeModal() {
+  document.getElementById('customModal').style.display = 'none';
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById("modalTitle").innerText = title;
+  document.getElementById("modalMsg").innerText = msg;
+  document.getElementById("modalIcon").innerText = icon || (isWin ? "🎉" : "💥");
+  document.getElementById("customModal").style.display = "flex";
+}
+
+function resetCoins() {
+  balance = 10000;
+  document.getElementById("balanceText").innerText = "₹10,000";
+  showModal("🔄 BALANCE RESET", "VIP practice coins restored to ₹10,000!", "💰", true);
+}
+
+function playWinGo(sel, multi) {
+  if (balance < 100) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
+  balance -= 100;
+  if (Math.random() < 0.5) {
+    var won = Math.floor(100 * multi); balance += won; showModal("WIN!", "Selected " + sel + "! Won ₹" + won, "🎨", true);
+  } else {
+    showModal("LOST", "Selected " + sel + "! Try again", "💥", false);
+  }
+  document.getElementById("balanceText").innerText = "₹" + balance.toLocaleString();
+}
+
+function launchJet() {
+  var btn = document.getElementById("jetBtn");
+  if (!flying) {
+    if (balance < 100) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
+    balance -= 100;
+    flying = true; m = 1.00;
+    btn.innerText = "CASHOUT"; btn.style.background = "#f59e0b";
+    var crashAt = (Math.random() * 3 + 1.1).toFixed(2);
+    timer = setInterval(function () {
+      m += 0.05;
+      var el = document.getElementById("jetMulti"); if (el) el.innerText = m.toFixed(2) + "x";
+      if (m >= crashAt) {
+        clearInterval(timer); flying = false;
+        if (el) el.innerText = "FLEW AWAY!";
+        btn.innerText = "BET 100 & LAUNCH"; btn.style.background = "#10b981";
+        showModal("FLEW AWAY", "Crashed @ " + m.toFixed(2) + "x", "✈️", false);
+      }
+    }, 100);
+  } else {
+    clearInterval(timer); flying = false;
+    var won = Math.floor(100 * m); balance += won;
+    document.getElementById("balanceText").innerText = "₹" + balance.toLocaleString();
+    showModal("CASHED OUT!", "Cashed out @ " + m.toFixed(2) + "x\nWon ₹" + won, "✈️", true);
+    btn.innerText = "BET 100 & LAUNCH"; btn.style.background = "#10b981";
+  }
+}
+
+function playGeneric(opt) {
+  if (balance < 500) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
+  balance -= 500;
+  if (Math.random() < 0.48) {
+    var won = 1100; balance += won; showModal("ROUND WIN!", opt + " Won! ₹" + won, "🎉", true);
+  } else {
+    showModal("ROUND LOST", opt + " Lost", "💥", false);
+  }
+  document.getElementById("balanceText").innerText = "₹" + balance.toLocaleString();
+}
+</script>
 </body>
-      </html>
-      
+</html>
+
