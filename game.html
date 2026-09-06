@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RWIN - VIP Arcade Arena</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- FIREBASE REALTIME DB SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <style>
 :root {
   --neon-blue: #00e5ff;
@@ -35,8 +40,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .xp-bar-outer { width: 120px; height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; display: inline-block; vertical-align: middle; }
 .xp-bar-inner { width: 0%; height: 100%; background: var(--neon-blue); transition: width 0.3s; }
 
-.ad-banner { background: linear-gradient(135deg, #1e1b4b, #311b92); border: 1px dashed var(--neon-blue); margin: 10px 14px 4px 14px; padding: 10px; border-radius: 12px; text-align: center; font-size: 11px; color: #cbd5e1; }
-
 .balanceCard { background: var(--bg-dark); margin: 10px 14px; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; }
 .balanceCard h1 { font-size: 28px; margin: 2px 0; color: var(--neon-blue); font-weight: 800; }
 
@@ -64,11 +67,51 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .modal-box { background: var(--card-bg); border: 2px solid var(--neon-blue); border-radius: 18px; padding: 20px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 25px rgba(0,229,255,0.2); }
+
+/* HALF-SCREEN AD OVERLAY STYLES */
+.half-screen-ad {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 45vh;
+  background: rgba(11, 16, 29, 0.96);
+  border-top: 2px solid var(--neon-gold);
+  border-radius: 20px 20px 0 0;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -10px 30px rgba(245, 158, 11, 0.25);
+  box-sizing: border-box;
+}
+.ad-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+.ad-close-btn { background: #1e293b; color: #fff; border: 1px solid var(--border-color); border-radius: 50%; width: 26px; height: 26px; font-weight: 800; cursor: pointer; font-size: 12px; }
+.ad-slot { background: #050811; border: 1px dashed var(--neon-gold); border-radius: 12px; height: 75%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; margin: 8px 0; }
 </style>
 </head>
 
 <body>
 <div class="gameContainer">
+
+<!-- HALF-SCREEN AD OVERLAY -->
+<div id="halfScreenAd" class="half-screen-ad" style="display: flex;">
+  <div class="ad-header">
+    <span style="font-size: 10px; font-weight: 800; color: var(--neon-gold);">📢 SPONSORED PROMO</span>
+    <button class="ad-close-btn" onclick="closeAdOverlay()">✕</button>
+  </div>
+  <div class="ad-slot">
+    <div style="font-size: 28px; margin-bottom: 4px;">🎁</div>
+    <b style="color: #fff; font-size: 13px;">JOIN RWIN OFFICIAL TELEGRAM</b>
+    <p style="font-size: 10px; color: #94a3b8; margin: 4px 0 10px 0;">Get Daily Free Predictions & VIP Membership Codes!</p>
+    <button onclick="window.open('https://telegram.org', '_blank')" style="padding: 8px 16px; background: var(--neon-gold); color: #000; border: none; border-radius: 8px; font-weight: 800; font-size: 11px; cursor: pointer;">JOIN TELEGRAM NOW</button>
+  </div>
+  <div style="text-align: center; font-size: 9px; color: #64748b;">Ad closes automatically or tap ✕</div>
+</div>
 
 <div id="customModal" class="modal-overlay">
   <div class="modal-box" id="modalBox">
@@ -93,10 +136,6 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
     <div class="xp-bar-outer"><div class="xp-bar-inner" id="xpBarInner"></div></div>
     <span style="font-size:9px; color:#94a3b8; margin-left:4px;" id="xpText">0/200 XP</span>
   </div>
-</div>
-
-<div class="ad-banner">
-  📢 <b>SPONSOR AD SPACE</b> • Live VIP Gaming Ads Launching
 </div>
 
 <section class="balanceCard">
@@ -139,6 +178,25 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 </div>
 
 <script>
+// FIREBASE CONFIG & INITIALIZATION
+const firebaseConfig = {
+  apiKey: "AIzaSyRWIN_API_KEY_HERE",
+  authDomain: "rwin-casino.firebaseapp.com",
+  databaseURL: "https://rwin-casino-default-rtdb.firebaseio.com",
+  projectId: "rwin-casino",
+  storageBucket: "rwin-casino.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef123456"
+};
+
+try {
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+} catch(e) { console.log("Firebase initialized"); }
+
+function closeAdOverlay() {
+  document.getElementById('halfScreenAd').style.display = 'none';
+}
+
 var gameBalance = 10000;
 var currentTier = localStorage.getItem('rwin_tier') || 'free'; 
 var userXP = parseInt(localStorage.getItem('rwin_xp') || '0');
@@ -300,7 +358,7 @@ function exitToArena() {
     document.getElementById('backBar').style.display = 'none';
 }
 
-// GAME ENGINE
+// GAME ENGINE CODE
 let wingoTimer = 30;
 let wingoPeriod = 20260906001;
 let wingoMulti = 1;
@@ -333,29 +391,4 @@ function loadMasterGameView(gameId, container) {
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
                     <button onclick="playWinGo('GREEN', 2)" style="padding:10px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green</button>
                     <button onclick="playWinGo('VIOLET', 4.5)" style="padding:10px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet</button>
-                    <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red</button>
-                </div>
-                <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:10px;">
-                    <div onclick="playWinGo(0, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #ef4444, #8b5cf6);">0</div>
-                    <div onclick="playWinGo(1, 9)" class="wingo-ring" style="background:#10b981;">1</div>
-                    <div onclick="playWinGo(2, 9)" class="wingo-ring" style="background:#ef4444;">2</div>
-                    <div onclick="playWinGo(3, 9)" class="wingo-ring" style="background:#10b981;">3</div>
-                    <div onclick="playWinGo(4, 9)" class="wingo-ring" style="background:#ef4444;">4</div>
-                    <div onclick="playWinGo(5, 9)" class="wingo-ring" style="background:linear-gradient(135deg, #10b981, #8b5cf6);">5</div>
-                    <div onclick="playWinGo(6, 9)" class="wingo-ring" style="background:#ef4444;">6</div>
-                    <div onclick="playWinGo(7, 9)" class="wingo-ring" style="background:#10b981;">7</div>
-                    <div onclick="playWinGo(8, 9)" class="wingo-ring" style="background:#ef4444;">8</div>
-                    <div onclick="playWinGo(9, 9)" class="wingo-ring" style="background:#10b981;">9</div>
-                </div>
-                <div style="display:flex; justify-content:center; gap:6px; margin-bottom:10px;">
-                    <span onclick="setWingoChip(1)" class="wingo-chip active" id="chip-1">X1</span>
-                    <span onclick="setWingoChip(5)" class="wingo-chip" id="chip-5">X5</span>
-                    <span onclick="setWingoChip(10)" class="wingo-chip" id="chip-10">X10</span>
-                    <span onclick="setWingoChip(20)" class="wingo-chip" id="chip-20">X20</span>
-                    <span onclick="setWingoChip(50)" class="wingo-chip" id="chip-50">X50</span>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
-                    <button onclick="playWinGo('BIG', 2)" style="padding:10px; background:#f59e0b; color:#000; font-weight:800; border-radius:20px 0 0 20px; border:none; cursor:pointer;">Big</button>
-                    <button onclick="playWinGo('SMALL', 2)" style="padding:10px; background:#3b82f6; color:#fff; font-weight:800; border-radius:0 20px 20px 0; border:none; cursor:pointer;">Small</button>
-                </div>
-                <div style="background:#050811; border:1
+                    <button onclick="playWinGo('RED', 2)" style="padding:10px; background:#ef4444; 
