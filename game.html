@@ -121,7 +121,7 @@ body {
   line-height: 1.4;
 }
 
-.vip-action-row {
+.vip-card-action-row {
   display: flex;
   gap: 10px;
 }
@@ -218,6 +218,7 @@ body {
   justify-content: space-between;
   min-height: 148px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .game-card:active {
@@ -308,7 +309,7 @@ body {
 .plan-option-grid {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin: 14px 0;
 }
 
@@ -316,7 +317,7 @@ body {
   background: #070a14;
   border: 1.5px solid var(--border-color);
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -327,14 +328,15 @@ body {
 .plan-item.selected {
   border-color: var(--neon-gold);
   background: rgba(245, 158, 11, 0.1);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
 }
 
 .key-input-box {
   width: 100%;
   background: #02040a;
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   border-radius: 10px;
-  padding: 10px;
+  padding: 12px;
   color: var(--neon-gold);
   font-weight: 800;
   text-align: center;
@@ -342,6 +344,17 @@ body {
   margin-bottom: 12px;
   outline: none;
   text-transform: uppercase;
+}
+.key-input-box:focus {
+  border-color: var(--neon-gold);
+}
+
+.error-msg {
+  color: var(--neon-red);
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: none;
 }
 </style>
 </head>
@@ -352,29 +365,31 @@ body {
   <!-- VIP PURCHASE / ACTIVATION MODAL -->
   <div id="vipModal" class="modal-overlay">
     <div class="modal-box">
-      <div style="font-size:48px; margin-bottom:4px;">👑</div>
-      <h3 style="color:var(--neon-gold); font-size:18px; margin:0 0 4px 0;">UNLOCKED VIP MEMBERSHIP</h3>
-      <p style="color:#94a3b8; font-size:11px; margin:0 0 14px 0;">Unlock all 20 Premium Arena Games & Unlimited Practice Wallet Resets!</p>
+      <div style="font-size:44px; margin-bottom:4px;">👑</div>
+      <h3 style="color:var(--neon-gold); font-size:18px; margin:0 0 4px 0;">UNLOCK VIP PASS</h3>
+      <p style="color:#94a3b8; font-size:11px; margin:0 0 14px 0;">Unlock All 20 Games & Unlimited Practice Wallet Resets!</p>
 
       <div class="plan-option-grid">
-        <div class="plan-item selected" onclick="selectPlan('GOLD', 199, this)">
+        <div class="plan-item selected" onclick="selectPlan('2MONTHS', 199, this)">
           <div style="text-align:left;">
-            <div style="font-size:12px; font-weight:800; color:#fff;">GOLD VIP PASS (30 Days)</div>
-            <div style="font-size:9px; color:#94a3b8;">Full 20 Games Access + Unlimited Resets</div>
+            <div style="font-size:12px; font-weight:800; color:#fff;">GOLD VIP (2 Months / 60 Days)</div>
+            <div style="font-size:9px; color:var(--neon-green);">All 20 Games + Unlimited Reset Coins</div>
           </div>
-          <div style="font-size:14px; font-weight:900; color:var(--neon-gold);">₹199</div>
+          <div style="font-size:15px; font-weight:900; color:var(--neon-gold);">₹199</div>
         </div>
 
-        <div class="plan-item" onclick="selectPlan('DIAMOND', 499, this)">
+        <div class="plan-item" onclick="selectPlan('6MONTHS', 499, this)">
           <div style="text-align:left;">
-            <div style="font-size:12px; font-weight:800; color:#fff;">DIAMOND LIFETIME</div>
-            <div style="font-size:9px; color:#94a3b8;">Permanent VIP Access + Priority Support</div>
+            <div style="font-size:12px; font-weight:800; color:#fff;">DIAMOND VIP (6 Months / 180 Days)</div>
+            <div style="font-size:9px; color:var(--neon-green);">All 20 Games + Unlimited Reset Coins</div>
           </div>
-          <div style="font-size:14px; font-weight:900; color:var(--neon-gold);">₹499</div>
+          <div style="font-size:15px; font-weight:900; color:var(--neon-gold);">₹499</div>
         </div>
       </div>
 
-      <input type="text" class="key-input-box" id="vipKeyInput" placeholder="Enter VIP Key (e.g. RWINVIP)" value="">
+      <div class="error-msg" id="modalError">❌ Invalid VIP Key or Payment UTR! Access Denied.</div>
+
+      <input type="text" class="key-input-box" id="vipKeyInput" placeholder="ENTER SECRET VIP KEY / CODE">
 
       <div style="display:flex; gap:8px;">
         <button onclick="activateWithKey()" style="flex:1; padding:12px; background:linear-gradient(135deg, var(--neon-gold), #d97706); color:#000; font-weight:900; border-radius:10px; border:none; cursor:pointer;">ACTIVATE VIP 👑</button>
@@ -456,6 +471,9 @@ function playSound(type) {
   } catch(e) {}
 }
 
+// STRICT SECRET KEYS FOR VERIFICATION (No fake random UTR accepted)
+const VALID_VIP_KEYS = ["RWIN199", "RWIN499", "ESHUVIP", "RWIN2026", "VIPARENA"];
+
 // COMPLETE 20 GAMES MASTER DATA
 const gamesList = [
   { id: 1, name: "WinGo 30s Color", file: "color.html", cat: "TABLE", icon: "🎨", tag: "FREE TO PLAY", isFree: true },
@@ -500,7 +518,7 @@ function updateVipCardUI() {
   } else {
     badge.className = "vip-card-badge badge-free";
     badge.innerText = "FREE TIER";
-    desc.innerHTML = "Upgrade to VIP Membership to unlock <b>All 20 Premium Games</b> & Practice Wallet Resets.";
+    desc.innerHTML = "Upgrade to VIP Membership to unlock <b>All 20 Premium Games</b> & Unlimited Wallet Resets.";
   }
 }
 
@@ -567,6 +585,7 @@ function filterGames() {
 
 function openVipModal() {
   playSound('click');
+  document.getElementById('modalError').style.display = "none";
   document.getElementById('vipModal').style.display = "flex";
 }
 
@@ -583,7 +602,11 @@ function selectPlan(type, price, el) {
 
 function activateWithKey() {
   let key = document.getElementById('vipKeyInput').value.trim().toUpperCase();
-  if (key === 'RWINVIP' || key === 'VIP' || key === 'ADMIN' || key.length >= 4) {
+  const errEl = document.getElementById('modalError');
+
+  // Strict Validation: Only pre-set admin keys work (No fake UTR or random input)
+  if (VALID_VIP_KEYS.includes(key)) {
+    errEl.style.display = "none";
     localStorage.setItem('rwin_membership', 'ACTIVE');
     playSound('click');
     alert("🎉 VIP Membership Activated Successfully!");
@@ -591,7 +614,9 @@ function activateWithKey() {
     updateVipCardUI();
     renderGames();
   } else {
-    alert("⚠️ Please enter a valid VIP Key (Demo Key: RWINVIP)");
+    playSound('lock');
+    errEl.innerText = "❌ Invalid UTR or Secret Key! Access Denied.";
+    errEl.style.display = "block";
   }
 }
 
@@ -600,5 +625,4 @@ updateVipCardUI();
 renderGames();
 </script>
 </body>
-  </html>
-  
+</html>
