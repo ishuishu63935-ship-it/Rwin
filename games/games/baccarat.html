@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Speed Baccarat Royale - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-purple: #a855f7;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+  --felt-blue: #0f172a;
+}
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-dark);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.gameContainer {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+/* HEADER BAR */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #020307;
+  border-bottom: 1px solid var(--border-color);
+}
+.back-btn {
+  padding: 6px 12px;
+  background: var(--border-color);
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  text-decoration: none;
+}
+.balance-pill {
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 1px solid var(--neon-gold);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--neon-gold);
+}
+
+/* ROADMAP / HISTORY BEAD PLATE */
+.roadmap-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px 12px;
+  background: #04060d;
+  border-bottom: 1px solid var(--border-color);
+}
+.bead-pill {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+.bead-player { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 1px solid #93c5fd; }
+.bead-banker { background: linear-gradient(135deg, #ef4444, #991b1b); border: 1px solid #fca5a5; }
+.bead-tie { background: linear-gradient(135deg, #10b981, #047857); border: 1px solid #6ee7b7; }
+
+/* CASINO BACCARAT FELT TABLE */
+.baccarat-table {
+  background: radial-gradient(circle, #1e1b4b 0%, #0f172a 75%, #050811 100%);
+  margin: 12px;
+  border: 3px solid var(--neon-purple);
+  border-radius: 24px;
+  padding: 16px 10px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.3), inset 0 0 25px rgba(0,0,0,0.8);
+}
+
+.table-sides-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.side-panel {
+  background: rgba(15, 23, 42, 0.8);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 10px 4px;
+  text-align: center;
+}
+.side-panel.player-side { border-color: rgba(59, 130, 246, 0.5); }
+.side-panel.banker-side { border-color: rgba(239, 68, 68, 0.5); }
+
+.side-title {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.score-tag {
+  background: #000;
+  padding: 1px 8px;
+  border-radius: 10px;
+  color: var(--neon-gold);
+  font-size: 11px;
+}
+
+.cards-row {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  min-height: 84px;
+  align-items: center;
+}
+
+.playing-card {
+  width: 52px;
+  height: 78px;
+  background: #fff;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4px;
+  font-weight: 800;
+  font-size: 12px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+  animation: cardFade 0.2s ease-out;
+}
+.playing-card.red-suit { color: #dc2626; }
+.playing-card.card-back {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+@keyframes cardFade {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* BETTING SPOTS */
+.betting-zones {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr 1fr;
+  gap: 8px;
+  margin: 12px;
+}
+
+.zone-box {
+  background: #070a14;
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 4px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s, border-color 0.2s;
+}
+.zone-box:active { transform: scale(0.95); }
+.zone-box.selected {
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.zone-player { background: linear-gradient(135deg, #1e3a8a, #0f172a); }
+.zone-tie { background: linear-gradient(135deg, #064e3b, #0f172a); }
+.zone-banker { background: linear-gradient(135deg, #7f1d1d, #0f172a); }
+
+.chip-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--neon-gold);
+  color: #000;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  display: none;
+}
+
+/* CONTROLS */
+.controls-card {
+  background: #04060d;
+  margin: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+}
+
+.chip-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.chip-btn {
+  padding: 6px 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  color: #94a3b8;
+}
+.chip-btn.active {
+  background: var(--neon-gold);
+  color: #000;
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 8px;
+}
+
+.btn-ctrl {
+  padding: 10px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+  color: #fff;
+  background: #1e293b;
+}
+.btn-deal {
+  background: linear-gradient(135deg, var(--neon-gold), #d97706);
+  color: #000;
+  border: none;
+  font-size: 13px;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+/* MODAL POPUP */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.modal-box {
+  background: var(--card-bg);
+  border: 2px solid var(--neon-purple);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  width: 85%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+</style>
+</head>
+
+<body>
+<div class="gameContainer">
+
+  <!-- RESULT MODAL -->
+  <div id="resultModal" class="modal-overlay">
+    <div class="modal-box" id="modalBox">
+      <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">💎</div>
+      <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 4px 0;">RESULT</h3>
+      <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 16px 0;">Details</p>
+      <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-purple); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-bar">
+    <a href="../game.html" class="back-btn">⬅️ Arena Hub</a>
+    <div class="balance-pill">
+      <span>💰</span>
+      <span id="balanceVal">₹10,000</span>
+    </div>
+  </header>
+
+  <!-- BEAD PLATE ROADMAP -->
+  <div class="roadmap-strip" id="roadmapStrip">
+    <div class="bead-pill bead-player">P</div>
+    <div class="bead-pill bead-banker">B</div>
+    <div class="bead-pill bead-banker">B</div>
+    <div class="bead-pill bead-tie">T</div>
+    <div class="bead-pill bead-player">P</div>
+  </div>
+
+  <div style="text-align:center; padding:8px 0 2px 0;">
+    <h2 style="margin:0; font-size:20px; color:var(--neon-purple);">💎 SPEED BACCARAT 🎴</h2>
+    <span style="font-size:10px; color:#94a3b8;">CLOSEST TO 9 WINS • MODULO 10 SCORING</span>
+  </div>
+
+  <!-- CASINO TABLE -->
+  <div class="baccarat-table">
+    <div class="table-sides-grid">
+      <!-- PLAYER HAND -->
+      <div class="side-panel player-side">
+        <div class="side-title" style="color:var(--neon-blue);">
+          PLAYER <span class="score-tag" id="playerScoreTxt">0</span>
+        </div>
+        <div class="cards-row" id="playerCards">
+          <div class="playing-card card-back">🃏</div>
+          <div class="playing-card card-back">🃏</div>
+        </div>
+      </div>
+
+      <!-- BANKER HAND -->
+      <div class="side-panel banker-side">
+        <div class="side-title" style="color:var(--neon-red);">
+          BANKER <span class="score-tag" id="bankerScoreTxt">0</span>
+        </div>
+        <div class="cards-row" id="bankerCards">
+          <div class="playing-card card-back">👑</div>
+          <div class="playing-card card-back">👑</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BETTING ZONES -->
+  <div class="betting-zones">
+    <div class="zone-box zone-player" id="zone-PLAYER" onclick="placeBet('PLAYER')">
+      <div style="font-size:12px; font-weight:900; color:var(--neon-blue);">PLAYER</div>
+      <div style="font-size:10px; opacity:0.8;">1:1</div>
+      <div class="chip-badge" id="badge-PLAYER">0</div>
+    </div>
+
+    <div class="zone-box zone-tie" id="zone-TIE" onclick="placeBet('TIE')">
+      <div style="font-size:12px; font-weight:900; color:var(--neon-green);">TIE</div>
+      <div style="font-size:10px; opacity:0.8;">8:1</div>
+      <div class="chip-badge" id="badge-TIE">0</div>
+    </div>
+
+    <div class="zone-box zone-banker" id="zone-BANKER" onclick="placeBet('BANKER')">
+      <div style="font-size:12px; font-weight:900; color:var(--neon-red);">BANKER</div>
+      <div style="font-size:10px; opacity:0.8;">1:0.95</div>
+      <div class="chip-badge" id="badge-BANKER">0</div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-card">
+    <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">SELECT CHIP VALUE</div>
+    <div class="chip-container">
+      <span onclick="setChip(100)" class="chip-btn active" id="chip-100">₹100</span>
+      <span onclick="setChip(500)" class="chip-btn" id="chip-500">₹500</span>
+      <span onclick="setChip(1000)" class="chip-btn" id="chip-1000">₹1,000</span>
+      <span onclick="setChip(2000)" class="chip-btn" id="chip-2000">₹2,000</span>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-ctrl" onclick="clearBets()">CLEAR</button>
+      <button class="btn-ctrl" onclick="resetWallet()">RESET 💰</button>
+      <button class="btn-ctrl btn-deal" id="dealBtn" onclick="startBaccaratHand()">DEAL 🎴</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// WEB AUDIO API SOUND GENERATOR
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+
+    if (type === 'chip') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'card') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(450, now);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      osc.start(now); osc.stop(now + 0.05);
+    } else if (type === 'win') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.3);
+      });
+    } else if (type === 'lose') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.35);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    }
+  } catch(e) {}
+}
+
+// GAME STATE
+let balance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let activeChip = 100;
+let placedBets = { PLAYER: 0, TIE: 0, BANKER: 0 };
+let roadmapList = ['P', 'B', 'B', 'T', 'P'];
+let isDealing = false;
+
+const suits = ['♠️', '♥️', '♦️', '♣️'];
+const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+function saveBalance() {
+  localStorage.setItem('rwin_balance', balance.toString());
+  document.getElementById('balanceVal').innerText = "₹" + balance.toLocaleString();
+}
+
+function resetWallet() {
+  playSound('chip');
+  balance = 10000;
+  saveBalance();
+  showModal("🔄 WALLET RESET", "Practice Balance restored to ₹10,000!", "💰", true);
+}
+
+function setChip(amt) {
+  if (isDealing) return;
+  playSound('chip');
+  activeChip = amt;
+  document.querySelectorAll('.chip-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('chip-' + amt).classList.add('active');
+}
+
+function placeBet(target) {
+  if (isDealing) return;
+  playSound('chip');
+
+  if (balance < activeChip) {
+    showModal("⚠️ LOW BALANCE", "Not enough coins! Reset balance.", "💰", false);
+    return;
+  }
+
+  balance -= activeChip;
+  saveBalance();
+
+  placedBets[target] += activeChip;
+  updateBadges();
+}
+
+function updateBadges() {
+  ['PLAYER', 'TIE', 'BANKER'].forEach(t => {
+    const badge = document.getElementById('badge-' + t);
+    if (placedBets[t] > 0) {
+      badge.style.display = "block";
+      badge.innerText = "₹" + placedBets[t];
+    } else {
+      badge.style.display = "none";
+    }
+  });
+}
+
+function clearBets() {
+  if (isDealing) return;
+  playSound('chip');
+  let total = placedBets.PLAYER + placedBets.TIE + placedBets.BANKER;
+  balance += total;
+  saveBalance();
+  placedBets = { PLAYER: 0, TIE: 0, BANKER: 0 };
+  updateBadges();
+}
+
+function getRandomCard() {
+  const suit = suits[Math.floor(Math.random() * suits.length)];
+  const rank = ranks[Math.floor(Math.random() * ranks.length)];
+  let val = parseInt(rank);
+  if (['10', 'J', 'Q', 'K'].includes(rank)) val = 0;
+  if (rank === 'A') val = 1;
+  return { rank, suit, val };
+}
+
+// BACCARAT MODULO 10 SCORE
+function calcScore(hand) {
+  let sum = hand.reduce((acc, c) => acc + c.val, 0);
+  return sum % 10;
+}
+
+function renderHand(hand, containerId) {
+  document.getElementById(containerId).innerHTML = hand.map(c => {
+    let isRed = (c.suit === '♥️' || c.suit === '♦️');
+    return `<div class="playing-card ${isRed ? 'red-suit' : ''}">
+      <div>${c.rank}</div>
+      <div style="font-size:18px; text-align:center;">${c.suit}</div>
+      <div style="text-align:right;">${c.rank}</div>
+    </div>`;
+  }).join('');
+}
+
+function startBaccaratHand() {
+  if (isDealing) return;
+  let totalBet = placedBets.PLAYER + placedBets.TIE + placedBets.BANKER;
+  if (totalBet === 0) {
+    showModal("⚠️ PLACE BET", "Please place chips on Player, Banker or Tie!", "💎", false);
+    return;
+  }
+
+  isDealing = true;
+  document.getElementById('dealBtn').style.opacity = "0.5";
+
+  let pHand = [getRandomCard(), getRandomCard()];
+  let bHand = [getRandomCard(), getRandomCard()];
+
+  playSound('card');
+  renderHand(pHand, 'playerCards');
+  renderHand(bHand, 'bankerCards');
+
+  let pScore = calcScore(pHand);
+  let bScore = calcScore(bHand);
+
+  document.getElementById('playerScoreTxt').innerText = pScore;
+  document.getElementById('bankerScoreTxt').innerText = bScore;
+
+  setTimeout(() => {
+    // Check Natural 8 or 9
+    if (pScore >= 8 || bScore >= 8) {
+      finishHand(pHand, bHand);
+      return;
+    }
+
+    // Player 3rd Card Rule
+    let p3rdCard = null;
+    if (pScore <= 5) {
+      p3rdCard = getRandomCard();
+      pHand.push(p3rdCard);
+      playSound('card');
+      renderHand(pHand, 'playerCards');
+      pScore = calcScore(pHand);
+      document.getElementById('playerScoreTxt').innerText = pScore;
+    }
+
+    // Banker 3rd Card Rule
+    let bDraws = false;
+    if (p3rdCard === null) {
+      if (bScore <= 5) bDraws = true;
+    } else {
+      let p3Val = p3rdCard.val;
+      if (bScore <= 2) bDraws = true;
+      else if (bScore === 3 && p3Val !== 8) bDraws = true;
+      else if (bScore === 4 && [2,3,4,5,6,7].includes(p3Val)) bDraws = true;
+      else if (bScore === 5 && [4,5,6,7].includes(p3Val)) bDraws = true;
+      else if (bScore === 6 && [6,7].includes(p3Val)) bDraws = true;
+    }
+
+    if (bDraws) {
+      setTimeout(() => {
+        bHand.push(getRandomCard());
+        playSound('card');
+        renderHand(bHand, 'bankerCards');
+        bScore = calcScore(bHand);
+        document.getElementById('bankerScoreTxt').innerText = bScore;
+        finishHand(pHand, bHand);
+      }, 500);
+    } else {
+      finishHand(pHand, bHand);
+    }
+  }, 600);
+}
+
+function finishHand(pHand, bHand) {
+  let pScore = calcScore(pHand);
+  let bScore = calcScore(bHand);
+
+  let winner = 'TIE';
+  if (pScore > bScore) winner = 'PLAYER';
+  else if (bScore > pScore) winner = 'BANKER';
+
+  // Calculate Winnings
+  let won = 0;
+  if (winner === 'PLAYER' && placedBets.PLAYER > 0) won += placedBets.PLAYER * 2;
+  if (winner === 'BANKER' && placedBets.BANKER > 0) won += Math.floor(placedBets.BANKER * 1.95);
+  if (winner === 'TIE' && placedBets.TIE > 0) won += placedBets.TIE * 9;
+
+  roadmapList.unshift(winner === 'PLAYER' ? 'P' : (winner === 'BANKER' ? 'B' : 'T'));
+  if (roadmapList.length > 8) roadmapList.pop();
+  renderRoadmap();
+
+  if (won > 0) {
+    balance += won;
+    saveBalance();
+    playSound('win');
+    showModal("🎉 BACCARAT WIN!", `Player Score: ${pScore} vs Banker Score: ${bScore}\nWinner: ${winner}!\nYou Won ₹${won.toLocaleString()}!`, "🏆", true);
+  } else {
+    playSound('lose');
+    showModal("💥 ROUND LOST", `Player Score: ${pScore} vs Banker Score: ${bScore}\nWinner: ${winner}`, "💔", false);
+  }
+
+  placedBets = { PLAYER: 0, TIE: 0, BANKER: 0 };
+  updateBadges();
+
+  isDealing = false;
+  document.getElementById('dealBtn').style.opacity = "1";
+}
+
+function renderRoadmap() {
+  const container = document.getElementById('roadmapStrip');
+  container.innerHTML = roadmapList.map(code => {
+    let cls = code === 'P' ? "bead-player" : (code === 'B' ? "bead-banker" : "bead-tie");
+    return `<div class="bead-pill ${cls}">${code}</div>`;
+  }).join('');
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = msg;
+  document.getElementById('modalIcon').innerText = icon;
+  document.getElementById('modalBox').style.borderColor = isWin ? "var(--neon-purple)" : "var(--neon-red)";
+  document.getElementById('resultModal').style.display = "flex";
+}
+
+function closeModal() {
+  playSound('chip');
+  document.getElementById('resultModal').style.display = "none";
+}
+
+// INITIALIZE
+saveBalance();
+renderRoadmap();
+</script>
+</body>
+      </html>
+      
