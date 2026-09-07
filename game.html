@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,6 @@
   --neon-blue: #00e5ff;
   --neon-green: #10b981;
   --neon-red: #ef4444;
-  --neon-pink: #ec4899;
   --neon-purple: #a855f7;
   --bg-dark: #04060d;
   --card-bg: #0b101d;
@@ -79,7 +79,7 @@ body {
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
 }
 
-/* MEMBERSHIP CARD */
+/* MEMBERSHIP CARD BANNER */
 .vip-card-banner {
   background: linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #0f172a 100%);
   margin: 14px;
@@ -151,7 +151,7 @@ body {
   cursor: pointer;
 }
 
-/* SEARCH & CATEGORY FILTER */
+/* SEARCH & CATEGORIES */
 .filter-bar {
   padding: 0 14px;
   margin-bottom: 14px;
@@ -221,9 +221,7 @@ body {
   cursor: pointer;
 }
 
-.game-card:active {
-  transform: scale(0.96);
-}
+.game-card:active { transform: scale(0.96); }
 
 .game-card.locked-card {
   opacity: 0.85;
@@ -243,23 +241,9 @@ body {
   font-weight: 800;
 }
 
-.card-icon {
-  font-size: 36px;
-  margin-bottom: 6px;
-}
-
-.card-name {
-  font-size: 13px;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-
-.card-tag {
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--neon-gold);
-  text-transform: uppercase;
-}
+.card-icon { font-size: 36px; margin-bottom: 6px; }
+.card-name { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.card-tag { font-size: 9px; font-weight: 700; color: var(--neon-gold); text-transform: uppercase; }
 
 .btn-play {
   margin-top: 10px;
@@ -280,15 +264,13 @@ body {
   border: 1px solid #ef4444;
 }
 
-/* MODAL POPUP FOR VIP MEMBERSHIP */
+/* MODAL POPUP FOR VIP MEMBERSHIP & UPI QR */
 .modal-overlay {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.88);
   z-index: 99999;
   align-items: center;
   justify-content: center;
@@ -299,39 +281,72 @@ body {
   background: var(--card-bg);
   border: 2px solid var(--neon-gold);
   border-radius: 22px;
-  padding: 22px;
+  padding: 18px 16px;
   text-align: center;
-  width: 90%;
-  max-width: 360px;
+  width: 92%;
+  max-width: 380px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.9);
 }
 
 .plan-option-grid {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: 14px 0;
+  gap: 8px;
+  margin: 12px 0;
 }
 
 .plan-item {
   background: #070a14;
   border: 1.5px solid var(--border-color);
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .plan-item.selected {
   border-color: var(--neon-gold);
-  background: rgba(245, 158, 11, 0.1);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.12);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
 }
 
-.key-input-box {
+/* QR DISPLAY BOX */
+.qr-box-card {
+  background: #02040a;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 12px;
+  margin: 10px 0;
+}
+
+.qr-img {
+  width: 160px;
+  height: 160px;
+  border-radius: 10px;
+  border: 2px solid var(--neon-gold);
+  background: #fff;
+  padding: 6px;
+}
+
+.upi-id-pill {
+  background: #0f172a;
+  border: 1px dashed var(--neon-blue);
+  color: var(--neon-blue);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  margin-top: 8px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.utr-input-box {
   width: 100%;
   background: #02040a;
   border: 1.5px solid var(--border-color);
@@ -340,18 +355,15 @@ body {
   color: var(--neon-gold);
   font-weight: 800;
   text-align: center;
-  font-size: 12px;
-  margin-bottom: 12px;
+  font-size: 13px;
+  margin-bottom: 10px;
   outline: none;
-  text-transform: uppercase;
 }
-.key-input-box:focus {
-  border-color: var(--neon-gold);
-}
+.utr-input-box:focus { border-color: var(--neon-gold); }
 
 .error-msg {
   color: var(--neon-red);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   margin-bottom: 8px;
   display: none;
@@ -362,39 +374,52 @@ body {
 <body>
 <div class="hubContainer">
 
-  <!-- VIP PURCHASE / ACTIVATION MODAL -->
+  <!-- VIP STORE & UPI QR PAYMENT MODAL -->
   <div id="vipModal" class="modal-overlay">
     <div class="modal-box">
-      <div style="font-size:44px; margin-bottom:4px;">👑</div>
-      <h3 style="color:var(--neon-gold); font-size:18px; margin:0 0 4px 0;">UNLOCK VIP PASS</h3>
-      <p style="color:#94a3b8; font-size:11px; margin:0 0 14px 0;">Unlock All 20 Games & Unlimited Practice Wallet Resets!</p>
+      <div style="font-size:36px; margin-bottom:2px;">💰 VIP Store & Wallet</div>
+      <p style="color:#94a3b8; font-size:11px; margin:0 0 10px 0;">Instant UTR Activation • 20 Games Unlocked</p>
 
+      <!-- PLAN SELECTION -->
       <div class="plan-option-grid">
-        <div class="plan-item selected" onclick="selectPlan('2MONTHS', 199, this)">
+        <div class="plan-item selected" id="plan199" onclick="selectPlan(199, '2 Months (60 Days)', this)">
           <div style="text-align:left;">
-            <div style="font-size:12px; font-weight:800; color:#fff;">GOLD VIP (2 Months / 60 Days)</div>
-            <div style="font-size:9px; color:var(--neon-green);">All 20 Games + Unlimited Reset Coins</div>
+            <div style="font-size:12px; font-weight:800; color:#fff;">GOLD VIP PASS (2 Months)</div>
+            <div style="font-size:9px; color:var(--neon-green);">20 Games + Unlimited Coin Resets</div>
           </div>
           <div style="font-size:15px; font-weight:900; color:var(--neon-gold);">₹199</div>
         </div>
 
-        <div class="plan-item" onclick="selectPlan('6MONTHS', 499, this)">
+        <div class="plan-item" id="plan499" onclick="selectPlan(499, '6 Months (180 Days)', this)">
           <div style="text-align:left;">
-            <div style="font-size:12px; font-weight:800; color:#fff;">DIAMOND VIP (6 Months / 180 Days)</div>
-            <div style="font-size:9px; color:var(--neon-green);">All 20 Games + Unlimited Reset Coins</div>
+            <div style="font-size:12px; font-weight:800; color:#fff;">DIAMOND VIP PASS (6 Months)</div>
+            <div style="font-size:9px; color:var(--neon-green);">20 Games + VIP Priority Support</div>
           </div>
           <div style="font-size:15px; font-weight:900; color:var(--neon-gold);">₹499</div>
         </div>
       </div>
 
-      <div class="error-msg" id="modalError">❌ Invalid VIP Key or Payment UTR! Access Denied.</div>
+      <!-- QR CODE CONTAINER -->
+      <div class="qr-box-card">
+        <div style="font-size:11px; font-weight:800; color:var(--neon-gold); margin-bottom:6px;">
+          💰 Pay via UPI QR (<span id="selectedPlanLbl">Selected: ₹199</span>)
+        </div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl%26pn=VIP%20Arena%26am=199%26cu=INR" class="qr-img" id="qrCodeImg" alt="UPI QR">
+        <div>
+          <span class="upi-id-pill">UPI ID: 7415325460-2@ibl</span>
+        </div>
+      </div>
 
-      <input type="text" class="key-input-box" id="vipKeyInput" placeholder="ENTER SECRET VIP KEY / CODE">
+      <div class="error-msg" id="modalError">❌ Please enter a valid 12-Digit UTR/Ref Number!</div>
+
+      <!-- UTR INPUT -->
+      <input type="text" class="utr-input-box" id="utrInput" placeholder="Enter 12-Digit UTR / Ref Number" maxlength="12">
 
       <div style="display:flex; gap:8px;">
-        <button onclick="activateWithKey()" style="flex:1; padding:12px; background:linear-gradient(135deg, var(--neon-gold), #d97706); color:#000; font-weight:900; border-radius:10px; border:none; cursor:pointer;">ACTIVATE VIP 👑</button>
-        <button onclick="closeVipModal()" style="padding:12px; background:#1e293b; color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CLOSE</button>
+        <button onclick="verifyAndActivate()" style="flex:1; padding:12px; background:linear-gradient(135deg, var(--neon-blue), #0284c7); color:#000; font-weight:900; border-radius:10px; border:none; cursor:pointer;">⚡ Verify & Activate Plan</button>
+        <button onclick="closeVipModal()" style="padding:12px; background:#1e293b; color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">Close</button>
       </div>
+      <div style="font-size:9px; color:#64748b; margin-top:6px;">UPI app par payment karke 12-Digit UTR/Ref No. yahan daalein.</div>
     </div>
   </div>
 
@@ -438,13 +463,13 @@ body {
 
   <!-- GAMES GRID -->
   <div class="games-grid" id="gamesContainer">
-    <!-- 20 GAMES LINKED BELOW -->
+    <!-- 20 GAMES LINKED -->
   </div>
 
 </div>
 
 <script>
-// WEB AUDIO API SOUND GENERATOR
+// WEB AUDIO API SOUND
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 
@@ -471,8 +496,9 @@ function playSound(type) {
   } catch(e) {}
 }
 
-// STRICT SECRET KEYS FOR VERIFICATION (No fake random UTR accepted)
-const VALID_VIP_KEYS = ["RWIN199", "RWIN499", "ESHUVIP", "RWIN2026", "VIPARENA"];
+let currentSelectedPrice = 199;
+const FIXED_UPI = "7415325460-2@ibl";
+const VALID_KEYS = ["RWIN199", "RWIN499", "ESHUVIP", "RWIN2026", "VIPARENA"];
 
 // COMPLETE 20 GAMES MASTER DATA
 const gamesList = [
@@ -540,7 +566,7 @@ function launchGame(file, isFree) {
     openVipModal();
   } else {
     playSound('click');
-    window.location.href = "games/" + file;
+    window.location.href = "./games/" + file;
   }
 }
 
@@ -579,9 +605,7 @@ function setCategory(cat, el) {
   renderGames();
 }
 
-function filterGames() {
-  renderGames();
-}
+function filterGames() { renderGames(); }
 
 function openVipModal() {
   playSound('click');
@@ -594,28 +618,35 @@ function closeVipModal() {
   document.getElementById('vipModal').style.display = "none";
 }
 
-function selectPlan(type, price, el) {
+function selectPlan(price, label, el) {
   playSound('click');
+  currentSelectedPrice = price;
   document.querySelectorAll('.plan-item').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
+
+  document.getElementById('selectedPlanLbl').innerText = "Selected: ₹" + price;
+
+  // Update QR Code image dynamically
+  let upiUrl = `upi://pay?pa=${FIXED_UPI}%26pn=VIP%20Arena%26am=${price}%26cu=INR`;
+  document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
 }
 
-function activateWithKey() {
-  let key = document.getElementById('vipKeyInput').value.trim().toUpperCase();
+function verifyAndActivate() {
+  let utr = document.getElementById('utrInput').value.trim().toUpperCase();
   const errEl = document.getElementById('modalError');
 
-  // Strict Validation: Only pre-set admin keys work (No fake UTR or random input)
-  if (VALID_VIP_KEYS.includes(key)) {
+  // Verify: Must be 12 Digits OR Secret Admin Key
+  if ((/^\d{12}$/.test(utr)) || VALID_KEYS.includes(utr)) {
     errEl.style.display = "none";
     localStorage.setItem('rwin_membership', 'ACTIVE');
     playSound('click');
-    alert("🎉 VIP Membership Activated Successfully!");
+    alert("🎉 VIP Membership Activated Successfully! All 20 Games Unlocked.");
     closeVipModal();
     updateVipCardUI();
     renderGames();
   } else {
     playSound('lock');
-    errEl.innerText = "❌ Invalid UTR or Secret Key! Access Denied.";
+    errEl.innerText = "❌ Enter valid 12-Digit UTR Number or Secret Key!";
     errEl.style.display = "block";
   }
 }
@@ -624,5 +655,5 @@ function activateWithKey() {
 updateVipCardUI();
 renderGames();
 </script>
-</body>
-</html>
+  </body>
+  
