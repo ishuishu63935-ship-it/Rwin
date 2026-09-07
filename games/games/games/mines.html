@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VIP Mines Cashout - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-purple: #a855f7;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-dark);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.gameContainer {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+/* HEADER BAR */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #020307;
+  border-bottom: 1px solid var(--border-color);
+}
+.back-btn {
+  padding: 6px 12px;
+  background: var(--border-color);
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  text-decoration: none;
+}
+.balance-pill {
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 1px solid var(--neon-gold);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--neon-gold);
+}
+
+/* MINES GRID ARENA */
+.mines-arena {
+  background: radial-gradient(circle, #0f172a 0%, #04060d 100%);
+  margin: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 24px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+}
+
+.grid-5x5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tile {
+  aspect-ratio: 1;
+  background: #1e293b;
+  border: 2px solid #334155;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s, border-color 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.tile:active { transform: scale(0.92); }
+.tile.revealed-gem {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--neon-green);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+.tile.revealed-mine {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: var(--neon-red);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: flex;
+  justify-content: space-between;
+  background: #02040a;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+
+/* CONTROLS CARD */
+.controls-card {
+  background: #04060d;
+  margin: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 14px;
+  text-align: center;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.setting-box {
+  background: #0f172a;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.setting-label {
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.selector-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.adj-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-start-game {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--neon-green), #047857);
+  color: #fff;
+  font-weight: 900;
+  font-size: 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-cashout-game {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--neon-gold), #d97706);
+  color: #000;
+  font-weight: 900;
+  font-size: 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: none;
+}
+
+/* MODAL POPUP */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.modal-box {
+  background: var(--card-bg);
+  border: 2px solid var(--neon-green);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  width: 85%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+</style>
+</head>
+
+<body>
+<div class="gameContainer">
+
+  <!-- RESULT MODAL -->
+  <div id="resultModal" class="modal-overlay">
+    <div class="modal-box" id="modalBox">
+      <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">💎</div>
+      <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 4px 0;">RESULT</h3>
+      <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 16px 0;">Details</p>
+      <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-green); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-bar">
+    <a href="../game.html" class="back-btn">⬅️ Arena Hub</a>
+    <div class="balance-pill">
+      <span>💰</span>
+      <span id="balanceVal">₹10,000</span>
+    </div>
+  </header>
+
+  <div style="text-align:center; padding:8px 0 2px 0;">
+    <h2 style="margin:0; font-size:20px; color:var(--neon-green);">💣 VIP MINES CASHOUT 💎</h2>
+    <span style="font-size:10px; color:#94a3b8;">FIND GEMS • AVOID MINES • CASHOUT ANYTIME</span>
+  </div>
+
+  <!-- MINES ARENA -->
+  <div class="mines-arena">
+    <div class="stats-bar">
+      <span>Mines: <b style="color:var(--neon-red);" id="mineStatTxt">3</b></span>
+      <span>Gems Left: <b style="color:var(--neon-green);" id="gemsLeftTxt">22</b></span>
+      <span>Multiplier: <b style="color:var(--neon-gold);" id="multiStatTxt">1.00X</b></span>
+    </div>
+
+    <!-- 5X5 GRID -->
+    <div class="grid-5x5" id="minesGrid">
+      <!-- 25 Tiles generated dynamically -->
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-card">
+    <div class="settings-grid" id="settingsBox">
+      <div class="setting-box">
+        <div class="setting-label">Mines Count</div>
+        <div class="selector-flex">
+          <button class="adj-btn" onclick="changeMines(-1)">-</button>
+          <span style="font-weight:900; color:var(--neon-red);" id="mineCountTxt">3</span>
+          <button class="adj-btn" onclick="changeMines(1)">+</button>
+        </div>
+      </div>
+
+      <div class="setting-box">
+        <div class="setting-label">Bet Amount</div>
+        <div class="selector-flex">
+          <button class="adj-btn" onclick="changeBet(-50)">-</button>
+          <span style="font-weight:900; color:var(--neon-gold);" id="betTxt">₹100</span>
+          <button class="adj-btn" onclick="changeBet(50)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-start-game" id="btnStart" onclick="startGame()">START GAME 🚀</button>
+    <button class="btn-cashout-game" id="btnCashout" onclick="cashoutWinnings()">CASHOUT ₹<span id="cashoutAmt">0</span></button>
+
+    <div style="margin-top:10px;">
+      <button onclick="resetWallet()" style="padding:4px 12px; background:var(--border-color); color:var(--neon-blue); border:1px solid var(--neon-blue); border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">🔄 Reset Wallet</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// WEB AUDIO API SOUND GENERATOR
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+
+    if (type === 'gem') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(800 + Math.random() * 200, now);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+      osc.start(now); osc.stop(now + 0.08);
+    } else if (type === 'mine') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.linearRampToValueAtTime(40, now + 0.35);
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    } else if (type === 'win') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.3);
+      });
+    }
+  } catch(e) {}
+}
+
+// GAME STATE
+let balance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let betAmount = 100;
+let mineCount = 3;
+let gemsRevealed = 0;
+let isGameActive = false;
+let minePositions = [];
+let currentMultiplier = 1.00;
+
+function saveBalance() {
+  localStorage.setItem('rwin_balance', balance.toString());
+  document.getElementById('balanceVal').innerText = "₹" + balance.toLocaleString();
+}
+
+function resetWallet() {
+  playSound('gem');
+  balance = 10000;
+  saveBalance();
+  showModal("🔄 WALLET RESET", "Practice Balance restored to ₹10,000!", "💰", true);
+}
+
+function changeMines(diff) {
+  if (isGameActive) return;
+  playSound('gem');
+  mineCount = Math.max(1, Math.min(24, mineCount + diff));
+  document.getElementById('mineCountTxt').innerText = mineCount;
+  document.getElementById('mineStatTxt').innerText = mineCount;
+  document.getElementById('gemsLeftTxt').innerText = 25 - mineCount;
+}
+
+function changeBet(diff) {
+  if (isGameActive) return;
+  playSound('gem');
+  betAmount = Math.max(50, Math.min(5000, betAmount + diff));
+  document.getElementById('betTxt').innerText = "₹" + betAmount;
+}
+
+function renderEmptyGrid() {
+  const container = document.getElementById('minesGrid');
+  let html = "";
+  for (let i = 0; i < 25; i++) {
+    html += `<div class="tile" id="tile-${i}" onclick="revealTile(${i})">❓</div>`;
+  }
+  container.innerHTML = html;
+}
+
+function startGame() {
+  if (balance < betAmount) {
+    showModal("⚠️ LOW BALANCE", "Not enough coins! Reset balance.", "💰", false);
+    return;
+  }
+
+  balance -= betAmount;
+  saveBalance();
+
+  isGameActive = true;
+  gemsRevealed = 0;
+  currentMultiplier = 1.00;
+
+  // Generate random mine positions
+  minePositions = [];
+  while (minePositions.length < mineCount) {
+    let r = Math.floor(Math.random() * 25);
+    if (!minePositions.includes(r)) minePositions.push(r);
+  }
+
+  renderEmptyGrid();
+
+  document.getElementById('btnStart').style.display = "none";
+  document.getElementById('btnCashout').style.display = "block";
+  document.getElementById('cashoutAmt').innerText = betAmount;
+  document.getElementById('multiStatTxt').innerText = "1.00X";
+  document.getElementById('gemsLeftTxt').innerText = 25 - mineCount;
+}
+
+function calculateNextMultiplier(gems) {
+  // Fair Mines multiplier formula
+  let totalTiles = 25;
+  let safeTiles = totalTiles - mineCount;
+  let prob = 1.0;
+
+  for (let i = 0; i < gems; i++) {
+    prob *= (safeTiles - i) / (totalTiles - i);
+  }
+
+  return parseFloat((0.97 / prob).toFixed(2));
+}
+
+function revealTile(idx) {
+  if (!isGameActive) return;
+
+  const tileEl = document.getElementById('tile-' + idx);
+  if (tileEl.classList.contains('revealed-gem') || tileEl.classList.contains('revealed-mine')) return;
+
+  if (minePositions.includes(idx)) {
+    // BOOM! MINE HIT!
+    playSound('mine');
+    tileEl.innerHTML = "💣";
+    tileEl.classList.add('revealed-mine');
+
+    // Reveal all remaining tiles
+    for (let i = 0; i < 25; i++) {
+      const el = document.getElementById('tile-' + i);
+      if (minePositions.includes(i)) {
+        el.innerHTML = "💣";
+        el.classList.add('revealed-mine');
+      } else {
+        el.innerHTML = "💎";
+        el.classList.add('revealed-gem');
+      }
+    }
+
+    isGameActive = false;
+    document.getElementById('btnStart').style.display = "block";
+    document.getElementById('btnCashout').style.display = "none";
+
+    showModal("💥 BOOM! MINE EXPLODED", "You hit a mine! Better luck next time.", "💔", false);
+  } else {
+    // SAFE GEM!
+    playSound('gem');
+    tileEl.innerHTML = "💎";
+    tileEl.classList.add('revealed-gem');
+
+    gemsRevealed++;
+    currentMultiplier = calculateNextMultiplier(gemsRevealed);
+
+    document.getElementById('multiStatTxt').innerText = currentMultiplier.toFixed(2) + "X";
+    document.getElementById('gemsLeftTxt').innerText = (25 - mineCount - gemsRevealed);
+
+    let cashoutVal = Math.floor(betAmount * currentMultiplier);
+    document.getElementById('cashoutAmt').innerText = cashoutVal.toLocaleString();
+
+    // Auto win if all gems found
+    if (gemsRevealed === (25 - mineCount)) {
+      cashoutWinnings();
+    }
+  }
+}
+
+function cashoutWinnings() {
+  if (!isGameActive || gemsRevealed === 0) return;
+
+  let wonAmount = Math.floor(betAmount * currentMultiplier);
+  balance += wonAmount;
+  saveBalance();
+
+  playSound('win');
+  isGameActive = false;
+
+  document.getElementById('btnStart').style.display = "block";
+  document.getElementById('btnCashout').style.display = "none";
+
+  showModal("🎉 MINES CASHOUT WIN!", `Found ${gemsRevealed} Gems @ ${currentMultiplier.toFixed(2)}X Multiplier!\nYou Won ₹${wonAmount.toLocaleString()}!`, "🏆", true);
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = msg;
+  document.getElementById('modalIcon').innerText = icon;
+  document.getElementById('modalBox').style.borderColor = isWin ? "var(--neon-green)" : "var(--neon-red)";
+  document.getElementById('resultModal').style.display = "flex";
+}
+
+function closeModal() {
+  playSound('gem');
+  document.getElementById('resultModal').style.display = "none";
+}
+
+// INITIALIZE
+saveBalance();
+renderEmptyGrid();
+</script>
+</body>
+</html>
