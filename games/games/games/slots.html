@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Neon 777 Slots - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-pink: #ec4899;
+  --neon-purple: #a855f7;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-dark);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.gameContainer {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+/* HEADER BAR */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #020307;
+  border-bottom: 1px solid var(--border-color);
+}
+.back-btn {
+  padding: 6px 12px;
+  background: var(--border-color);
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  text-decoration: none;
+}
+.balance-pill {
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 1px solid var(--neon-gold);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--neon-gold);
+}
+
+/* SLOT MACHINE HOUSING */
+.slot-machine-box {
+  background: radial-gradient(circle, #2e1065 0%, #0f172a 75%, #050811 100%);
+  margin: 14px 12px;
+  border: 3px solid var(--neon-pink);
+  border-radius: 24px;
+  padding: 18px 12px;
+  text-align: center;
+  box-shadow: 0 0 35px rgba(236, 72, 153, 0.4), inset 0 0 25px rgba(0,0,0,0.9);
+  position: relative;
+}
+
+.slot-header-title {
+  font-size: 22px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f472b6, #ec4899, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* REELS GRID */
+.reels-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #02040a;
+  border: 2px solid var(--neon-gold);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+  position: relative;
+}
+
+.payline-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--neon-red);
+  box-shadow: 0 0 10px var(--neon-red);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.reel-window {
+  height: 100px;
+  background: linear-gradient(180deg, #0b101d, #1e293b, #0b101d);
+  border: 2px solid #334155;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 46px;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+  overflow: hidden;
+  position: relative;
+}
+
+.reel-symbol {
+  transition: transform 0.05s ease-in-out;
+}
+
+/* PAYTABLE DISPLAY */
+.paytable-card {
+  background: #070a14;
+  margin: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 10px;
+}
+.paytable-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--neon-gold);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.paytable-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  font-size: 10px;
+  text-align: center;
+}
+.pay-item {
+  background: #0f172a;
+  padding: 4px 2px;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+}
+
+/* CONTROLS */
+.controls-card {
+  background: #04060d;
+  margin: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+}
+
+.bet-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.adjust-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.bet-val {
+  background: #0f172a;
+  border: 1px solid var(--border-color);
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--neon-gold);
+  min-width: 90px;
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 8px;
+}
+
+.btn-ctrl {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+  color: #fff;
+  background: #1e293b;
+}
+.btn-spin {
+  background: linear-gradient(135deg, var(--neon-pink), #c026d3);
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  font-weight: 900;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+}
+
+/* MODAL POPUP */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.modal-box {
+  background: var(--card-bg);
+  border: 2px solid var(--neon-pink);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  width: 85%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+</style>
+</head>
+
+<body>
+<div class="gameContainer">
+
+  <!-- RESULT MODAL -->
+  <div id="resultModal" class="modal-overlay">
+    <div class="modal-box" id="modalBox">
+      <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">7️⃣</div>
+      <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 4px 0;">SLOTS RESULT</h3>
+      <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 16px 0;">Details</p>
+      <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-pink); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-bar">
+    <a href="../game.html" class="back-btn">⬅️ Arena Hub</a>
+    <div class="balance-pill">
+      <span>💰</span>
+      <span id="balanceVal">₹10,000</span>
+    </div>
+  </header>
+
+  <!-- SLOT MACHINE HOUSING -->
+  <div class="slot-machine-box">
+    <div class="slot-header-title">🎰 NEON 777 SLOTS</div>
+
+    <div class="reels-container">
+      <div class="payline-indicator"></div>
+      <div class="reel-window"><span class="reel-symbol" id="reel1">7️⃣</span></div>
+      <div class="reel-window"><span class="reel-symbol" id="reel2">7️⃣</span></div>
+      <div class="reel-window"><span class="reel-symbol" id="reel3">7️⃣</span></div>
+    </div>
+  </div>
+
+  <!-- PAYTABLE CARD -->
+  <div class="paytable-card">
+    <div class="paytable-title">🏆 SYMBOL PAYTABLE MULTIPLIERS</div>
+    <div class="paytable-grid">
+      <div class="pay-item">7️⃣7️⃣7️⃣ <b style="color:var(--neon-gold);">100X</b></div>
+      <div class="pay-item">💎💎💎 <b style="color:var(--neon-blue);">50X</b></div>
+      <div class="pay-item">🔔🔔🔔 <b style="color:var(--neon-gold);">25X</b></div>
+      <div class="pay-item">🍒🍒🍒 <b style="color:var(--neon-red);">10X</b></div>
+      <div class="pay-item">🍋🍋🍋 <b style="color:var(--neon-green);">5X</b></div>
+      <div class="pay-item">🪙🪙🪙 <b style="color:#94a3b8;">2X</b></div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-card">
+    <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">SPIN BET AMOUNT</div>
+    <div class="bet-selector">
+      <button class="adjust-btn" onclick="changeBet(-50)">-</button>
+      <div class="bet-val" id="betDisplay">₹100</div>
+      <button class="adjust-btn" onclick="changeBet(50)">+</button>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-ctrl" onclick="resetWallet()">RESET 💰</button>
+      <button class="btn-ctrl btn-spin" id="spinBtn" onclick="spinSlots()">SPIN 🎰</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// WEB AUDIO API SOUND GENERATOR
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+
+    if (type === 'spinTick') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(400, now);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.03);
+      osc.start(now); osc.stop(now + 0.03);
+    } else if (type === 'stop') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(700, now);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      osc.start(now); osc.stop(now + 0.05);
+    } else if (type === 'win') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.3);
+      });
+    } else if (type === 'lose') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.35);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    }
+  } catch(e) {}
+}
+
+// GAME STATE
+let balance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let betAmount = 100;
+let isSpinning = false;
+
+const symbols = [
+  { icon: '7️⃣', multi: 100 },
+  { icon: '💎', multi: 50 },
+  { icon: '🔔', multi: 25 },
+  { icon: '🍒', multi: 10 },
+  { icon: '🍋', multi: 5 },
+  { icon: '🪙', multi: 2 }
+];
+
+function saveBalance() {
+  localStorage.setItem('rwin_balance', balance.toString());
+  document.getElementById('balanceVal').innerText = "₹" + balance.toLocaleString();
+}
+
+function resetWallet() {
+  playSound('spinTick');
+  balance = 10000;
+  saveBalance();
+  showModal("🔄 WALLET RESET", "Practice Balance restored to ₹10,000!", "💰", true);
+}
+
+function changeBet(diff) {
+  if (isSpinning) return;
+  playSound('spinTick');
+  betAmount = Math.max(50, Math.min(5000, betAmount + diff));
+  document.getElementById('betDisplay').innerText = "₹" + betAmount;
+}
+
+function getRandomSymbol() {
+  let r = Math.random();
+  if (r < 0.05) return symbols[0]; // 777
+  if (r < 0.15) return symbols[1]; // Diamond
+  if (r < 0.30) return symbols[2]; // Bell
+  if (r < 0.50) return symbols[3]; // Cherry
+  if (r < 0.75) return symbols[4]; // Lemon
+  return symbols[5];               // Coin
+}
+
+function spinSlots() {
+  if (isSpinning) return;
+
+  if (balance < betAmount) {
+    showModal("⚠️ LOW BALANCE", "Not enough coins! Reset balance to play.", "💰", false);
+    return;
+  }
+
+  balance -= betAmount;
+  saveBalance();
+  isSpinning = true;
+  document.getElementById('spinBtn').style.opacity = "0.5";
+
+  const r1 = document.getElementById('reel1');
+  const r2 = document.getElementById('reel2');
+  const r3 = document.getElementById('reel3');
+
+  let s1 = getRandomSymbol();
+  let s2 = getRandomSymbol();
+  let s3 = getRandomSymbol();
+
+  // Rapid blur spin cycle
+  let spinInterval1 = setInterval(() => { r1.innerText = symbols[Math.floor(Math.random() * symbols.length)].icon; playSound('spinTick'); }, 60);
+  let spinInterval2 = setInterval(() => { r2.innerText = symbols[Math.floor(Math.random() * symbols.length)].icon; }, 60);
+  let spinInterval3 = setInterval(() => { r3.innerText = symbols[Math.floor(Math.random() * symbols.length)].icon; }, 60);
+
+  // Stop Reel 1
+  setTimeout(() => {
+    clearInterval(spinInterval1);
+    r1.innerText = s1.icon;
+    playSound('stop');
+  }, 1000);
+
+  // Stop Reel 2
+  setTimeout(() => {
+    clearInterval(spinInterval2);
+    r2.innerText = s2.icon;
+    playSound('stop');
+  }, 1600);
+
+  // Stop Reel 3
+  setTimeout(() => {
+    clearInterval(spinInterval3);
+    r3.innerText = s3.icon;
+    playSound('stop');
+
+    evaluateSlotsResult(s1, s2, s3);
+  }, 2200);
+}
+
+function evaluateSlotsResult(s1, s2, s3) {
+  isSpinning = false;
+  document.getElementById('spinBtn').style.opacity = "1";
+
+  let wonAmount = 0;
+
+  // 3 of a kind match
+  if (s1.icon === s2.icon && s2.icon === s3.icon) {
+    wonAmount = betAmount * s1.multi;
+  }
+  // 2 of a kind match
+  else if (s1.icon === s2.icon || s2.icon === s3.icon || s1.icon === s3.icon) {
+    let matched = (s1.icon === s2.icon) ? s1 : ((s2.icon === s3.icon) ? s2 : s1);
+    wonAmount = Math.floor(betAmount * (matched.multi * 0.3));
+  }
+
+  if (wonAmount > 0) {
+    balance += wonAmount;
+    saveBalance();
+    playSound('win');
+    showModal("🎉 SLOT JACKPOT WIN!", `Line: ${s1.icon} ${s2.icon} ${s3.icon}\nYou Won ₹${wonAmount.toLocaleString()}!`, "🎰", true);
+  } else {
+    playSound('lose');
+    showModal("💥 NO MATCH", `Line: ${s1.icon} ${s2.icon} ${s3.icon}\nBetter luck next spin!`, "💔", false);
+  }
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = msg;
+  document.getElementById('modalIcon').innerText = icon;
+  document.getElementById('modalBox').style.borderColor = isWin ? "var(--neon-pink)" : "var(--neon-red)";
+  document.getElementById('resultModal').style.display = "flex";
+}
+
+function closeModal() {
+  playSound('spinTick');
+  document.getElementById('resultModal').style.display = "none";
+}
+
+// INITIALIZE
+saveBalance();
+</script>
+</body>
+</html>
