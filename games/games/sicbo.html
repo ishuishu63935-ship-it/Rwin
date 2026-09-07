@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cyber Sic Bo Dice - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-purple: #a855f7;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-dark);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.gameContainer {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+/* HEADER BAR */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #020307;
+  border-bottom: 1px solid var(--border-color);
+}
+.back-btn {
+  padding: 6px 12px;
+  background: var(--border-color);
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  text-decoration: none;
+}
+.balance-pill {
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 1px solid var(--neon-gold);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--neon-gold);
+}
+
+/* HISTORY STRIP */
+.history-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px 12px;
+  background: #04060d;
+  border-bottom: 1px solid var(--border-color);
+}
+.hist-pill {
+  min-width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+.hist-small { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 1px solid #93c5fd; }
+.hist-big { background: linear-gradient(135deg, #ef4444, #991b1b); border: 1px solid #fca5a5; }
+.hist-triple { background: linear-gradient(135deg, #10b981, #047857); border: 1px solid #6ee7b7; }
+
+/* DICE SHAKER ARENA */
+.shaker-card {
+  background: radial-gradient(circle, #1e1b4b 0%, #0f172a 75%, #050811 100%);
+  margin: 12px;
+  border: 3px solid var(--neon-gold);
+  border-radius: 24px;
+  padding: 20px 10px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.3), inset 0 0 25px rgba(0,0,0,0.8);
+}
+
+.dice-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 10px 0;
+}
+
+.dice-face {
+  width: 58px;
+  height: 58px;
+  background: #fff;
+  border-radius: 12px;
+  border: 3px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 900;
+  color: #000;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  transition: transform 0.1s;
+}
+
+.shaking {
+  animation: shakeAnim 0.15s infinite alternate;
+}
+
+@keyframes shakeAnim {
+  0% { transform: translate(-4px, -4px) rotate(-6deg); }
+  100% { transform: translate(4px, 4px) rotate(6deg); }
+}
+
+/* BETTING BOARD GRID */
+.board-section {
+  padding: 0 12px;
+}
+
+.big-small-grid {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.zone-card {
+  background: #070a14;
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 4px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s, border-color 0.2s;
+  color: #fff;
+}
+.zone-card:active { transform: scale(0.95); }
+.zone-card.selected {
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.bg-small { background: linear-gradient(135deg, #1e3a8a, #0f172a); }
+.bg-triple { background: linear-gradient(135deg, #064e3b, #0f172a); }
+.bg-big { background: linear-gradient(135deg, #7f1d1d, #0f172a); }
+
+.sums-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.sum-tile {
+  background: #0f172a;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 2px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  font-size: 10px;
+  font-weight: 800;
+}
+.sum-tile:active { transform: scale(0.92); }
+
+.chip-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--neon-gold);
+  color: #000;
+  font-size: 8px;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  display: none;
+}
+
+/* CONTROLS */
+.controls-card {
+  background: #04060d;
+  margin: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+}
+
+.chip-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.chip-btn {
+  padding: 6px 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  color: #94a3b8;
+}
+.chip-btn.active {
+  background: var(--neon-gold);
+  color: #000;
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 8px;
+}
+
+.btn-ctrl {
+  padding: 10px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+  color: #fff;
+  background: #1e293b;
+}
+.btn-roll {
+  background: linear-gradient(135deg, var(--neon-gold), #d97706);
+  color: #000;
+  border: none;
+  font-size: 13px;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+/* MODAL POPUP */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.modal-box {
+  background: var(--card-bg);
+  border: 2px solid var(--neon-gold);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  width: 85%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+</style>
+</head>
+
+<body>
+<div class="gameContainer">
+
+  <!-- RESULT MODAL -->
+  <div id="resultModal" class="modal-overlay">
+    <div class="modal-box" id="modalBox">
+      <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">🎲</div>
+      <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 4px 0;">RESULT</h3>
+      <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 16px 0;">Details</p>
+      <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-gold); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-bar">
+    <a href="../game.html" class="back-btn">⬅️ Arena Hub</a>
+    <div class="balance-pill">
+      <span>💰</span>
+      <span id="balanceVal">₹10,000</span>
+    </div>
+  </header>
+
+  <!-- HISTORY STRIP -->
+  <div class="history-strip" id="historyStrip">
+    <div class="hist-pill hist-small">8S</div>
+    <div class="hist-pill hist-big">14B</div>
+    <div class="hist-pill hist-triple">12T</div>
+    <div class="hist-pill hist-small">6S</div>
+    <div class="hist-pill hist-big">15B</div>
+  </div>
+
+  <div style="text-align:center; padding:8px 0 2px 0;">
+    <h2 style="margin:0; font-size:20px; color:var(--neon-gold);">🎲 CYBER SIC BO 🎲</h2>
+    <span style="font-size:10px; color:#94a3b8;">3 DICE ROLL • SMALL 4-10 • BIG 11-17 • TRIPLES 30X</span>
+  </div>
+
+  <!-- SHAKER ARENA -->
+  <div class="shaker-card">
+    <div style="font-size:10px; font-weight:800; color:var(--neon-gold); margin-bottom:4px;">TOTAL SUM: <span id="diceSumVal">11</span></div>
+    <div class="dice-container">
+      <div class="dice-face" id="dice1">⚃</div>
+      <div class="dice-face" id="dice2">⚂</div>
+      <div class="dice-face" id="dice3">⚄</div>
+    </div>
+  </div>
+
+  <!-- BETTING BOARD -->
+  <div class="board-section">
+    <!-- BIG / SMALL / TRIPLE -->
+    <div class="big-small-grid">
+      <div class="zone-card bg-small" onclick="placeBet('SMALL')">
+        <div style="font-size:12px; font-weight:900; color:var(--neon-blue);">SMALL</div>
+        <div style="font-size:9px; opacity:0.8;">4-10 (1:1)</div>
+        <div class="chip-badge" id="badge-SMALL">0</div>
+      </div>
+
+      <div class="zone-card bg-triple" onclick="placeBet('ANY_TRIPLE')">
+        <div style="font-size:11px; font-weight:900; color:var(--neon-green);">ANY TRIPLE</div>
+        <div style="font-size:9px; opacity:0.8;">30:1</div>
+        <div class="chip-badge" id="badge-ANY_TRIPLE">0</div>
+      </div>
+
+      <div class="zone-card bg-big" onclick="placeBet('BIG')">
+        <div style="font-size:12px; font-weight:900; color:var(--neon-red);">BIG</div>
+        <div style="font-size:9px; opacity:0.8;">11-17 (1:1)</div>
+        <div class="chip-badge" id="badge-BIG">0</div>
+      </div>
+    </div>
+
+    <!-- SPECIFIC SUMS -->
+    <div style="font-size:10px; font-weight:800; color:#94a3b8; margin-bottom:4px;">SPECIFIC SUM BETS (6X TO 60X)</div>
+    <div class="sums-grid">
+      <div class="sum-tile" onclick="placeBet('SUM_4')">4<br><span style="color:var(--neon-gold);">60X</span><div class="chip-badge" id="badge-SUM_4">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_5')">5<br><span style="color:var(--neon-gold);">30X</span><div class="chip-badge" id="badge-SUM_5">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_6')">6<br><span style="color:var(--neon-gold);">18X</span><div class="chip-badge" id="badge-SUM_6">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_7')">7<br><span style="color:var(--neon-gold);">12X</span><div class="chip-badge" id="badge-SUM_7">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_8')">8<br><span style="color:var(--neon-gold);">8X</span><div class="chip-badge" id="badge-SUM_8">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_9')">9<br><span style="color:var(--neon-gold);">6X</span><div class="chip-badge" id="badge-SUM_9">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_10')">10<br><span style="color:var(--neon-gold);">6X</span><div class="chip-badge" id="badge-SUM_10">0</div></div>
+    </div>
+    <div class="sums-grid">
+      <div class="sum-tile" onclick="placeBet('SUM_11')">11<br><span style="color:var(--neon-gold);">6X</span><div class="chip-badge" id="badge-SUM_11">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_12')">12<br><span style="color:var(--neon-gold);">6X</span><div class="chip-badge" id="badge-SUM_12">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_13')">13<br><span style="color:var(--neon-gold);">8X</span><div class="chip-badge" id="badge-SUM_13">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_14')">14<br><span style="color:var(--neon-gold);">12X</span><div class="chip-badge" id="badge-SUM_14">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_15')">15<br><span style="color:var(--neon-gold);">18X</span><div class="chip-badge" id="badge-SUM_15">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_16')">16<br><span style="color:var(--neon-gold);">30X</span><div class="chip-badge" id="badge-SUM_16">0</div></div>
+      <div class="sum-tile" onclick="placeBet('SUM_17')">17<br><span style="color:var(--neon-gold);">60X</span><div class="chip-badge" id="badge-SUM_17">0</div></div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-card">
+    <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">SELECT CHIP VALUE</div>
+    <div class="chip-container">
+      <span onclick="setChip(100)" class="chip-btn active" id="chip-100">₹100</span>
+      <span onclick="setChip(500)" class="chip-btn" id="chip-500">₹500</span>
+      <span onclick="setChip(1000)" class="chip-btn" id="chip-1000">₹1,000</span>
+      <span onclick="setChip(2000)" class="chip-btn" id="chip-2000">₹2,000</span>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-ctrl" onclick="clearBets()">CLEAR</button>
+      <button class="btn-ctrl" onclick="resetWallet()">RESET 💰</button>
+      <button class="btn-ctrl btn-roll" id="rollBtn" onclick="rollDice()">ROLL 🎲</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// WEB AUDIO API SOUND GENERATOR
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+
+    if (type === 'chip') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'rattle') {
+      for (let i = 0; i < 5; i++) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(300 + Math.random() * 400, now + i * 0.05);
+        gain.gain.setValueAtTime(0.08, now + i * 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.05 + 0.03);
+        osc.start(now + i * 0.05); osc.stop(now + i * 0.05 + 0.03);
+      }
+    } else if (type === 'win') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.3);
+      });
+    } else if (type === 'lose') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.35);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    }
+  } catch(e) {}
+}
+
+// GAME STATE
+let balance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let activeChip = 100;
+let placedBets = {};
+let historyList = [{ sum: 8, cat: 'S' }, { sum: 14, cat: 'B' }, { sum: 12, cat: 'T' }];
+let isRolling = false;
+
+const diceIcons = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+
+function saveBalance() {
+  localStorage.setItem('rwin_balance', balance.toString());
+  document.getElementById('balanceVal').innerText = "₹" + balance.toLocaleString();
+}
+
+function resetWallet() {
+  playSound('chip');
+  balance = 10000;
+  saveBalance();
+  showModal("🔄 WALLET RESET", "Practice Balance restored to ₹10,000!", "💰", true);
+}
+
+function setChip(amt) {
+  if (isRolling) return;
+  playSound('chip');
+  activeChip = amt;
+  document.querySelectorAll('.chip-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('chip-' + amt).classList.add('active');
+}
+
+function placeBet(target) {
+  if (isRolling) return;
+  playSound('chip');
+
+  if (balance < activeChip) {
+    showModal("⚠️ LOW BALANCE", "Not enough coins! Reset balance.", "💰", false);
+    return;
+  }
+
+  balance -= activeChip;
+  saveBalance();
+
+  placedBets[target] = (placedBets[target] || 0) + activeChip;
+  updateBadge(target);
+}
+
+function updateBadge(target) {
+  const badge = document.getElementById('badge-' + target);
+  if (badge) {
+    if (placedBets[target] > 0) {
+      badge.style.display = "block";
+      badge.innerText = "₹" + placedBets[target];
+    } else {
+      badge.style.display = "none";
+    }
+  }
+}
+
+function clearBets() {
+  if (isRolling) return;
+  playSound('chip');
+  let total = 0;
+  Object.keys(placedBets).forEach(k => total += placedBets[k]);
+  balance += total;
+  saveBalance();
+  placedBets = {};
+  document.querySelectorAll('.chip-badge').forEach(b => b.style.display = "none");
+}
+
+function rollDice() {
+  if (isRolling) return;
+  let totalBet = 0;
+  Object.keys(placedBets).forEach(k => totalBet += placedBets[k]);
+
+  if (totalBet === 0) {
+    showModal("⚠️ PLACE BET", "Please place chips on Small, Big or Sums!", "🎲", false);
+    return;
+  }
+
+  isRolling = true;
+  document.getElementById('rollBtn').style.opacity = "0.5";
+
+  const d1El = document.getElementById('dice1');
+  const d2El = document.getElementById('dice2');
+  const d3El = document.getElementById('dice3');
+
+  d1El.classList.add('shaking');
+  d2El.classList.add('shaking');
+  d3El.classList.add('shaking');
+
+  playSound('rattle');
+
+  let rollInterval = setInterval(() => {
+    d1El.innerText = diceIcons[Math.floor(Math.random() * 6)];
+    d2El.innerText = diceIcons[Math.floor(Math.random() * 6)];
+    d3El.innerText = diceIcons[Math.floor(Math.random() * 6)];
+  }, 80);
+
+  setTimeout(() => {
+    clearInterval(rollInterval);
+    d1El.classList.remove('shaking');
+    d2El.classList.remove('shaking');
+    d3El.classList.remove('shaking');
+
+    let v1 = Math.floor(Math.random() * 6) + 1;
+    let v2 = Math.floor(Math.random() * 6) + 1;
+    let v3 = Math.floor(Math.random() * 6) + 1;
+
+    d1El.innerText = diceIcons[v1 - 1];
+    d2El.innerText = diceIcons[v2 - 1];
+    d3El.innerText = diceIcons[v3 - 1];
+
+    let sum = v1 + v2 + v3;
+    document.getElementById('diceSumVal').innerText = sum;
+
+    evaluateSicBoResult(v1, v2, v3, sum);
+  }, 1800);
+}
+
+function evaluateSicBoResult(v1, v2, v3, sum) {
+  let isTriple = (v1 === v2 && v2 === v3);
+  let isSmall = (sum >= 4 && sum <= 10 && !isTriple);
+  let isBig = (sum >= 11 && sum <= 17 && !isTriple);
+
+  const sumMultipliers = {
+    4: 60, 5: 30, 6: 18, 7: 12, 8: 8, 9: 6, 10: 6,
+    11: 6, 12: 6, 13: 8, 14: 12, 15: 18, 16: 30, 17: 60
+  };
+
+  let totalWon = 0;
+
+  Object.keys(placedBets).forEach(target => {
+    let amt = placedBets[target];
+    if (target === 'SMALL' && isSmall) totalWon += amt * 2;
+    if (target === 'BIG' && isBig) totalWon += amt * 2;
+    if (target === 'ANY_TRIPLE' && isTriple) totalWon += amt * 31;
+
+    if (target === ('SUM_' + sum)) {
+      totalWon += amt * (sumMultipliers[sum] + 1);
+    }
+  });
+
+  let cat = isTriple ? 'T' : (isSmall ? 'S' : 'B');
+  historyList.unshift({ sum, cat });
+  if (historyList.length > 8) historyList.pop();
+  renderHistory();
+
+  if (totalWon > 0) {
+    balance += totalWon;
+    saveBalance();
+    playSound('win');
+    showModal("🎉 SIC BO WIN!", `Dice: ${v1}-${v2}-${v3} (Sum: ${sum})\nYou Won ₹${totalWon.toLocaleString()}!`, "🏆", true);
+  } else {
+    playSound('lose');
+    showModal("💥 ROUND LOST", `Dice: ${v1}-${v2}-${v3} (Sum: ${sum})`, "💔", false);
+  }
+
+  placedBets = {};
+  document.querySelectorAll('.chip-badge').forEach(b => b.style.display = "none");
+
+  isRolling = false;
+  document.getElementById('rollBtn').style.opacity = "1";
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyStrip');
+  container.innerHTML = historyList.map(item => {
+    let cls = item.cat === 'S' ? "hist-small" : (item.cat === 'B' ? "hist-big" : "hist-triple");
+    return `<div class="hist-pill ${cls}">${item.sum}${item.cat}</div>`;
+  }).join('');
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = msg;
+  document.getElementById('modalIcon').innerText = icon;
+  document.getElementById('modalBox').style.borderColor = isWin ? "var(--neon-gold)" : "var(--neon-red)";
+  document.getElementById('resultModal').style.display = "
