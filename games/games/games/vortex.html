@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Vortex Official Game - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-purple: #a855f7;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-gold: #f59e0b;
+  --neon-red: #ef4444;
+  --bg-dark: #070913;
+  --card-bg: #0d1120;
+  --border-color: #1e293b;
+}
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+.gameContainer { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; position: relative; padding-bottom: 20px; }
+
+/* TOP HEADER BAR */
+.header-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #04060d; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 11px; text-decoration: none; }
+.balance-pill { background: linear-gradient(135deg, #1e1b4b, #0f172a); border: 1px solid var(--neon-purple); border-radius: 20px; padding: 4px 14px; font-weight: 800; font-size: 13px; color: var(--neon-blue); display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(168, 85, 247, 0.3); }
+
+/* VORTEX LOGO */
+.vortex-logo-box { text-align: center; padding: 12px 0 4px 0; }
+.vortex-logo-title { font-size: 26px; font-weight: 900; background: linear-gradient(135deg, #c084fc, #9333ea, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); margin: 0; }
+.vortex-sub { font-size: 9px; color: #94a3b8; letter-spacing: 3px; font-weight: 700; text-transform: uppercase; }
+
+/* CANVAS WHEEL AREA */
+.wheel-container { position: relative; width: 320px; height: 320px; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
+#vortexCanvas { width: 320px; height: 320px; display: block; filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.4)); }
+.top-pointer { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 18px solid var(--neon-purple); filter: drop-shadow(0 0 8px var(--neon-purple)); z-index: 10; }
+
+/* BET & ACTION CONTROLS */
+.controls-card { background: #04060d; margin: 12px; border: 1px solid var(--border-color); border-radius: 18px; padding: 14px; text-align: center; }
+
+.bet-selector { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 14px; }
+.circle-btn { width: 36px; height: 36px; border-radius: 50%; background: #1e293b; border: 1px solid #334155; color: #fff; font-size: 18px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+.circle-btn:active { transform: scale(0.9); }
+.bet-val-display { background: #0d1120; border: 1px solid var(--border-color); padding: 6px 16px; border-radius: 10px; font-weight: 800; font-size: 15px; color: var(--neon-gold); min-width: 90px; }
+
+/* MAIN SPIN BUTTON */
+.spin-btn-container { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; }
+.cashout-btn { flex: 1; padding: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; color: #94a3b8; font-weight: 800; font-size: 11px; cursor: not-allowed; }
+.cashout-btn.active { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border-color: var(--neon-green); cursor: pointer; box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); }
+
+.spin-main-btn { width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle, #c084fc 0%, #7e22ce 70%, #581c87 100%); border: 3px solid #e9d5ff; color: #fff; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(168, 85, 247, 0.7); transition: transform 0.1s; }
+.spin-main-btn:active { transform: scale(0.92); }
+.spin-main-btn.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+
+/* POPUP MODAL */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+.modal-box { background: var(--card-bg); border: 2px solid var(--neon-purple); border-radius: 20px; padding: 22px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+</style>
+</head>
+
+<body>
+<div class="gameContainer">
+
+  <!-- MODAL POPUP -->
+  <div id="resultModal" class="modal-overlay">
+    <div class="modal-box" id="modalBox">
+      <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">🎡</div>
+      <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 4px 0;">VORTEX RESULT</h3>
+      <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 16px 0;">Details</p>
+      <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-purple); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-bar">
+    <a href="../game.html" class="back-btn">⬅️ Arena Hub</a>
+    <div class="balance-pill">
+      <span>💰</span>
+      <span id="balanceVal">₹10,000</span>
+    </div>
+  </header>
+
+  <!-- LOGO -->
+  <div class="vortex-logo-box">
+    <h1 class="vortex-logo-title">VORTEX</h1>
+    <div class="vortex-sub">OFFICIAL GAME</div>
+  </div>
+
+  <!-- CANVAS 3-RING WHEEL -->
+  <div class="wheel-container">
+    <div class="top-pointer"></div>
+    <canvas id="vortexCanvas" width="320" height="320"></canvas>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-card">
+    <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">BET AMOUNT</div>
+    <div class="bet-selector">
+      <button class="circle-btn" onclick="changeBet(-50)">-</button>
+      <div class="bet-val-display" id="betDisplay">₹100</div>
+      <button class="circle-btn" onclick="changeBet(50)">+</button>
+    </div>
+
+    <div class="spin-btn-container">
+      <button class="cashout-btn" id="cashoutBtn" onclick="cashoutWin()">CASH OUT<br><span id="cashoutAmt">₹0</span></button>
+      <button class="spin-main-btn" id="spinBtn" onclick="startSpin()">
+        <span style="font-size:20px;">🌀</span>
+        <span>SPIN</span>
+      </button>
+      <button class="circle-btn" onclick="resetCoins()" title="Reset Coins">🔄</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// WEB AUDIO API SOUND GENERATOR
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+
+    if (type === 'spinTick') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(400, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.03);
+      osc.start(now); osc.stop(now + 0.03);
+    } else if (type === 'levelup') {
+      [400, 600, 900].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.15, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.2);
+      });
+    } else if (type === 'win') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.3);
+      });
+    } else if (type === 'lose') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(250, now);
+      osc.frequency.linearRampToValueAtTime(100, now + 0.35);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    }
+  } catch(e) {}
+}
+
+// GAME STATE
+let balance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let betAmount = 100;
+let isSpinning = false;
+let currentRingLevel = 1; // 1: Outer, 2: Middle, 3: Inner Core
+let currentAccumulatedWin = 0;
+
+// RING SEGMENTS DATA
+const outerRingSegments = [
+  { label: "2.5X", multi: 2.5, type: "multi" },
+  { label: "3.9X", multi: 3.9, type: "multi" },
+  { label: "🔥 BONUS", multi: 0, type: "bonus" },
+  { label: "12.5X", multi: 12.5, type: "multi" },
+  { label: "28X", multi: 28, type: "multi" },
+  { label: "52X", multi: 52, type: "multi" },
+  { label: "85X", multi: 85, type: "multi" },
+  { label: "133X", multi: 133, type: "multi" },
+  { label: "200X", multi: 200, type: "multi" },
+  { label: "0X", multi: 0, type: "miss" }
+];
+
+const middleRingSegments = [
+  { label: "+7X", multi: 7, type: "multi" },
+  { label: "+20.5X", multi: 20.5, type: "multi" },
+  { label: "🟢 BONUS", multi: 0, type: "bonus" },
+  { label: "44X", multi: 44, type: "multi" },
+  { label: "27.5X", multi: 27.5, type: "multi" },
+  { label: "16X", multi: 16, type: "multi" },
+  { label: "4.85X", multi: 4.85, type: "multi" }
+];
+
+// CANVAS & ANIMATION ANGLES
+const canvas = document.getElementById('vortexCanvas');
+const ctx = canvas.getContext('2d');
+const cx = 160, cy = 160;
+
+let angleOuter = 0;
+let angleMiddle = 0;
+
+function saveBalance() {
+  localStorage.setItem('rwin_balance', balance.toString());
+  document.getElementById('balanceVal').innerText = "₹" + balance.toLocaleString();
+}
+
+function resetCoins() {
+  playSound('spinTick');
+  balance = 10000;
+  saveBalance();
+  showModal("🔄 WALLET RESET", "Practice Balance restored to ₹10,000!", "💰", true);
+}
+
+function changeBet(diff) {
+  if (isSpinning) return;
+  playSound('spinTick');
+  betAmount = Math.max(50, Math.min(5000, betAmount + diff));
+  document.getElementById('betDisplay').innerText = "₹" + betAmount;
+}
+
+// DRAW VORTEX RINGS
+function drawWheel() {
+  ctx.clearRect(0, 0, 320, 320);
+
+  // 1. OUTER RING (Radius 110 to 155)
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angleOuter);
+  let segAngleOuter = (Math.PI * 2) / outerRingSegments.length;
+
+  outerRingSegments.forEach((seg, i) => {
+    let a1 = i * segAngleOuter;
+    let a2 = a1 + segAngleOuter;
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 155, a1, a2);
+    ctx.arc(0, 0, 115, a2, a1, true);
+    ctx.closePath();
+
+    ctx.fillStyle = (i % 2 === 0) ? "#121829" : "#0a0d17";
+    ctx.fill();
+    ctx.strokeStyle = "#2e1065";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Text / Icon
+    ctx.save();
+    ctx.rotate(a1 + segAngleOuter / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = seg.type === "bonus" ? "#f59e0b" : "#e9d5ff";
+    ctx.font = "bold 11px Poppins, sans-serif";
+    ctx.fillText(seg.label, 148, 4);
+    ctx.restore();
+  });
+  ctx.restore();
+
+  // 2. MIDDLE RING (Radius 70 to 110)
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angleMiddle);
+  let segAngleMid = (Math.PI * 2) / middleRingSegments.length;
+
+  middleRingSegments.forEach((seg, i) => {
+    let a1 = i * segAngleMid;
+    let a2 = a1 + segAngleMid;
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 110, a1, a2);
+    ctx.arc(0, 0, 72, a2, a1, true);
+    ctx.closePath();
+
+    ctx.fillStyle = (i % 2 === 0) ? "#1a103c" : "#0f0826";
+    ctx.fill();
+    ctx.strokeStyle = "#581c87";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.rotate(a1 + segAngleMid / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = seg.type === "bonus" ? "#10b981" : "#c084fc";
+    ctx.font = "bold 10px Poppins, sans-serif";
+    ctx.fillText(seg.label, 104, 3);
+    ctx.restore();
+  });
+  ctx.restore();
+
+  // 3. INNER CORE ORB (Radius 0 to 68)
+  ctx.save();
+  ctx.translate(cx, cy);
+  let grad = ctx.createRadialGradient(0, 0, 10, 0, 0, 68);
+  grad.addColorStop(0, "#38bdf8");
+  grad.addColorStop(0.5, "#0284c7");
+  grad.addColorStop(1, "#0369a1");
+  ctx.beginPath();
+  ctx.arc(0, 0, 68, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = "#38bdf8";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Core Water Wave Graphic
+  ctx.font = "32px sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("🌊", 0, 0);
+  ctx.restore();
+}
+
+// SPIN ENGINE LOGIC
+function startSpin() {
+  if (isSpinning) return;
+
+  if (balance < betAmount) {
+    showModal("⚠️ LOW BALANCE", "Reset coins to play Vortex!", "💰", false);
+    return;
+  }
+
+  balance -= betAmount;
+  saveBalance();
+  isSpinning = true;
+
+  document.getElementById('spinBtn').classList.add('disabled');
+
+  let targetRing = (currentRingLevel === 1) ? outerRingSegments : middleRingSegments;
+  let targetIndex = Math.floor(Math.random() * targetRing.length);
+
+  let totalRotations = Math.PI * 2 * 5; // 5 full spins
+  let segAngle = (Math.PI * 2) / targetRing.length;
+  // Point to top (270 degrees or -PI/2)
+  let targetAngle = totalRotations + (Math.PI * 1.5) - (targetIndex * segAngle + segAngle / 2);
+
+  let startAngle = (currentRingLevel === 1) ? angleOuter : angleMiddle;
+  let duration = 3200; // 3.2 seconds
+  let startTime = Date.now();
+
+  let tickInterval = setInterval(() => playSound('spinTick'), 120);
+
+  function animate() {
+    let now = Date.now();
+    let elapsed = now - startTime;
+    let p = Math.min(1, elapsed / duration);
+    // Ease-out cubic curve
+    let ease = 1 - Math.pow(1 - p, 3);
+
+    let currentA = startAngle + (targetAngle - startAngle) * ease;
+    if (currentRingLevel === 1) angleOuter = currentA;
+    else angleMiddle = currentA;
+
+    drawWheel();
+
+    if (p < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      clearInterval(tickInterval);
+      evaluateResult(targetRing[targetIndex]);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function evaluateResult(seg) {
+  isSpinning = false;
+  document.getElementById('spinBtn').classList.remove('disabled');
+
+  if (seg.type === "multi") {
+    let won = Math.floor(betAmount * seg.multi);
+    currentAccumulatedWin += won;
+    balance += currentAccumulatedWin;
+    saveBalance();
+
+    playSound('win');
+    showModal("🎉 VORTEX WIN!", `Landed on ${seg.label}!\nWon ₹${currentAccumulatedWin.toLocaleString()}!`, "🎡", true);
+    currentRingLevel = 1;
+    currentAccumulatedWin = 0;
+    updateCashoutUI();
+
+  } else if (seg.type === "bonus") {
+    playSound('levelup');
+    if (currentRingLevel === 1) {
+      currentRingLevel = 2;
+      showModal("🔥 LEVEL UP!", "Fire Bonus Hit! Unlocked Middle Ring with higher multipliers!", "🔥", true);
+    } else {
+      let won = betAmount * 100; // Inner Core Jackpot
+      balance += won;
+      saveBalance();
+      showModal("🌊 WATER CORE JACKPOT!", `Landed on Center Core!\nJACKPOT ₹${won.toLocaleString()}!`, "💎", true);
+      currentRingLevel = 1;
+    }
+  } else {
+    playSound('lose');
+    showModal("💥 NO MULTIPLIER", "Landed on 0X! Try again.", "💔", false);
+    currentRingLevel = 1;
+    currentAccumulatedWin = 0;
+    updateCashoutUI();
+  }
+}
+
+function updateCashoutUI() {
+  const btn = document.getElementById('cashoutBtn');
+  const amtEl = document.getElementById('cashoutAmt');
+  if (currentAccumulatedWin > 0) {
+    btn.classList.add('active');
+    amtEl.innerText = "₹" + currentAccumulatedWin;
+  } else {
+    btn.classList.remove('active');
+    amtEl.innerText = "₹0";
+  }
+}
+
+function cashoutWin() {
+  if (currentAccumulatedWin <= 0) return;
+  playSound('win');
+  showModal("💰 CASHED OUT", `Cashed out ₹${currentAccumulatedWin.toLocaleString()}!`, "🎉", true);
+  currentAccumulatedWin = 0;
+  updateCashoutUI();
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = msg;
+  document.getElementById('modalIcon').innerText = icon;
+  document.getElementById('modalBox').style.borderColor = isWin ? "var(--neon-purple)" : "var(--neon-red)";
+  document.getElementById('resultModal').style.display = "flex";
+}
+
+function closeModal() {
+  playSound('spinTick');
+  document.getElementById('resultModal').style.display = "none";
+}
+
+// INITIAL RENDER
+saveBalance();
+drawWheel();
+</script>
+</body>
+        </html>
+        
