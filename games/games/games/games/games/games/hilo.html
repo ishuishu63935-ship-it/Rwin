@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hi-Lo Poker Streak - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-purple: #a855f7;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+  --felt-purple: #1e1b4b;
+}
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-dark);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.gameContainer {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+/* HEADER BAR */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #020307;
+  border-bottom: 1px solid var(--border-color);
+}
+.back-btn {
+  padding: 6px 12px;
+  background: var(--border-color);
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  text-decoration: none;
+}
+.balance-pill {
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 1px solid var(--neon-gold);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--neon-gold);
+}
+
+/* CARD DISPLAY FELT ARENA */
+.hilo-felt-card {
+  background: radial-gradient(circle, #2e1065 0%, #0f172a 75%, #050811 100%);
+  margin: 12px;
+  border: 3px solid var(--neon-purple);
+  border-radius: 24px;
+  padding: 20px 10px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.3), inset 0 0 25px rgba(0,0,0,0.8);
+}
+
+.card-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 10px 0;
+}
+
+.playing-card {
+  width: 78px;
+  height: 114px;
+  background: #fff;
+  border-radius: 10px;
+  border: 2px solid #cbd5e1;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  transition: transform 0.2s;
+}
+.playing-card.red-suit { color: #dc2626; }
+.playing-card.card-back {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+/* STREAK & MULTIPLIER STATS */
+.streak-bar {
+  display: flex;
+  justify-content: space-between;
+  background: #02040a;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 11px;
+  margin-top: 10px;
+}
+
+/* CONTROLS CARD */
+.controls-card {
+  background: #04060d;
+  margin: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 14px;
+  text-align: center;
+}
+
+.guess-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.btn-guess {
+  padding: 14px 6px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  font-weight: 900;
+  font-size: 13px;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+.btn-guess:active { transform: scale(0.95); }
+.btn-higher { background: linear-gradient(135deg, #10b981, #047857); border-color: #6ee7b7; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+.btn-lower { background: linear-gradient(135deg, #ef4444, #991b1b); border-color: #fca5a5; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.btn-action {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+  color: #fff;
+  background: #1e293b;
+}
+.btn-cashout {
+  background: linear-gradient(135deg, var(--neon-gold), #d97706);
+  color: #000;
+  font-weight: 900;
+  border: none;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.bet-adjuster {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+.adjust-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.bet-val {
+  background: #0f172a;
+  border: 1px solid var(--border-color);
+  padding: 4px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--neon-gold);
+  min-width: 80px;
+}
+
+/* MODAL POPUP */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.modal-box {
+  background: var(--card-bg);
+  border: 2px solid var(--neon-purple);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  width: 85%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+</style>
+</head>
+
+<body>
+<div class="gameContainer">
+
+  <!-- RESULT MODAL -->
+  <div id="resultModal" class="modal-overlay">
+    <div class="modal-box" id="modalBox">
+      <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">🃏</div>
+      <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 4px 0;">HI-LO RESULT</h3>
+      <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 16px 0;">Details</p>
+      <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-purple); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-bar">
+    <a href="../game.html" class="back-btn">⬅️ Arena Hub</a>
+    <div class="balance-pill">
+      <span>💰</span>
+      <span id="balanceVal">₹10,000</span>
+    </div>
+  </header>
+
+  <div style="text-align:center; padding:8px 0 2px 0;">
+    <h2 style="margin:0; font-size:20px; color:var(--neon-purple);">🃏 HI-LO POKER STREAK</h2>
+    <span style="font-size:10px; color:#94a3b8;">PREDICT HIGHER OR LOWER • BUILD MULTIPLIER STREAK</span>
+  </div>
+
+  <!-- CARD STAGE -->
+  <div class="hilo-felt-card">
+    <div style="font-size:10px; font-weight:800; color:var(--neon-gold); margin-bottom:6px;">CURRENT CARD</div>
+    
+    <div class="card-stage">
+      <div id="currentCardBox">
+        <div class="playing-card card-back">🃏</div>
+      </div>
+    </div>
+
+    <div class="streak-bar">
+      <span>Streak: <b style="color:var(--neon-green);" id="streakTxt">0 Cards</b></span>
+      <span>Total Multiplier: <b style="color:var(--neon-gold);" id="totalMultiTxt">1.00X</b></span>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-card">
+    <div class="guess-grid">
+      <button class="btn-guess btn-higher" id="btnHigher" onclick="makeGuess('HIGHER')">
+        <span>HIGHER / SAME ⬆️</span>
+        <span style="font-size:10px; opacity:0.85; margin-top:2px;" id="higherMultiTxt">1.50X</span>
+      </button>
+
+      <button class="btn-guess btn-lower" id="btnLower" onclick="makeGuess('LOWER')">
+        <span>LOWER / SAME ⬇️</span>
+        <span style="font-size:10px; opacity:0.85; margin-top:2px;" id="lowerMultiTxt">1.50X</span>
+      </button>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-action" onclick="skipCard()">SKIP CARD 🔄</button>
+      <button class="btn-action btn-cashout" id="cashoutBtn" onclick="cashoutWin()">CASHOUT ₹<span id="cashoutAmtTxt">0</span></button>
+    </div>
+
+    <div style="font-size:10px; color:#94a3b8; margin-bottom:4px;">INITIAL BET AMOUNT</div>
+    <div class="bet-adjuster">
+      <button class="adjust-btn" onclick="changeBet(-50)">-</button>
+      <div class="bet-val" id="betDisplay">₹100</div>
+      <button class="adjust-btn" onclick="changeBet(50)">+</button>
+    </div>
+
+    <div style="margin-top:10px;">
+      <button onclick="resetWallet()" style="padding:4px 12px; background:var(--border-color); color:var(--neon-blue); border:1px solid var(--neon-blue); border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">🔄 Reset Wallet</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// WEB AUDIO API SOUND GENERATOR
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+
+    if (type === 'card') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(500, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      osc.start(now); osc.stop(now + 0.05);
+    } else if (type === 'win') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.3);
+      });
+    } else if (type === 'lose') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.35);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    }
+  } catch(e) {}
+}
+
+// GAME STATE
+let balance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let betAmount = 100;
+let currentCard = null;
+let accumulatedMulti = 1.00;
+let streakCount = 0;
+let isStreakActive = false;
+
+const suits = ['♠️', '♥️', '♦️', '♣️'];
+const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const rankValues = { 'A':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, '10':10, 'J':11, 'Q':12, 'K':13 };
+
+function saveBalance() {
+  localStorage.setItem('rwin_balance', balance.toString());
+  document.getElementById('balanceVal').innerText = "₹" + balance.toLocaleString();
+}
+
+function resetWallet() {
+  playSound('card');
+  balance = 10000;
+  saveBalance();
+  showModal("🔄 WALLET RESET", "Practice Balance restored to ₹10,000!", "💰", true);
+}
+
+function changeBet(diff) {
+  if (isStreakActive) return;
+  playSound('card');
+  betAmount = Math.max(50, Math.min(5000, betAmount + diff));
+  document.getElementById('betDisplay').innerText = "₹" + betAmount;
+}
+
+function getRandomCard() {
+  const suit = suits[Math.floor(Math.random() * suits.length)];
+  const rank = ranks[Math.floor(Math.random() * ranks.length)];
+  return { rank, suit, val: rankValues[rank] };
+}
+
+function renderCardHTML(card) {
+  let isRed = (card.suit === '♥️' || card.suit === '♦️');
+  return `<div class="playing-card ${isRed ? 'red-suit' : ''}">
+    <div>${card.rank}</div>
+    <div style="font-size:24px; text-align:center;">${card.suit}</div>
+    <div style="text-align:right;">${card.rank}</div>
+  </div>`;
+}
+
+function initCard() {
+  currentCard = getRandomCard();
+  document.getElementById('currentCardBox').innerHTML = renderCardHTML(currentCard);
+  updateProbabilities();
+}
+
+function updateProbabilities() {
+  let v = currentCard.val;
+  let higherCount = 13 - v + 1; // including same
+  let lowerCount = v;          // including same
+
+  let higherProb = higherCount / 13;
+  let lowerProb = lowerCount / 13;
+
+  let higherMulti = parseFloat((0.98 / higherProb).toFixed(2));
+  let lowerMulti = parseFloat((0.98 / lowerProb).toFixed(2));
+
+  document.getElementById('higherMultiTxt').innerText = higherMulti.toFixed(2) + "X";
+  document.getElementById('lowerMultiTxt').innerText = lowerMulti.toFixed(2) + "X";
+
+  let cashoutVal = Math.floor(betAmount * accumulatedMulti);
+  document.getElementById('cashoutAmtTxt').innerText = isStreakActive ? cashoutVal.toLocaleString() : "0";
+}
+
+function skipCard() {
+  playSound('card');
+  initCard();
+}
+
+function makeGuess(guess) {
+  if (!isStreakActive) {
+    if (balance < betAmount) {
+      showModal("⚠️ LOW BALANCE", "Not enough coins! Reset balance to play.", "💰", false);
+      return;
+    }
+    balance -= betAmount;
+    saveBalance();
+    isStreakActive = true;
+  }
+
+  const nextCard = getRandomCard();
+  playSound('card');
+
+  let v = currentCard.val;
+  let higherCount = 13 - v + 1;
+  let lowerCount = v;
+
+  let prob = (guess === 'HIGHER') ? (higherCount / 13) : (lowerCount / 13);
+  let stepMulti = parseFloat((0.98 / prob).toFixed(2));
+
+  let isWin = false;
+  if (guess === 'HIGHER' && nextCard.val >= currentCard.val) isWin = true;
+  if (guess === 'LOWER' && nextCard.val <= currentCard.val) isWin = true;
+
+  if (isWin) {
+    streakCount++;
+    accumulatedMulti = parseFloat((accumulatedMulti * stepMulti).toFixed(2));
+    currentCard = nextCard;
+    document.getElementById('currentCardBox').innerHTML = renderCardHTML(currentCard);
+
+    document.getElementById('streakTxt').innerText = streakCount + " Cards";
+    document.getElementById('totalMultiTxt').innerText = accumulatedMulti.toFixed(2) + "X";
+    updateProbabilities();
+    playSound('card');
+
+  } else {
+    playSound('lose');
+    showModal("💥 WRONG GUESS!", `Next Card was ${nextCard.rank}${nextCard.suit}.\nStreak lost!`, "💔", false);
+    resetStreak();
+  }
+}
+
+function cashoutWin() {
+  if (!isStreakActive || streakCount === 0) return;
+
+  let winAmount = Math.floor(betAmount * accumulatedMulti);
+  balance += winAmount;
+  saveBalance();
+
+  playSound('win');
+  showModal("🎉 CASHOUT WIN!", `Successfully Cashed Out @ ${accumulatedMulti.toFixed(2)}X\nWon ₹${winAmount.toLocaleString()}!`, "🏆", true);
+  resetStreak();
+}
+
+function resetStreak() {
+  isStreakActive = false;
+  streakCount = 0;
+  accumulatedMulti = 1.00;
+  document.getElementById('streakTxt').innerText = "0 Cards";
+  document.getElementById('totalMultiTxt').innerText = "1.00X";
+  initCard();
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = msg;
+  document.getElementById('modalIcon').innerText = icon;
+  document.getElementById('modalBox').style.borderColor = isWin ? "var(--neon-purple)" : "var(--neon-red)";
+  document.getElementById('resultModal').style.display = "flex";
+}
+
+function closeModal() {
+  playSound('card');
+  document.getElementById('resultModal').style.display = "none";
+}
+
+// INITIALIZE
+saveBalance();
+initCard();
+</script>
+</body>
+                                                                                               </html>
+        
