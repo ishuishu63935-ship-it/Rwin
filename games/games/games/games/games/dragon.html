@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dragon vs Tiger - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-red: #ef4444;
+  --neon-blue: #00e5ff;
+  --neon-gold: #f59e0b;
+  --neon-green: #10b981;
+  --bg-dark: #050811;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; }
+.gameContainer { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; position: relative; padding-bottom: 20px; }
+
+/* HEADER */
+.header-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #070a14; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 11px; text-decoration: none; }
+.balance-pill { background: linear-gradient(135deg, #1e1b4b, #0f172a); border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 14px; font-weight: 800; font-size: 13px; color: var(--neon-gold); }
+
+/* HISTORY STRIP */
+.history-strip { display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; background: #04060d; border-bottom: 1px solid var(--border-color); }
+.hist-pill { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.5); }
+.hist-dragon { background: linear-gradient(135deg, #ef4444, #991b1b); border: 1px solid #fca5a5; }
+.hist-tiger { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 1px solid #93c5fd; }
+.hist-tie { background: linear-gradient(135deg, #10b981, #047857); border: 1px solid #6ee7b7; }
+
+/* DUEL TABLE AREA */
+.duel-table { background: radial-gradient(circle, #0f172a 0%, #050811 100%); margin: 12px; border: 2px solid var(--border-color); border-radius: 20px; padding: 16px 10px; text-align: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+
+.card-duel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 12px 0; }
+.side-box { background: rgba(15, 23, 42, 0.8); border: 2px solid var(--border-color); border-radius: 16px; padding: 12px 6px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+.side-box.dragon-side { border-color: rgba(239, 68, 68, 0.4); }
+.side-box.tiger-side { border-color: rgba(59, 130, 246, 0.4); }
+.side-title { font-size: 13px; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; }
+
+.playing-card { width: 68px; height: 98px; background: #fff; border-radius: 10px; border: 2px solid #cbd5e1; color: #000; display: flex; flex-direction: column; justify-content: space-between; padding: 6px; font-weight: 800; font-size: 15px; margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
+.playing-card.red-suit { color: #dc2626; }
+.playing-card.card-back { background: linear-gradient(135deg, #1e293b, #0f172a); border-color: var(--neon-gold); color: var(--neon-gold); align-items: center; justify-content: center; font-size: 28px; }
+
+/* BETTING AREA */
+.bet-options-grid { display: grid; grid-template-columns: 1fr 0.8fr 1fr; gap: 8px; margin: 12px; }
+.bet-card { border-radius: 14px; padding: 12px 6px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s, box-shadow 0.2s; color: #fff; }
+.bet-card:active { transform: scale(0.94); }
+.bet-card.active-selection { border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.6); }
+
+.bg-dragon { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.bg-tie { background: linear-gradient(135deg, #10b981, #047857); }
+.bg-tiger { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+
+/* CHIP SELECTOR */
+.chip-container { display: flex; justify-content: center; gap: 8px; margin: 12px; }
+.chip-btn { padding: 6px 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
+.chip-btn.active { background: var(--neon-gold); color: #000; border-color: var(--neon-gold); box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+
+/* MAIN PLAY BUTTON */
+.play-btn { width: calc(100% - 24px); margin: 0 12px 10px 12px; padding: 14px; background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; font-weight: 900; font-size: 15px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); text-transform: uppercase; letter-spacing: 1px; }
+.play-btn:active { transform: scale(0.98); }
+
+/* MODAL POPUP */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+.modal-box { background: var(--card-bg); border: 2px solid var(--neon-gold); border-radius: 20px; padding: 22px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+</style>
+</head>
+
+<body>
+<div class="gameContainer">
+
+  <!-- MODAL POPUP -->
+  <div id="resultModal" class="modal-overlay">
+    <div class="modal-box" id="modalBox">
+      <div id="modalIcon" style="font-size:48px; margin-bottom:8px;">🐉</div>
+      <h3 id="modalTitle" style="color:#fff; font-size:18px; margin:0 0 4px 0;">DUEL RESULT</h3>
+      <p id="modalMsg" style="color:#94a3b8; font-size:12px; margin:0 0 16px 0;">Details</p>
+      <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--neon-gold); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header-bar">
+    <a href="../game.html" class="back-btn">⬅️ Arena Hub</a>
+    <div class="balance-pill">
+      <span>💰</span>
+      <span id="balanceVal">₹10,000</span>
+    </div>
+  </header>
+
+  <!-- HISTORY STRIP -->
+  <div class="history-strip" id="historyStrip">
+    <div class="hist-pill hist-dragon">D</div>
+    <div class="hist-pill hist-tiger">T</div>
+    <div class="hist-pill hist-dragon">D</div>
+    <div class="hist-pill hist-tie">E</div>
+    <div class="hist-pill hist-tiger">T</div>
+  </div>
+
+  <div style="text-align:center; padding:10px 0 2px 0;">
+    <h2 style="margin:0; font-size:20px; color:var(--neon-gold);">🐉 DRAGON VS TIGER 🐅</h2>
+    <span style="font-size:10px; color:#94a3b8;">HIGHEST CARD WINS • KING IS HIGH, ACE IS LOW</span>
+  </div>
+
+  <!-- DUEL TABLE -->
+  <div class="duel-table">
+    <div class="card-duel-grid">
+      <!-- DRAGON SIDE -->
+      <div class="side-box dragon-side">
+        <div class="side-title" style="color:var(--neon-red);">🐉 DRAGON</div>
+        <div id="dragonCardBox">
+          <div class="playing-card card-back">🐉</div>
+        </div>
+      </div>
+
+      <!-- TIGER SIDE -->
+      <div class="side-box tiger-side">
+        <div class="side-title" style="color:var(--neon-blue);">🐅 TIGER</div>
+        <div id="tigerCardBox">
+          <div class="playing-card card-back">🐅</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BET SELECTION CARDS -->
+  <div class="bet-options-grid">
+    <div class="bet-card bg-dragon active-selection" id="bet-DRAGON" onclick="selectBetSide('DRAGON')">
+      <div style="font-size:20px;">🐉</div>
+      <div style="font-size:12px; font-weight:900;">DRAGON</div>
+      <div style="font-size:10px; opacity:0.8;">1:1 (2X)</div>
+    </div>
+
+    <div class="bet-card bg-tie" id="bet-TIE" onclick="selectBetSide('TIE')">
+      <div style="font-size:20px;">🤝</div>
+      <div style="font-size:12px; font-weight:900;">TIE</div>
+      <div style="font-size:10px; opacity:0.8;">8:1 (9X)</div>
+    </div>
+
+    <div class="bet-card bg-tiger" id="bet-TIGER" onclick="selectBetSide('TIGER')">
+      <div style="font-size:20px;">🐅</div>
+      <div style="font-size:12px; font-weight:900;">TIGER</div>
+      <div style="font-size:10px; opacity:0.8;">1:1 (2X)</div>
+    </div>
+  </div>
+
+  <!-- CHIP AMOUNT SELECTOR -->
+  <div class="chip-container">
+    <span onclick="setChip(100)" class="chip-btn active" id="chip-100">₹100</span>
+    <span onclick="setChip(500)" class="chip-btn" id="chip-500">₹500</span>
+    <span onclick="setChip(1000)" class="chip-btn" id="chip-1000">₹1,000</span>
+    <span onclick="setChip(2000)" class="chip-btn" id="chip-2000">₹2,000</span>
+  </div>
+
+  <!-- ACTION BUTTON -->
+  <button class="play-btn" onclick="startDuel()">DEAL & REVEAL (BET ₹<span id="betAmtTxt">100</span>)</button>
+
+  <div style="text-align:center;">
+    <button onclick="resetCoins()" style="padding:6px 14px; background:var(--border-color); color:var(--neon-blue); border:1px solid var(--neon-blue); border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">🔄 Reset Wallet Balance</button>
+  </div>
+
+</div>
+
+<script>
+// WEB AUDIO API SOUND GENERATOR
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+
+    if (type === 'click') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(550, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'card') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(400, now);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
+      osc.start(now); osc.stop(now + 0.06);
+    } else if (type === 'win') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.3);
+      });
+    } else if (type === 'lose') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(240, now);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.35);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    }
+  } catch(e) {}
+}
+
+// GAME STATE
+let balance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let selectedSide = 'DRAGON';
+let selectedChip = 100;
+let historyList = ['D', 'T', 'D', 'E', 'T'];
+
+const suits = ['♠️', '♥️', '♦️', '♣️'];
+const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const rankValues = { 'A':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, '10':10, 'J':11, 'Q':12, 'K':13 };
+
+function saveBalance() {
+  localStorage.setItem('rwin_balance', balance.toString());
+  document.getElementById('balanceVal').innerText = "₹" + balance.toLocaleString();
+}
+
+function resetCoins() {
+  playSound('click');
+  balance = 10000;
+  saveBalance();
+  showModal("🔄 WALLET RESET", "Practice Balance restored to ₹10,000!", "💰", true);
+}
+
+function selectBetSide(side) {
+  playSound('click');
+  selectedSide = side;
+  document.querySelectorAll('.bet-card').forEach(el => el.classList.remove('active-selection'));
+  document.getElementById('bet-' + side).classList.add('active-selection');
+}
+
+function setChip(amt) {
+  playSound('click');
+  selectedChip = amt;
+  document.querySelectorAll('.chip-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('chip-' + amt).classList.add('active');
+  document.getElementById('betAmtTxt').innerText = amt;
+}
+
+function getRandomCard() {
+  const suit = suits[Math.floor(Math.random() * suits.length)];
+  const rank = ranks[Math.floor(Math.random() * ranks.length)];
+  return { rank, suit, val: rankValues[rank] };
+}
+
+function renderCardHTML(card) {
+  let isRed = (card.suit === '♥️' || card.suit === '♦️');
+  return `<div class="playing-card ${isRed ? 'red-suit' : ''}">
+    <div>${card.rank}</div>
+    <div style="font-size:22px; text-align:center;">${card.suit}</div>
+    <div style="text-align:right;">${card.rank}</div>
+  </div>`;
+}
+
+function startDuel() {
+  if (balance < selectedChip) {
+    showModal("⚠️ LOW BALANCE", "Not enough coins! Reset balance to play.", "💰", false);
+    return;
+  }
+
+  balance -= selectedChip;
+  saveBalance();
+
+  // Reset Cards Back
+  document.getElementById('dragonCardBox').innerHTML = `<div class="playing-card card-back">🐉</div>`;
+  document.getElementById('tigerCardBox').innerHTML = `<div class="playing-card card-back">🐅</div>`;
+
+  playSound('card');
+
+  // Reveal Cards with delay animation
+  setTimeout(() => {
+    const dragonCard = getRandomCard();
+    const tigerCard = getRandomCard();
+
+    document.getElementById('dragonCardBox').innerHTML = renderCardHTML(dragonCard);
+    playSound('card');
+
+    setTimeout(() => {
+      document.getElementById('tigerCardBox').innerHTML = renderCardHTML(tigerCard);
+      playSound('card');
+
+      // Evaluate
+      evaluateDuel(dragonCard, tigerCard);
+    }, 400);
+  }, 300);
+}
+
+function evaluateDuel(dCard, tCard) {
+  let winner = 'TIE';
+  if (dCard.val > tCard.val) winner = 'DRAGON';
+  else if (tCard.val > dCard.val) winner = 'TIGER';
+
+  // Record history
+  let code = winner === 'DRAGON' ? 'D' : (winner === 'TIGER' ? 'T' : 'E');
+  historyList.unshift(code);
+  if (historyList.length > 8) historyList.pop();
+  renderHistory();
+
+  let wonAmount = 0;
+  if (selectedSide === winner) {
+    let multi = (winner === 'TIE') ? 9 : 2;
+    wonAmount = selectedChip * multi;
+    balance += wonAmount;
+    saveBalance();
+    playSound('win');
+    showModal("🎉 DUEL WIN!", `Dragon: ${dCard.rank}${dCard.suit} vs Tiger: ${tCard.rank}${tCard.suit}\nWinner: ${winner}!\nYou Won ₹${wonAmount.toLocaleString()}!`, "🏆", true);
+  } else {
+    playSound('lose');
+    showModal("💥 DUEL LOST", `Dragon: ${dCard.rank}${dCard.suit} vs Tiger: ${tCard.rank}${tCard.suit}\nWinner: ${winner}`, "💔", false);
+  }
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyStrip');
+  container.innerHTML = historyList.map(h => {
+    let cls = h === 'D' ? "hist-dragon" : (h === 'T' ? "hist-tiger" : "hist-tie");
+    return `<div class="hist-pill ${cls}">${h}</div>`;
+  }).join('');
+}
+
+function showModal(title, msg, icon, isWin) {
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = msg;
+  document.getElementById('modalIcon').innerText = icon;
+  document.getElementById('modalBox').style.borderColor = isWin ? "var(--neon-gold)" : "var(--neon-red)";
+  document.getElementById('resultModal').style.display = "flex";
+}
+
+function closeModal() {
+  playSound('click');
+  document.getElementById('resultModal').style.display = "none";
+}
+
+// INIT
+saveBalance();
+renderHistory();
+</script>
+</body>
+</html>
