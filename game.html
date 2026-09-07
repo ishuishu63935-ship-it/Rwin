@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VIP Arena Hub - 20 Casino & Arcade Games</title>
+<title>VIP Arena Hub - RWIN Space</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -69,9 +69,9 @@ body {
   background: linear-gradient(135deg, #1e1b4b, #0f172a);
   border: 1px solid var(--neon-gold);
   border-radius: 20px;
-  padding: 6px 16px;
+  padding: 6px 14px;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--neon-gold);
   display: flex;
   align-items: center;
@@ -79,28 +79,76 @@ body {
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
 }
 
-/* BANNER */
-.hero-banner {
-  background: radial-gradient(circle, #2e1065 0%, #0f172a 80%);
+/* MEMBERSHIP CARD */
+.vip-card-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #0f172a 100%);
   margin: 14px;
-  border-radius: 20px;
+  border-radius: 22px;
   padding: 18px;
-  text-align: center;
-  border: 1px solid var(--neon-purple);
-  box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
+  border: 2px solid var(--neon-gold);
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-title {
-  font-size: 22px;
+.vip-card-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+.badge-free { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--neon-red); color: var(--neon-red); }
+.badge-vip { background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; box-shadow: 0 0 10px var(--neon-gold); }
+
+.vip-title {
+  font-size: 20px;
   font-weight: 900;
   margin: 0 0 4px 0;
   color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.hero-subtitle {
+.vip-status-desc {
   font-size: 11px;
-  color: #94a3b8;
+  color: #cbd5e1;
   margin: 0 0 14px 0;
+  line-height: 1.4;
+}
+
+.vip-action-row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-vip-upgrade {
+  flex: 1;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--neon-gold), #d97706);
+  color: #000;
+  font-weight: 900;
+  font-size: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+  text-transform: uppercase;
+}
+
+.btn-reset-wallet {
+  padding: 10px 14px;
+  background: #0f172a;
+  border: 1px solid var(--neon-blue);
+  color: var(--neon-blue);
+  font-weight: 800;
+  font-size: 11px;
+  border-radius: 12px;
+  cursor: pointer;
 }
 
 /* SEARCH & CATEGORY FILTER */
@@ -168,16 +216,30 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 140px;
+  min-height: 148px;
+  overflow: hidden;
 }
 
 .game-card:active {
   transform: scale(0.96);
 }
 
-.game-card:hover {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+.game-card.locked-card {
+  opacity: 0.85;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.lock-overlay-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(239, 68, 68, 0.25);
+  border: 1px solid var(--neon-red);
+  color: var(--neon-red);
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 800;
 }
 
 .card-icon {
@@ -211,28 +273,115 @@ body {
   text-transform: uppercase;
 }
 
-/* RESET WALLET FOOTER */
-.reset-footer {
-  text-align: center;
-  margin-top: 24px;
-  padding: 0 14px;
+.btn-play.btn-locked {
+  background: linear-gradient(135deg, #334155, #1e293b);
+  color: #ef4444;
+  border: 1px solid #ef4444;
 }
 
-.btn-reset-main {
-  padding: 10px 20px;
-  background: #1e293b;
-  border: 1px solid var(--neon-blue);
-  color: var(--neon-blue);
+/* MODAL POPUP FOR VIP MEMBERSHIP */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+
+.modal-box {
+  background: var(--card-bg);
+  border: 2px solid var(--neon-gold);
+  border-radius: 22px;
+  padding: 22px;
+  text-align: center;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+}
+
+.plan-option-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.plan-item {
+  background: #070a14;
+  border: 1.5px solid var(--border-color);
   border-radius: 12px;
-  font-weight: 800;
-  font-size: 12px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.plan-item.selected {
+  border-color: var(--neon-gold);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.key-input-box {
+  width: 100%;
+  background: #02040a;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--neon-gold);
+  font-weight: 800;
+  text-align: center;
+  font-size: 12px;
+  margin-bottom: 12px;
+  outline: none;
+  text-transform: uppercase;
 }
 </style>
 </head>
 
 <body>
 <div class="hubContainer">
+
+  <!-- VIP PURCHASE / ACTIVATION MODAL -->
+  <div id="vipModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size:48px; margin-bottom:4px;">👑</div>
+      <h3 style="color:var(--neon-gold); font-size:18px; margin:0 0 4px 0;">UNLOCKED VIP MEMBERSHIP</h3>
+      <p style="color:#94a3b8; font-size:11px; margin:0 0 14px 0;">Unlock all 20 Premium Arena Games & Unlimited Practice Wallet Resets!</p>
+
+      <div class="plan-option-grid">
+        <div class="plan-item selected" onclick="selectPlan('GOLD', 199, this)">
+          <div style="text-align:left;">
+            <div style="font-size:12px; font-weight:800; color:#fff;">GOLD VIP PASS (30 Days)</div>
+            <div style="font-size:9px; color:#94a3b8;">Full 20 Games Access + Unlimited Resets</div>
+          </div>
+          <div style="font-size:14px; font-weight:900; color:var(--neon-gold);">₹199</div>
+        </div>
+
+        <div class="plan-item" onclick="selectPlan('DIAMOND', 499, this)">
+          <div style="text-align:left;">
+            <div style="font-size:12px; font-weight:800; color:#fff;">DIAMOND LIFETIME</div>
+            <div style="font-size:9px; color:#94a3b8;">Permanent VIP Access + Priority Support</div>
+          </div>
+          <div style="font-size:14px; font-weight:900; color:var(--neon-gold);">₹499</div>
+        </div>
+      </div>
+
+      <input type="text" class="key-input-box" id="vipKeyInput" placeholder="Enter VIP Key (e.g. RWINVIP)" value="">
+
+      <div style="display:flex; gap:8px;">
+        <button onclick="activateWithKey()" style="flex:1; padding:12px; background:linear-gradient(135deg, var(--neon-gold), #d97706); color:#000; font-weight:900; border-radius:10px; border:none; cursor:pointer;">ACTIVATE VIP 👑</button>
+        <button onclick="closeVipModal()" style="padding:12px; background:#1e293b; color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">CLOSE</button>
+      </div>
+    </div>
+  </div>
 
   <!-- HEADER -->
   <header class="header-bar">
@@ -243,11 +392,20 @@ body {
     </div>
   </header>
 
-  <!-- HERO BANNER -->
-  <div class="hero-banner">
-    <div class="hero-title">🎰 20 VIP ARENA GAMES</div>
-    <div class="hero-subtitle">SELECT YOUR FAVORITE GAME & START WINNING</div>
-    <button class="btn-reset-main" onclick="resetWallet()">🔄 RESET PRACTICE WALLET (₹10,000)</button>
+  <!-- MEMBERSHIP CARD BANNER -->
+  <div class="vip-card-banner">
+    <div class="vip-card-badge" id="vipBadgeTag">FREE USER</div>
+    <div class="vip-title">
+      <span>👑</span> <span id="vipCardTitle">VIP MEMBERSHIP CARD</span>
+    </div>
+    <p class="vip-status-desc" id="vipCardDesc">
+      Upgrade to VIP Pass to unlock <b>All 20 Premium Casino Games</b> & Unlimited Wallet Resets.
+    </p>
+
+    <div class="vip-card-action-row">
+      <button class="btn-vip-upgrade" onclick="openVipModal()">BUY VIP MEMBERSHIP 👑</button>
+      <button class="btn-reset-wallet" onclick="handleWalletReset()">RESET WALLET 🔄</button>
+    </div>
   </div>
 
   <!-- SEARCH & CATEGORIES -->
@@ -271,65 +429,107 @@ body {
 </div>
 
 <script>
-// WEB AUDIO API CLICK SOUND
+// WEB AUDIO API SOUND GENERATOR
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 
-function playSound() {
+function playSound(type) {
   try {
     if (!audioCtx) audioCtx = new AudioCtx();
     const now = audioCtx.currentTime;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.frequency.setValueAtTime(600, now);
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
-    osc.start(now); osc.stop(now + 0.04);
+    
+    if (type === 'lock') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, now);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
+    } else {
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    }
   } catch(e) {}
 }
 
 // COMPLETE 20 GAMES MASTER DATA
 const gamesList = [
-  { id: 1, name: "WinGo 30s Color", file: "color.html", cat: "TABLE", icon: "🎨", tag: "COLOR PREDICTION" },
-  { id: 2, name: "Aviator Rocket", file: "aviator.html", cat: "CRASH", icon: "🚀", tag: "CRASH MULTIPLIER" },
-  { id: 3, name: "Vortex Spin Wheel", file: "vortex.html", cat: "TABLE", icon: "🌀", tag: "WHEEL OF FORTUNE" },
-  { id: 4, name: "3 Patti Deluxe", file: "teenpatti.html", cat: "CARD", icon: "🃏", tag: "TEEN PATTI" },
-  { id: 5, name: "Dragon vs Tiger", file: "dragon.html", cat: "CARD", icon: "🐉", tag: "SINGLE CARD DUEL" },
-  { id: 6, name: "Cyber Minesweeper", file: "mines.html", cat: "ARCADE", icon: "💣", tag: "MINE CASHOUT" },
-  { id: 7, name: "Rummy Pro 13-Card", file: "rummy.html", cat: "CARD", icon: "🎴", tag: "13-CARD RUMMY" },
-  { id: 8, name: "European Roulette", file: "roulette.html", cat: "TABLE", icon: "🎡", tag: "37-POCKET WHEEL" },
-  { id: 9, name: "Blackjack 21", file: "blackjack.html", cat: "CARD", icon: "♠️", tag: "DEALER VS PLAYER" },
-  { id: 10, name: "Speed Baccarat", file: "baccarat.html", cat: "CARD", icon: "💎", tag: "MODULO 10 BACCARAT" },
-  { id: 11, name: "Andar Bahar Royale", file: "andarbahar.html", cat: "CARD", icon: "🔴", tag: "JOKER MATCH" },
-  { id: 12, name: "Sic Bo Dice", file: "sicbo.html", cat: "TABLE", icon: "🎲", tag: "3-DICE ROLL" },
-  { id: 13, name: "Neon 777 Slots", file: "slots.html", cat: "ARCADE", icon: "🎰", tag: "3-REEL JACKPOT" },
-  { id: 14, name: "Cyber Dice Over/Under", file: "cyberdice.html", cat: "CRASH", icon: "⚡", tag: "CUSTOM PROBABILITY" },
-  { id: 15, name: "Hi-Lo Poker Streak", file: "hilo.html", cat: "CARD", icon: "🃏", tag: "HIGH LOW STREAK" },
-  { id: 16, name: "Plinko Neon Drop", file: "plinko.html", cat: "ARCADE", icon: "🔴", tag: "PEG BOUNCE MULTI" },
-  { id: 17, name: "Chicken Road Cross", file: "chicken.html", cat: "ARCADE", icon: "🐔", tag: "ROAD MULTIPLIER" },
-  { id: 18, name: "Limbo Rocket", file: "limbo.html", cat: "CRASH", icon: "🚀", tag: "INSTANT MULTIPLIER" },
-  { id: 19, name: "Derby Horse Racing", file: "derby.html", cat: "TABLE", icon: "🏇", tag: "HORSE RACE BETS" },
-  { id: 20, name: "BTC Crypto Candle 30s", file: "crypto.html", cat: "CRASH", icon: "📈", tag: "BINARY TRADING" }
+  { id: 1, name: "WinGo 30s Color", file: "color.html", cat: "TABLE", icon: "🎨", tag: "FREE TO PLAY", isFree: true },
+  { id: 2, name: "Aviator Rocket", file: "aviator.html", cat: "CRASH", icon: "🚀", tag: "CRASH MULTIPLIER", isFree: false },
+  { id: 3, name: "Vortex Spin Wheel", file: "vortex.html", cat: "TABLE", icon: "🌀", tag: "WHEEL OF FORTUNE", isFree: false },
+  { id: 4, name: "3 Patti Deluxe", file: "teenpatti.html", cat: "CARD", icon: "🃏", tag: "TEEN PATTI", isFree: false },
+  { id: 5, name: "Dragon vs Tiger", file: "dragon.html", cat: "CARD", icon: "🐉", tag: "SINGLE CARD DUEL", isFree: false },
+  { id: 6, name: "Cyber Minesweeper", file: "mines.html", cat: "ARCADE", icon: "💣", tag: "MINE CASHOUT", isFree: false },
+  { id: 7, name: "Rummy Pro 13-Card", file: "rummy.html", cat: "CARD", icon: "🎴", tag: "13-CARD RUMMY", isFree: false },
+  { id: 8, name: "European Roulette", file: "roulette.html", cat: "TABLE", icon: "🎡", tag: "37-POCKET WHEEL", isFree: false },
+  { id: 9, name: "Blackjack 21", file: "blackjack.html", cat: "CARD", icon: "♠️", tag: "DEALER VS PLAYER", isFree: false },
+  { id: 10, name: "Speed Baccarat", file: "baccarat.html", cat: "CARD", icon: "💎", tag: "MODULO 10 BACCARAT", isFree: false },
+  { id: 11, name: "Andar Bahar Royale", file: "andarbahar.html", cat: "CARD", icon: "🔴", tag: "JOKER MATCH", isFree: false },
+  { id: 12, name: "Sic Bo Dice", file: "sicbo.html", cat: "TABLE", icon: "🎲", tag: "3-DICE ROLL", isFree: false },
+  { id: 13, name: "Neon 777 Slots", file: "slots.html", cat: "ARCADE", icon: "🎰", tag: "3-REEL JACKPOT", isFree: false },
+  { id: 14, name: "Cyber Dice Over/Under", file: "cyberdice.html", cat: "CRASH", icon: "⚡", tag: "CUSTOM PROBABILITY", isFree: false },
+  { id: 15, name: "Hi-Lo Poker Streak", file: "hilo.html", cat: "CARD", icon: "🃏", tag: "HIGH LOW STREAK", isFree: false },
+  { id: 16, name: "Plinko Neon Drop", file: "plinko.html", cat: "ARCADE", icon: "🔴", tag: "PEG BOUNCE MULTI", isFree: false },
+  { id: 17, name: "Chicken Road Cross", file: "chicken.html", cat: "ARCADE", icon: "🐔", tag: "ROAD MULTIPLIER", isFree: false },
+  { id: 18, name: "Limbo Rocket", file: "limbo.html", cat: "CRASH", icon: "🚀", tag: "INSTANT MULTIPLIER", isFree: false },
+  { id: 19, name: "Derby Horse Racing", file: "derby.html", cat: "TABLE", icon: "🏇", tag: "HORSE RACE BETS", isFree: false },
+  { id: 20, name: "BTC Crypto Candle 30s", file: "crypto.html", cat: "CRASH", icon: "📈", tag: "BINARY TRADING", isFree: false }
 ];
 
 let activeCategory = 'ALL';
 
-function syncBalance() {
-  let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
-  document.getElementById('hubBalance').innerText = "₹" + bal.toLocaleString();
+function isVipActive() {
+  return localStorage.getItem('rwin_membership') === 'ACTIVE';
 }
 
-function resetWallet() {
-  playSound();
-  localStorage.setItem('rwin_balance', '10000');
-  syncBalance();
-  alert("💰 Practice Wallet balance restored to ₹10,000!");
+function updateVipCardUI() {
+  const badge = document.getElementById('vipBadgeTag');
+  const desc = document.getElementById('vipCardDesc');
+  const bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+  
+  document.getElementById('hubBalance').innerText = "₹" + bal.toLocaleString();
+
+  if (isVipActive()) {
+    badge.className = "vip-card-badge badge-vip";
+    badge.innerText = "VIP ACTIVE 👑";
+    desc.innerHTML = "Your <b>VIP Pass is Active</b>! All 20 Games Unlocked & Unlimited Wallet Resets Enabled.";
+  } else {
+    badge.className = "vip-card-badge badge-free";
+    badge.innerText = "FREE TIER";
+    desc.innerHTML = "Upgrade to VIP Membership to unlock <b>All 20 Premium Games</b> & Practice Wallet Resets.";
+  }
+}
+
+function handleWalletReset() {
+  if (!isVipActive()) {
+    playSound('lock');
+    openVipModal();
+  } else {
+    playSound('click');
+    localStorage.setItem('rwin_balance', '10000');
+    updateVipCardUI();
+    alert("💰 Practice Wallet balance restored to ₹10,000!");
+  }
+}
+
+function launchGame(file, isFree) {
+  if (!isFree && !isVipActive()) {
+    playSound('lock');
+    openVipModal();
+  } else {
+    playSound('click');
+    window.location.href = "games/" + file;
+  }
 }
 
 function renderGames() {
   const container = document.getElementById('gamesContainer');
   const searchText = document.getElementById('searchInput').value.toLowerCase();
+  const vip = isVipActive();
 
   let filtered = gamesList.filter(g => {
     let matchCat = (activeCategory === 'ALL' || g.cat === activeCategory);
@@ -338,19 +538,23 @@ function renderGames() {
   });
 
   container.innerHTML = filtered.map(g => {
-    return `<a href="games/${g.file}" class="game-card" onclick="playSound()">
+    let isLocked = !g.isFree && !vip;
+    return `<div class="game-card ${isLocked ? 'locked-card' : ''}" onclick="launchGame('${g.file}', ${g.isFree})">
+      ${isLocked ? '<div class="lock-overlay-badge">🔒 VIP</div>' : ''}
       <div>
         <div class="card-icon">${g.icon}</div>
         <div class="card-name">${g.name}</div>
         <div class="card-tag">${g.tag}</div>
       </div>
-      <button class="btn-play">PLAY NOW 🎮</button>
-    </a>`;
+      <button class="btn-play ${isLocked ? 'btn-locked' : ''}">
+        ${isLocked ? 'UNLOCK VIP 🔒' : 'PLAY NOW 🎮'}
+      </button>
+    </div>`;
   }).join('');
 }
 
 function setCategory(cat, el) {
-  playSound();
+  playSound('click');
   activeCategory = cat;
   document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
@@ -361,9 +565,40 @@ function filterGames() {
   renderGames();
 }
 
+function openVipModal() {
+  playSound('click');
+  document.getElementById('vipModal').style.display = "flex";
+}
+
+function closeVipModal() {
+  playSound('click');
+  document.getElementById('vipModal').style.display = "none";
+}
+
+function selectPlan(type, price, el) {
+  playSound('click');
+  document.querySelectorAll('.plan-item').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function activateWithKey() {
+  let key = document.getElementById('vipKeyInput').value.trim().toUpperCase();
+  if (key === 'RWINVIP' || key === 'VIP' || key === 'ADMIN' || key.length >= 4) {
+    localStorage.setItem('rwin_membership', 'ACTIVE');
+    playSound('click');
+    alert("🎉 VIP Membership Activated Successfully!");
+    closeVipModal();
+    updateVipCardUI();
+    renderGames();
+  } else {
+    alert("⚠️ Please enter a valid VIP Key (Demo Key: RWINVIP)");
+  }
+}
+
 // INITIALIZE
-syncBalance();
+updateVipCardUI();
 renderGames();
 </script>
 </body>
-</html>
+  </html>
+  
