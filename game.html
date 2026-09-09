@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VIP Arena Hub - RWIN Space</title>
+<title>Rwin Central Game Arena</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -12,648 +11,135 @@
   --neon-blue: #00e5ff;
   --neon-green: #10b981;
   --neon-red: #ef4444;
-  --neon-purple: #a855f7;
   --bg-dark: #04060d;
   --card-bg: #0b101d;
   --border-color: #1e293b;
 }
 
-* {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  box-sizing: border-box;
-}
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; }
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 14px; }
 
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg-dark);
-  font-family: 'Poppins', sans-serif;
-  color: #fff;
-  overflow-x: hidden;
-}
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 6px 14px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+.wallet-btn { padding: 6px 12px; background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; border-radius: 10px; text-decoration: none; font-size: 11px; font-weight: 900; }
 
-.hubContainer {
-  max-width: 520px;
-  margin: 0 auto;
-  background: var(--card-bg);
-  min-height: 100vh;
-  position: relative;
-  padding-bottom: 40px;
-}
+.profile-strip { display: flex; justify-content: space-between; align-items: center; background: #04060d; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 14px; margin: 12px 0; }
+.reset-btn { padding: 6px 12px; background: #1e293b; border: 1px solid var(--neon-blue); color: var(--neon-blue); border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; }
 
-/* HEADER BAR */
-.header-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 18px;
-  background: #020307;
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.brand-logo {
-  font-size: 18px;
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--neon-gold), #d97706);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 1px;
-}
-
-.balance-pill {
-  background: linear-gradient(135deg, #1e1b4b, #0f172a);
-  border: 1px solid var(--neon-gold);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-weight: 800;
-  font-size: 13px;
-  color: var(--neon-gold);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
-}
-
-/* MEMBERSHIP CARD BANNER */
-.vip-card-banner {
-  background: linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #0f172a 100%);
-  margin: 14px;
-  border-radius: 22px;
-  padding: 18px;
-  border: 2px solid var(--neon-gold);
-  box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.vip-card-badge {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 1px;
-}
-.badge-free { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--neon-red); color: var(--neon-red); }
-.badge-vip { background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; box-shadow: 0 0 10px var(--neon-gold); }
-
-.vip-title {
-  font-size: 20px;
-  font-weight: 900;
-  margin: 0 0 4px 0;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.vip-status-desc {
-  font-size: 11px;
-  color: #cbd5e1;
-  margin: 0 0 14px 0;
-  line-height: 1.4;
-}
-
-.vip-card-action-row {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-vip-upgrade {
-  flex: 1;
-  padding: 10px;
-  background: linear-gradient(135deg, var(--neon-gold), #d97706);
-  color: #000;
-  font-weight: 900;
-  font-size: 12px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
-  text-transform: uppercase;
-}
-
-.btn-reset-wallet {
-  padding: 10px 14px;
-  background: #0f172a;
-  border: 1px solid var(--neon-blue);
-  color: var(--neon-blue);
-  font-weight: 800;
-  font-size: 11px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-/* SEARCH & CATEGORIES */
-.filter-bar {
-  padding: 0 14px;
-  margin-bottom: 14px;
-}
-
-.search-box {
-  width: 100%;
-  background: #070a14;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 10px 14px;
-  color: #fff;
-  font-size: 12px;
-  font-family: inherit;
-  outline: none;
-  margin-bottom: 10px;
-}
-
-.cat-scroll {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.cat-chip {
-  padding: 6px 14px;
-  background: #0f172a;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #94a3b8;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.cat-chip.active {
-  background: var(--neon-gold);
-  color: #000;
-  border-color: var(--neon-gold);
-}
-
-/* GAMES GRID */
-.games-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 0 14px;
-}
-
-.game-card {
-  background: linear-gradient(145deg, #0f172a, #070a14);
-  border: 1px solid var(--border-color);
-  border-radius: 18px;
-  padding: 14px 10px;
-  text-align: center;
-  text-decoration: none;
-  color: #fff;
-  position: relative;
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 148px;
-  overflow: hidden;
-  cursor: pointer;
-}
-
+.game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+.game-card { background: #04060d; border: 1.5px solid var(--border-color); border-radius: 16px; padding: 12px; text-align: center; cursor: pointer; position: relative; transition: transform 0.1s; }
 .game-card:active { transform: scale(0.96); }
+.game-card.locked { opacity: 0.6; filter: grayscale(0.5); }
+.lock-badge { position: absolute; top: 8px; right: 8px; font-size: 12px; }
 
-.game-card.locked-card {
-  opacity: 0.85;
-  border-color: rgba(239, 68, 68, 0.4);
-}
-
-.lock-overlay-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(239, 68, 68, 0.25);
-  border: 1px solid var(--neon-red);
-  color: var(--neon-red);
-  padding: 2px 8px;
-  border-radius: 8px;
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.card-icon { font-size: 36px; margin-bottom: 6px; }
-.card-name { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
-.card-tag { font-size: 9px; font-weight: 700; color: var(--neon-gold); text-transform: uppercase; }
-
-.btn-play {
-  margin-top: 10px;
-  padding: 8px;
-  background: linear-gradient(135deg, var(--neon-blue), #0284c7);
-  color: #000;
-  font-weight: 900;
-  font-size: 11px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-.btn-play.btn-locked {
-  background: linear-gradient(135deg, #334155, #1e293b);
-  color: #ef4444;
-  border: 1px solid #ef4444;
-}
-
-/* MODAL POPUP FOR VIP MEMBERSHIP & UPI QR */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.88);
-  z-index: 99999;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(6px);
-}
-
-.modal-box {
-  background: var(--card-bg);
-  border: 2px solid var(--neon-gold);
-  border-radius: 22px;
-  padding: 18px 16px;
-  text-align: center;
-  width: 92%;
-  max-width: 380px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-}
-
-.plan-option-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-.plan-item {
-  background: #070a14;
-  border: 1.5px solid var(--border-color);
-  border-radius: 12px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.plan-item.selected {
-  border-color: var(--neon-gold);
-  background: rgba(245, 158, 11, 0.12);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
-}
-
-/* QR DISPLAY BOX */
-.qr-box-card {
-  background: #02040a;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 12px;
-  margin: 10px 0;
-}
-
-.qr-img {
-  width: 160px;
-  height: 160px;
-  border-radius: 10px;
-  border: 2px solid var(--neon-gold);
-  background: #fff;
-  padding: 6px;
-}
-
-.upi-id-pill {
-  background: #0f172a;
-  border: 1px dashed var(--neon-blue);
-  color: var(--neon-blue);
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 800;
-  margin-top: 8px;
-  display: inline-block;
-  letter-spacing: 0.5px;
-}
-
-.utr-input-box {
-  width: 100%;
-  background: #02040a;
-  border: 1.5px solid var(--border-color);
-  border-radius: 10px;
-  padding: 12px;
-  color: var(--neon-gold);
-  font-weight: 800;
-  text-align: center;
-  font-size: 13px;
-  margin-bottom: 10px;
-  outline: none;
-}
-.utr-input-box:focus { border-color: var(--neon-gold); }
-
-.error-msg {
-  color: var(--neon-red);
-  font-size: 11px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  display: none;
-}
+.game-icon { font-size: 32px; margin-bottom: 4px; }
+.game-title { font-size: 12px; font-weight: 800; color: #fff; }
+.game-sub { font-size: 9px; color: #94a3b8; font-weight: 700; margin-top: 2px; }
 </style>
 </head>
-
 <body>
-<div class="hubContainer">
 
-  <!-- VIP STORE & UPI QR PAYMENT MODAL -->
-  <div id="vipModal" class="modal-overlay">
-    <div class="modal-box">
-      <div style="font-size:36px; margin-bottom:2px;">💰 VIP Store & Wallet</div>
-      <p style="color:#94a3b8; font-size:11px; margin:0 0 10px 0;">Instant UTR Activation • 20 Games Unlocked</p>
-
-      <!-- PLAN SELECTION -->
-      <div class="plan-option-grid">
-        <div class="plan-item selected" id="plan199" onclick="selectPlan(199, '2 Months (60 Days)', this)">
-          <div style="text-align:left;">
-            <div style="font-size:12px; font-weight:800; color:#fff;">GOLD VIP PASS (2 Months)</div>
-            <div style="font-size:9px; color:var(--neon-green);">20 Games + Unlimited Coin Resets</div>
-          </div>
-          <div style="font-size:15px; font-weight:900; color:var(--neon-gold);">₹199</div>
-        </div>
-
-        <div class="plan-item" id="plan499" onclick="selectPlan(499, '6 Months (180 Days)', this)">
-          <div style="text-align:left;">
-            <div style="font-size:12px; font-weight:800; color:#fff;">DIAMOND VIP PASS (6 Months)</div>
-            <div style="font-size:9px; color:var(--neon-green);">20 Games + VIP Priority Support</div>
-          </div>
-          <div style="font-size:15px; font-weight:900; color:var(--neon-gold);">₹499</div>
-        </div>
-      </div>
-
-      <!-- QR CODE CONTAINER -->
-      <div class="qr-box-card">
-        <div style="font-size:11px; font-weight:800; color:var(--neon-gold); margin-bottom:6px;">
-          💰 Pay via UPI QR (<span id="selectedPlanLbl">Selected: ₹199</span>)
-        </div>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=7415325460-2@ibl%26pn=VIP%20Arena%26am=199%26cu=INR" class="qr-img" id="qrCodeImg" alt="UPI QR">
-        <div>
-          <span class="upi-id-pill">UPI ID: 7415325460-2@ibl</span>
-        </div>
-      </div>
-
-      <div class="error-msg" id="modalError">❌ Please enter a valid 12-Digit UTR/Ref Number!</div>
-
-      <!-- UTR INPUT -->
-      <input type="text" class="utr-input-box" id="utrInput" placeholder="Enter 12-Digit UTR / Ref Number" maxlength="12">
-
-      <div style="display:flex; gap:8px;">
-        <button onclick="verifyAndActivate()" style="flex:1; padding:12px; background:linear-gradient(135deg, var(--neon-blue), #0284c7); color:#000; font-weight:900; border-radius:10px; border:none; cursor:pointer;">⚡ Verify & Activate Plan</button>
-        <button onclick="closeVipModal()" style="padding:12px; background:#1e293b; color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer;">Close</button>
-      </div>
-      <div style="font-size:9px; color:#64748b; margin-top:6px;">UPI app par payment karke 12-Digit UTR/Ref No. yahan daalein.</div>
-    </div>
+<div class="container">
+  <div class="header">
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+    <a href="wallet.html" class="wallet-btn">💳 VIP WALLET</a>
   </div>
 
-  <!-- HEADER -->
-  <header class="header-bar">
-    <div class="brand-logo">⚡ VIP ARENA HUB</div>
-    <div class="balance-pill">
-      <span>💰</span>
-      <span id="hubBalance">₹10,000</span>
+  <div class="profile-strip">
+    <div>
+      <div style="font-size:10px; color:#94a3b8;">ACTIVE PLAN</div>
+      <div style="font-size:12px; font-weight:900; color:var(--neon-gold);" id="planTxt">FREE</div>
     </div>
-  </header>
-
-  <!-- MEMBERSHIP CARD BANNER -->
-  <div class="vip-card-banner">
-    <div class="vip-card-badge" id="vipBadgeTag">FREE USER</div>
-    <div class="vip-title">
-      <span>👑</span> <span id="vipCardTitle">VIP MEMBERSHIP CARD</span>
+    <div>
+      <div style="font-size:10px; color:#94a3b8;">LEVEL</div>
+      <div style="font-size:12px; font-weight:900; color:var(--neon-blue);" id="levelTxt">LVL 1</div>
     </div>
-    <p class="vip-status-desc" id="vipCardDesc">
-      Upgrade to VIP Pass to unlock <b>All 20 Premium Casino Games</b> & Unlimited Wallet Resets.
-    </p>
-
-    <div class="vip-card-action-row">
-      <button class="btn-vip-upgrade" onclick="openVipModal()">BUY VIP MEMBERSHIP 👑</button>
-      <button class="btn-reset-wallet" onclick="handleWalletReset()">RESET WALLET 🔄</button>
-    </div>
+    <button class="reset-btn" onclick="resetBalance()">RESET COINS 🔄</button>
   </div>
 
-  <!-- SEARCH & CATEGORIES -->
-  <div class="filter-bar">
-    <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search game name..." onkeyup="filterGames()">
-    
-    <div class="cat-scroll">
-      <div class="cat-chip active" onclick="setCategory('ALL', this)">ALL (20)</div>
-      <div class="cat-chip" onclick="setCategory('CARD', this)">🎴 CARDS</div>
-      <div class="cat-chip" onclick="setCategory('CRASH', this)">🚀 CRASH & MULTI</div>
-      <div class="cat-chip" onclick="setCategory('TABLE', this)">🎡 TABLE & DICE</div>
-      <div class="cat-chip" onclick="setCategory('ARCADE', this)">🎰 SLOTS & ARCADE</div>
-    </div>
-  </div>
-
-  <!-- GAMES GRID -->
-  <div class="games-grid" id="gamesContainer">
-    <!-- 20 GAMES LINKED -->
-  </div>
-
+  <div class="game-grid" id="gameGrid"></div>
 </div>
 
 <script>
-// WEB AUDIO API SOUND
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
+let plan = localStorage.getItem('rwin_plan') || 'FREE';
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let level = parseInt(localStorage.getItem('rwin_level') || '1');
 
-function playSound(type) {
-  try {
-    if (!audioCtx) audioCtx = new AudioCtx();
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    
-    if (type === 'lock') {
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(200, now);
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-      osc.start(now); osc.stop(now + 0.15);
-    } else {
-      osc.frequency.setValueAtTime(600, now);
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
-      osc.start(now); osc.stop(now + 0.04);
-    }
-  } catch(e) {}
-}
-
-let currentSelectedPrice = 199;
-const FIXED_UPI = "7415325460-2@ibl";
-const VALID_KEYS = ["RWIN199", "RWIN499", "ESHUVIP", "RWIN2026", "VIPARENA"];
-
-// COMPLETE 20 GAMES MASTER DATA
 const gamesList = [
-  { id: 1, name: "WinGo 30s Color", file: "color.html", cat: "TABLE", icon: "🎨", tag: "FREE TO PLAY", isFree: true },
-  { id: 2, name: "Aviator Rocket", file: "aviator.html", cat: "CRASH", icon: "🚀", tag: "CRASH MULTIPLIER", isFree: false },
-  { id: 3, name: "Vortex Spin Wheel", file: "vortex.html", cat: "TABLE", icon: "🌀", tag: "WHEEL OF FORTUNE", isFree: false },
-  { id: 4, name: "3 Patti Deluxe", file: "teenpatti.html", cat: "CARD", icon: "🃏", tag: "TEEN PATTI", isFree: false },
-  { id: 5, name: "Dragon vs Tiger", file: "dragon.html", cat: "CARD", icon: "🐉", tag: "SINGLE CARD DUEL", isFree: false },
-  { id: 6, name: "Cyber Minesweeper", file: "mines.html", cat: "ARCADE", icon: "💣", tag: "MINE CASHOUT", isFree: false },
-  { id: 7, name: "Rummy Pro 13-Card", file: "rummy.html", cat: "CARD", icon: "🎴", tag: "13-CARD RUMMY", isFree: false },
-  { id: 8, name: "European Roulette", file: "roulette.html", cat: "TABLE", icon: "🎡", tag: "37-POCKET WHEEL", isFree: false },
-  { id: 9, name: "Blackjack 21", file: "blackjack.html", cat: "CARD", icon: "♠️", tag: "DEALER VS PLAYER", isFree: false },
-  { id: 10, name: "Speed Baccarat", file: "baccarat.html", cat: "CARD", icon: "💎", tag: "MODULO 10 BACCARAT", isFree: false },
-  { id: 11, name: "Andar Bahar Royale", file: "andarbahar.html", cat: "CARD", icon: "🔴", tag: "JOKER MATCH", isFree: false },
-  { id: 12, name: "Sic Bo Dice", file: "sicbo.html", cat: "TABLE", icon: "🎲", tag: "3-DICE ROLL", isFree: false },
-  { id: 13, name: "Neon 777 Slots", file: "slots.html", cat: "ARCADE", icon: "🎰", tag: "3-REEL JACKPOT", isFree: false },
-  { id: 14, name: "Cyber Dice Over/Under", file: "cyberdice.html", cat: "CRASH", icon: "⚡", tag: "CUSTOM PROBABILITY", isFree: false },
-  { id: 15, name: "Hi-Lo Poker Streak", file: "hilo.html", cat: "CARD", icon: "🃏", tag: "HIGH LOW STREAK", isFree: false },
-  { id: 16, name: "Plinko Neon Drop", file: "plinko.html", cat: "ARCADE", icon: "🔴", tag: "PEG BOUNCE MULTI", isFree: false },
-  { id: 17, name: "Chicken Road Cross", file: "chicken.html", cat: "ARCADE", icon: "🐔", tag: "ROAD MULTIPLIER", isFree: false },
-  { id: 18, name: "Limbo Rocket", file: "limbo.html", cat: "CRASH", icon: "🚀", tag: "INSTANT MULTIPLIER", isFree: false },
-  { id: 19, name: "Derby Horse Racing", file: "derby.html", cat: "TABLE", icon: "🏇", tag: "HORSE RACE BETS", isFree: false },
-  { id: 20, name: "BTC Crypto Candle 30s", file: "crypto.html", cat: "CRASH", icon: "📈", tag: "BINARY TRADING", isFree: false }
+  { name: "Color Trading", icon: "🎨", file: "color.html", lvl: 1, free: true },
+  { name: "Aviator Rocket", icon: "🚀", file: "aviator.html", lvl: 1, free: true },
+  { name: "Vortex Wheel", icon: "🌀", file: "vortex.html", lvl: 2, free: false },
+  { name: "3 Patti Deluxe", icon: "🃏", file: "teenpatti.html", lvl: 3, free: false },
+  { name: "Dragon vs Tiger", icon: "🐉", file: "dragon.html", lvl: 4, free: false },
+  { name: "Cyber Mines", icon: "💣", file: "mines.html", lvl: 5, free: false },
+  { name: "Rummy Pro", icon: "🎴", file: "rummy.html", lvl: 6, free: false },
+  { name: "Roulette", icon: "🎡", file: "roulette.html", lvl: 7, free: false },
+  { name: "Blackjack 21", icon: "♠️", file: "blackjack.html", lvl: 8, free: false },
+  { name: "Mega Slots", icon: "🎰", file: "slots.html", lvl: 9, free: false },
+  { name: "Baccarat", icon: "👑", file: "baccarat.html", lvl: 10, free: false },
+  { name: "Andar Bahar", icon: "🅰️", file: "andarbahar.html", lvl: 11, free: false },
+  { name: "7 Up 7 Down", icon: "🎲", file: "sevenup.html", lvl: 12, free: false },
+  { name: "Hi-Lo Trader", icon: "📈", file: "hilow.html", lvl: 13, free: false },
+  { name: "Sic Bo", icon: "🎯", file: "sicbo.html", lvl: 14, free: false },
+  { name: "Coin Flip", icon: "🪙", file: "coinflip.html", lvl: 15, free: false },
+  { name: "Fortune Wheel", icon: "🔮", file: "fortune.html", lvl: 16, free: false },
+  { name: "Penalty Kick", icon: "⚽", file: "penalty.html", lvl: 17, free: false },
+  { name: "Chicken Road", icon: "🐔", file: "chicken.html", lvl: 18, free: false },
+  { name: "Crypto Trader", icon: "📊", file: "crypto.html", lvl: 19, free: false }
 ];
 
-let activeCategory = 'ALL';
-
-function isVipActive() {
-  return localStorage.getItem('rwin_membership') === 'ACTIVE';
-}
-
-function updateVipCardUI() {
-  const badge = document.getElementById('vipBadgeTag');
-  const desc = document.getElementById('vipCardDesc');
-  const bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
-  
-  document.getElementById('hubBalance').innerText = "₹" + bal.toLocaleString();
-
-  if (isVipActive()) {
-    badge.className = "vip-card-badge badge-vip";
-    badge.innerText = "VIP ACTIVE 👑";
-    desc.innerHTML = "Your <b>VIP Pass is Active</b>! All 20 Games Unlocked & Unlimited Wallet Resets Enabled.";
-  } else {
-    badge.className = "vip-card-badge badge-free";
-    badge.innerText = "FREE TIER";
-    desc.innerHTML = "Upgrade to VIP Membership to unlock <b>All 20 Premium Games</b> & Unlimited Wallet Resets.";
-  }
-}
-
-function handleWalletReset() {
-  if (!isVipActive()) {
-    playSound('lock');
-    openVipModal();
-  } else {
-    playSound('click');
-    localStorage.setItem('rwin_balance', '10000');
-    updateVipCardUI();
-    alert("💰 Practice Wallet balance restored to ₹10,000!");
-  }
-}
-
-function launchGame(file, isFree) {
-  if (!isFree && !isVipActive()) {
-    playSound('lock');
-    openVipModal();
-  } else {
-    playSound('click');
-    window.location.href = "./games/" + file;
-  }
-}
-
-function renderGames() {
-  const container = document.getElementById('gamesContainer');
-  const searchText = document.getElementById('searchInput').value.toLowerCase();
-  const vip = isVipActive();
-
-  let filtered = gamesList.filter(g => {
-    let matchCat = (activeCategory === 'ALL' || g.cat === activeCategory);
-    let matchSearch = g.name.toLowerCase().includes(searchText) || g.tag.toLowerCase().includes(searchText);
-    return matchCat && matchSearch;
-  });
-
-  container.innerHTML = filtered.map(g => {
-    let isLocked = !g.isFree && !vip;
-    return `<div class="game-card ${isLocked ? 'locked-card' : ''}" onclick="launchGame('${g.file}', ${g.isFree})">
-      ${isLocked ? '<div class="lock-overlay-badge">🔒 VIP</div>' : ''}
-      <div>
-        <div class="card-icon">${g.icon}</div>
-        <div class="card-name">${g.name}</div>
-        <div class="card-tag">${g.tag}</div>
-      </div>
-      <button class="btn-play ${isLocked ? 'btn-locked' : ''}">
-        ${isLocked ? 'UNLOCK VIP 🔒' : 'PLAY NOW 🎮'}
-      </button>
-    </div>`;
-  }).join('');
-}
-
-function setCategory(cat, el) {
-  playSound('click');
-  activeCategory = cat;
-  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
+function syncUI() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+  document.getElementById('planTxt').innerText = plan;
+  document.getElementById('levelTxt').innerText = "LVL " + level;
   renderGames();
 }
 
-function filterGames() { renderGames(); }
-
-function openVipModal() {
-  playSound('click');
-  document.getElementById('modalError').style.display = "none";
-  document.getElementById('vipModal').style.display = "flex";
+function isGameUnlocked(g) {
+  if (plan === 'VIP_499') return true;
+  if (plan === 'VIP_199') return level >= g.lvl;
+  return g.free; // Free Plan
 }
 
-function closeVipModal() {
-  playSound('click');
-  document.getElementById('vipModal').style.display = "none";
+function renderGames() {
+  const container = document.getElementById('gameGrid');
+  container.innerHTML = gamesList.map(g => {
+    let unlocked = isGameUnlocked(g);
+    return `
+      <div class="game-card ${unlocked ? '' : 'locked'}" onclick="launchGame('${g.file}', ${unlocked})">
+        <div class="lock-badge">${unlocked ? '🔓' : '🔒'}</div>
+        <div class="game-icon">${g.icon}</div>
+        <div class="game-title">${g.name}</div>
+        <div class="game-sub">${unlocked ? 'PLAY NOW' : (plan === 'FREE' ? 'VIP ONLY' : 'UNLOCK AT LVL ' + g.lvl)}</div>
+      </div>
+    `;
+  }).join('');
 }
 
-function selectPlan(price, label, el) {
-  playSound('click');
-  currentSelectedPrice = price;
-  document.querySelectorAll('.plan-item').forEach(p => p.classList.remove('selected'));
-  el.classList.add('selected');
-
-  document.getElementById('selectedPlanLbl').innerText = "Selected: ₹" + price;
-
-  // Update QR Code image dynamically
-  let upiUrl = `upi://pay?pa=${FIXED_UPI}%26pn=VIP%20Arena%26am=${price}%26cu=INR`;
-  document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
-}
-
-function verifyAndActivate() {
-  let utr = document.getElementById('utrInput').value.trim().toUpperCase();
-  const errEl = document.getElementById('modalError');
-
-  // Verify: Must be 12 Digits OR Secret Admin Key
-  if ((/^\d{12}$/.test(utr)) || VALID_KEYS.includes(utr)) {
-    errEl.style.display = "none";
-    localStorage.setItem('rwin_membership', 'ACTIVE');
-    playSound('click');
-    alert("🎉 VIP Membership Activated Successfully! All 20 Games Unlocked.");
-    closeVipModal();
-    updateVipCardUI();
-    renderGames();
+function launchGame(file, isUnlocked) {
+  if (!isUnlocked) {
+    alert("🔒 Game Locked! Upgrade Plan or Level up in Wallet to play.");
+    window.location.href = "wallet.html";
   } else {
-    playSound('lock');
-    errEl.innerText = "❌ Enter valid 12-Digit UTR Number or Secret Key!";
-    errEl.style.display = "block";
+    window.location.href = "./play/" + file;
   }
 }
 
-// INITIALIZE
-updateVipCardUI();
-renderGames();
+function resetBalance() {
+  if (plan === 'FREE') {
+    alert("⚠️ Reset Coin Feature is Locked in FREE Plan.\nUpgrade to VIP 199 or VIP 499 in Wallet for unlimited resets!");
+    window.location.href = "wallet.html";
+  } else {
+    bal = 10000;
+    syncUI();
+    alert("🔄 Balance Successfully Reset to ₹10,000!");
+  }
+}
+
+syncUI();
 </script>
-  </body>
+</body>
+  </html>
   
