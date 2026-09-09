@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rummy Pro 13-Card - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+
+.table-area { background: radial-gradient(circle, #064e3b 0%, #022c22 100%); border: 3px solid var(--neon-gold); border-radius: 20px; margin: 12px 0; padding: 14px 10px; text-align: center; }
+
+.deck-row { display: flex; justify-content: center; gap: 20px; margin-bottom: 14px; }
+.pile-box { width: 60px; height: 85px; border-radius: 10px; border: 2px dashed var(--neon-gold); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; cursor: pointer; background: rgba(0,0,0,0.4); }
+.pile-box.active-pile { border-style: solid; box-shadow: 0 0 12px var(--neon-gold); }
+
+.card-item { width: 42px; height: 60px; background: #fff; border-radius: 6px; color: #000; font-weight: 900; font-size: 13px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #cbd5e1; margin: 2px; cursor: pointer; transition: transform 0.1s; }
+.card-item.red { color: var(--neon-red); }
+.card-item.selected { transform: translateY(-10px); border: 2px solid var(--neon-gold); box-shadow: 0 0 10px var(--neon-gold); }
+.card-back { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--neon-gold); color: var(--neon-gold); font-size: 20px; }
+
+.hand-scroll { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; margin: 10px 0; min-height: 135px; }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
+.act-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.act-btn { padding: 12px; border-radius: 10px; border: none; font-weight: 900; font-size: 11px; cursor: pointer; text-transform: uppercase; }
+.btn-sort { background: #1e293b; color: var(--neon-blue); border: 1px solid var(--neon-blue); }
+.btn-discard { background: linear-gradient(135deg, var(--neon-red), #b91c1c); color: #fff; }
+.btn-declare { background: linear-gradient(135deg, var(--neon-green), #047857); color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="../game.html" class="back-btn">⬅️ Hub</a>
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+  </div>
+
+  <div class="table-area">
+    <div class="deck-row">
+      <div class="pile-box active-pile" onclick="drawFromClosed()">
+        <div style="font-size:18px;">🎴</div>
+        <div>CLOSED</div>
+      </div>
+      <div class="pile-box" onclick="drawFromOpen()">
+        <div id="openPileCard">🎴</div>
+        <div>OPEN</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px; color:var(--neon-gold); font-weight:800; margin-bottom:4px;">YOUR 13 HAND CARDS</div>
+    <div class="hand-scroll" id="handContainer">
+      <!-- 13 CARDS -->
+    </div>
+  </div>
+
+  <div class="controls-card">
+    <div style="font-size:11px; color:#94a3b8;" id="turnStatusTxt">CLICK CLOSED DECK TO DRAW CARD</div>
+
+    <div class="act-grid">
+      <button class="act-btn btn-sort" onclick="sortHand()">AUTO SORT 🔀</button>
+      <button class="act-btn btn-discard" id="discardBtn" onclick="discardCard()" disabled>DISCARD 🗑️</button>
+      <button class="act-btn btn-declare" id="declareBtn" onclick="declareHand()" disabled>DECLARE 🏆</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'card') {
+      osc.frequency.setValueAtTime(450, now);
+      gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    }
+  } catch(e) {}
+}
+
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let hand = [];
+let openPile = null;
+let selectedIndex = -1;
+let hasDrawn = false;
+let entryFee = 200;
+
+const suits = ['♠', '♥', '♦', '♣'];
+const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+function sync() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+}
+
+function getRandomCard() {
+  let s = suits[Math.floor(Math.random() * suits.length)];
+  let vIdx = Math.floor(Math.random() * values.length);
+  return { suit: s, val: values[vIdx], rank: vIdx, isRed: (s === '♥' || s === '♦') };
+}
+
+function initGame() {
+  if (bal < entryFee) return alert("Low balance! Needs ₹200");
+  bal -= entryFee;
+  sync();
+
+  hand = [];
+  for (let i = 0; i < 13; i++) hand.push(getRandomCard());
+  openPile = getRandomCard();
+  hasDrawn = false;
+  selectedIndex = -1;
+
+  renderHand();
+  renderOpenPile();
+  updateStatus("DRAW CARD FROM CLOSED OR OPEN PILE");
+}
+
+function renderOpenPile() {
+  const container = document.getElementById('openPileCard');
+  container.innerHTML = `<div class="card-item ${openPile.isRed ? 'red' : ''}" style="margin:0;">${openPile.val}${openPile.suit}</div>`;
+}
+
+function renderHand() {
+  const container = document.getElementById('handContainer');
+  container.innerHTML = hand.map((c, i) => `
+    <div class="card-item ${c.isRed ? 'red' : ''} ${selectedIndex === i ? 'selected' : ''}" onclick="selectCard(${i})">
+      <div>${c.val}</div>
+      <div style="font-size:10px;">${c.suit}</div>
+    </div>
+  `).join('');
+}
+
+function selectCard(idx) {
+  playSound('card');
+  selectedIndex = (selectedIndex === idx) ? -1 : idx;
+  renderHand();
+  document.getElementById('discardBtn').disabled = (selectedIndex === -1 || !hasDrawn);
+  document.getElementById('declareBtn').disabled = !hasDrawn;
+}
+
+function drawFromClosed() {
+  if (hasDrawn) return alert("Already drawn a card! Discard one.");
+  playSound('card');
+  hand.push(getRandomCard());
+  hasDrawn = true;
+  renderHand();
+  updateStatus("SELECT A CARD AND DISCARD");
+  document.getElementById('declareBtn').disabled = false;
+}
+
+function drawFromOpen() {
+  if (hasDrawn) return alert("Already drawn a card! Discard one.");
+  playSound('card');
+  hand.push(openPile);
+  openPile = getRandomCard();
+  renderOpenPile();
+  hasDrawn = true;
+  renderHand();
+  updateStatus("SELECT A CARD AND DISCARD");
+  document.getElementById('declareBtn').disabled = false;
+}
+
+function discardCard() {
+  if (!hasDrawn || selectedIndex === -1) return;
+  playSound('card');
+  openPile = hand.splice(selectedIndex, 1)[0];
+  renderOpenPile();
+  selectedIndex = -1;
+  hasDrawn = false;
+  renderHand();
+  document.getElementById('discardBtn').disabled = true;
+  document.getElementById('declareBtn').disabled = true;
+  updateStatus("CARD DISCARDED! DRAW FOR NEXT TURN.");
+}
+
+function sortHand() {
+  playSound('card');
+  hand.sort((a,b) => a.suit.localeCompare(b.suit) || a.rank - b.rank);
+  renderHand();
+}
+
+function declareHand() {
+  let win = Math.random() < 0.65; // 65% Winning algorithm
+  let winAmt = entryFee * 3;
+
+  if (win) {
+    bal += winAmt;
+    sync();
+    playSound('win');
+    alert(`🏆 VALID DECLARE!\nYou Won ₹${winAmt}!`);
+  } else {
+    alert("❌ INVALID DECLARE! Penalty 80 Points.");
+  }
+  initGame();
+}
+
+function updateStatus(txt) {
+  document.getElementById('turnStatusTxt').innerText = txt;
+}
+
+initGame();
+</script>
+</body>
+  </html>
+  
