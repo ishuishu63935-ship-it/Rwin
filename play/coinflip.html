@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Coin Flip Duel - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+
+.flip-arena { background: radial-gradient(circle, #1e1b4b 0%, #02040a 100%); border: 2px solid var(--neon-gold); border-radius: 20px; margin: 12px 0; padding: 24px; text-align: center; box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); }
+
+.coin-box { width: 100px; height: 100px; background: linear-gradient(135deg, var(--neon-gold), #b45309); border-radius: 50%; color: #000; font-size: 42px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); border: 4px solid #fef08a; transition: transform 0.1s; }
+.coin-box.flipping { animation: coinSpin 0.15s infinite linear; }
+
+@keyframes coinSpin {
+  0% { transform: rotateY(0deg) scale(1); }
+  50% { transform: rotateY(180deg) scale(1.1); }
+  100% { transform: rotateY(360deg) scale(1); }
+}
+
+.bet-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.bet-box { background: #04060d; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; cursor: pointer; }
+.bet-box.selected { border-color: var(--neon-gold); background: rgba(245, 158, 11, 0.12); }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
+.chip-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.chip { padding: 6px 14px; background: #1e293b; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
+.chip.active { background: var(--neon-gold); color: #000; }
+
+.flip-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 900; font-size: 16px; cursor: pointer; background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; text-transform: uppercase; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="../game.html" class="back-btn">⬅️ Hub</a>
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+  </div>
+
+  <div class="flip-arena">
+    <div style="font-size:11px; color:var(--neon-gold); font-weight:800; margin-bottom:8px;">3D COIN FLIP DUEL</div>
+    <div class="coin-box" id="coinBox">🪙</div>
+    <div style="font-size:12px; font-weight:800; color:#94a3b8;" id="resTxt">FLIP THE COIN</div>
+  </div>
+
+  <div style="font-size:11px; color:#94a3b8; margin-bottom:6px; text-align:center;">SELECT HEADS OR TAILS</div>
+  <div class="bet-options">
+    <div class="bet-box selected" onclick="selectSide('HEADS', this)">
+      <div style="font-size:16px; font-weight:900; color:var(--neon-gold);">HEADS 👑</div>
+      <div style="font-size:11px; font-weight:800; color:var(--neon-blue);">1.95X</div>
+    </div>
+    <div class="bet-box" onclick="selectSide('TAILS', this)">
+      <div style="font-size:16px; font-weight:900; color:var(--neon-gold);">TAILS ⚡</div>
+      <div style="font-size:11px; font-weight:800; color:var(--neon-blue);">1.95X</div>
+    </div>
+  </div>
+
+  <div class="controls-card">
+    <div class="chip-row">
+      <span class="chip active" onclick="setChip(100, this)">₹100</span>
+      <span class="chip" onclick="setChip(500, this)">₹500</span>
+      <span class="chip" onclick="setChip(1000, this)">₹1,000</span>
+    </div>
+
+    <button class="flip-btn" id="flipBtn" onclick="flipCoin()">FLIP COIN 🪙</button>
+  </div>
+</div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'flip') {
+      osc.frequency.setValueAtTime(500, now);
+      gain.gain.setValueAtTime(0.04, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.03);
+      osc.start(now); osc.stop(now + 0.03);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    }
+  } catch(e) {}
+}
+
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let chip = 100;
+let activeSide = 'HEADS';
+let isFlipping = false;
+
+function sync() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+}
+
+function setChip(amt, el) {
+  if (isFlipping) return;
+  chip = amt;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectSide(side, el) {
+  if (isFlipping) return;
+  playSound('flip');
+  activeSide = side;
+  document.querySelectorAll('.bet-box').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function flipCoin() {
+  if (isFlipping) return;
+  if (bal < chip) return alert("Low balance!");
+
+  bal -= chip;
+  sync();
+  isFlipping = true;
+
+  const btn = document.getElementById('flipBtn');
+  btn.innerText = "FLIPPING...";
+  btn.disabled = true;
+
+  const coin = document.getElementById('coinBox');
+  coin.classList.add('flipping');
+
+  let ticks = 0;
+  let interval = setInterval(() => {
+    ticks++;
+    playSound('flip');
+
+    if (ticks > 16) {
+      clearInterval(interval);
+      coin.classList.remove('flipping');
+
+      let outcome = Math.random() < 0.5 ? 'HEADS' : 'TAILS';
+      coin.innerText = outcome === 'HEADS' ? '👑' : '⚡';
+      document.getElementById('resTxt').innerText = `RESULT: ${outcome}`;
+
+      let won = (activeSide === outcome);
+      let winAmt = Math.floor(chip * 1.95);
+
+      if (won) {
+        bal += winAmt;
+        sync();
+        playSound('win');
+        alert(`🎉 COIN LANDED ON ${outcome}!\nYou Won ₹${winAmt}!`);
+      } else {
+        alert(`💔 Landed on ${outcome}.\nBetter luck next flip!`);
+      }
+
+      isFlipping = false;
+      btn.innerText = "FLIP COIN 🪙";
+      btn.disabled = false;
+    }
+  }, 90);
+}
+
+sync();
+</script>
+</body>
+</html>
