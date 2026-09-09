@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Blackjack 21 - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+
+.felt-table { background: radial-gradient(circle, #1e3a8a 0%, #02040a 100%); border: 3px solid var(--neon-blue); border-radius: 20px; margin: 12px 0; padding: 16px; text-align: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+
+.card-row { display: flex; justify-content: center; gap: 8px; margin: 8px 0; min-height: 75px; }
+.card-item { width: 50px; height: 72px; background: #fff; border-radius: 8px; color: #000; font-weight: 900; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+.card-item.red { color: var(--neon-red); }
+.card-back { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--neon-gold); color: var(--neon-gold); font-size: 24px; }
+
+.score-badge { display: inline-block; background: rgba(0,0,0,0.6); border: 1px solid var(--border-color); color: var(--neon-gold); padding: 3px 10px; border-radius: 12px; font-weight: 800; font-size: 11px; margin-bottom: 4px; }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
+.action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.act-btn { padding: 12px 6px; border-radius: 10px; border: none; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; }
+.btn-hit { background: linear-gradient(135deg, var(--neon-blue), #0284c7); color: #000; }
+.btn-stand { background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; }
+.btn-deal { background: linear-gradient(135deg, var(--neon-green), #047857); color: #fff; grid-column: span 3; }
+
+.chip-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
+.chip { padding: 6px 14px; background: #1e293b; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
+.chip.active { background: var(--neon-gold); color: #000; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="../game.html" class="back-btn">⬅️ Hub</a>
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+  </div>
+
+  <div class="felt-table">
+    <div class="score-badge">DEALER HAND: <span id="dScoreTxt">0</span></div>
+    <div class="card-row" id="dealerCards">
+      <div class="card-item card-back">🎴</div>
+      <div class="card-item card-back">🎴</div>
+    </div>
+
+    <div style="height:1px; background:rgba(255,255,255,0.1); margin:12px 0;"></div>
+
+    <div class="score-badge">YOUR HAND: <span id="pScoreTxt">0</span></div>
+    <div class="card-row" id="playerCards">
+      <div class="card-item card-back">🎴</div>
+      <div class="card-item card-back">🎴</div>
+    </div>
+  </div>
+
+  <div class="controls-card">
+    <div class="chip-row">
+      <span class="chip active" onclick="setChip(100, this)">₹100</span>
+      <span class="chip" onclick="setChip(500, this)">₹500</span>
+      <span class="chip" onclick="setChip(1000, this)">₹1,000</span>
+    </div>
+
+    <div class="action-grid">
+      <button class="act-btn btn-hit" id="hitBtn" onclick="hitCard()" disabled>HIT 🃏</button>
+      <button class="act-btn btn-stand" id="standBtn" onclick="standHand()" disabled>STAND ✋</button>
+      <button class="act-btn btn-deal" id="dealBtn" onclick="startDeal()">DEAL HAND 💰</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'card') {
+      osc.frequency.setValueAtTime(450, now);
+      gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    }
+  } catch(e) {}
+}
+
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let chip = 100;
+let gameState = 'IDLE'; // IDLE, PLAYING
+let playerHand = [], dealerHand = [];
+
+const suits = ['♠', '♥', '♦', '♣'];
+const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+function sync() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+}
+
+function setChip(amt, el) {
+  if (gameState !== 'IDLE') return;
+  chip = amt;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getRandomCard() {
+  let s = suits[Math.floor(Math.random() * suits.length)];
+  let v = values[Math.floor(Math.random() * values.length)];
+  let pts = (v === 'A') ? 11 : (['J', 'Q', 'K'].includes(v) ? 10 : parseInt(v));
+  return { suit: s, val: v, pts: pts, isRed: (s === '♥' || s === '♦') };
+}
+
+function calcScore(hand) {
+  let score = hand.reduce((a, b) => a + b.pts, 0);
+  let aces = hand.filter(c => c.val === 'A').length;
+  while (score > 21 && aces > 0) {
+    score -= 10;
+    aces--;
+  }
+  return score;
+}
+
+function renderHand(containerId, hand, hideSecond = false) {
+  const container = document.getElementById(containerId);
+  if (hideSecond && hand.length >= 2) {
+    container.innerHTML = `
+      <div class="card-item ${hand[0].isRed ? 'red' : ''}"><div>${hand[0].val}</div><div style="font-size:12px;">${hand[0].suit}</div></div>
+      <div class="card-item card-back">🎴</div>
+    `;
+    return;
+  }
+  container.innerHTML = hand.map(c => `
+    <div class="card-item ${c.isRed ? 'red' : ''}">
+      <div>${c.val}</div>
+      <div style="font-size:12px;">${c.suit}</div>
+    </div>
+  `).join('');
+}
+
+function startDeal() {
+  if (bal < chip) return alert("Low balance!");
+  bal -= chip;
+  sync();
+
+  gameState = 'PLAYING';
+  playerHand = [getRandomCard(), getRandomCard()];
+  dealerHand = [getRandomCard(), getRandomCard()];
+
+  playSound('card');
+  renderHand('playerCards', playerHand, false);
+  renderHand('dealerCards', dealerHand, true);
+
+  document.getElementById('pScoreTxt').innerText = calcScore(playerHand);
+  document.getElementById('dScoreTxt').innerText = "?";
+
+  document.getElementById('hitBtn').disabled = false;
+  document.getElementById('standBtn').disabled = false;
+  document.getElementById('dealBtn').disabled = true;
+
+  if (calcScore(playerHand) === 21) {
+    standHand();
+  }
+}
+
+function hitCard() {
+  if (gameState !== 'PLAYING') return;
+  playSound('card');
+  playerHand.push(getRandomCard());
+  renderHand('playerCards', playerHand, false);
+  
+  let pScore = calcScore(playerHand);
+  document.getElementById('pScoreTxt').innerText = pScore;
+
+  if (pScore > 21) {
+    alert("💥 BUST! Score exceeded 21.");
+    endRound(false);
+  }
+}
+
+function standHand() {
+  if (gameState !== 'PLAYING') return;
+
+  renderHand('dealerCards', dealerHand, false);
+  let dScore = calcScore(dealerHand);
+
+  while (dScore < 17) {
+    dealerHand.push(getRandomCard());
+    dScore = calcScore(dealerHand);
+  }
+
+  renderHand('dealerCards', dealerHand, false);
+  document.getElementById('dScoreTxt').innerText = dScore;
+
+  let pScore = calcScore(playerHand);
+  let pWin = false;
+
+  if (dScore > 21 || pScore > dScore) pWin = true;
+  else if (pScore === dScore) {
+    bal += chip; // Push / Refund
+    sync();
+    alert("⚖️ PUSH / DRAW! Bet refunded.");
+    endRound(null);
+    return;
+  }
+
+  endRound(pWin);
+}
+
+function endRound(pWin) {
+  if (pWin === true) {
+    let winAmt = chip * 2;
+    bal += winAmt;
+    sync();
+    playSound('win');
+    alert(`🎉 YOU WON ₹${winAmt}!`);
+  } else if (pWin === false) {
+    alert("💔 DEALER WINS!");
+  }
+
+  gameState = 'IDLE';
+  document.getElementById('hitBtn').disabled = true;
+  document.getElementById('standBtn').disabled = true;
+  document.getElementById('dealBtn').disabled = false;
+}
+
+sync();
+</script>
+</body>
+</html>
