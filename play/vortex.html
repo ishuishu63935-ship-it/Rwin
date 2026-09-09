@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Vortex Spin Wheel - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-purple: #a855f7;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+
+.wheel-card { position: relative; width: 100%; height: 320px; background: radial-gradient(circle, #1e1b4b, #02040a); border: 2px solid var(--neon-purple); border-radius: 20px; margin: 12px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(168, 85, 247, 0.25); }
+#wheelCanvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1); }
+
+.pointer { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 24px solid var(--neon-gold); z-index: 10; filter: drop-shadow(0 0 8px var(--neon-gold)); }
+
+.bet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.bet-card { background: #04060d; border: 1.5px solid var(--border-color); border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: transform 0.1s, border-color 0.2s; }
+.bet-card.selected { border-color: var(--neon-gold); background: rgba(245, 158, 11, 0.1); }
+.bet-card:active { transform: scale(0.96); }
+
+.multi-badge { font-size: 16px; font-weight: 900; }
+.multi-2x { color: var(--neon-blue); }
+.multi-5x { color: var(--neon-green); }
+.multi-10x { color: var(--neon-gold); }
+.multi-20x { color: var(--neon-purple); }
+.multi-50x { color: #ec4899; }
+.multi-0x { color: var(--neon-red); }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
+.chip-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.chip { padding: 6px 14px; background: #1e293b; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
+.chip.active { background: var(--neon-gold); color: #000; }
+
+.spin-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 900; font-size: 16px; cursor: pointer; background: linear-gradient(135deg, var(--neon-purple), #7c3aed); color: #fff; text-transform: uppercase; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="../game.html" class="back-btn">⬅️ Hub</a>
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+  </div>
+
+  <div class="wheel-card">
+    <div class="pointer"></div>
+    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+  </div>
+
+  <div style="font-size:11px; color:#94a3b8; margin-bottom:6px; text-align:center;">CHOOSE YOUR MULTIPLIER TARGET</div>
+  <div class="bet-grid">
+    <div class="bet-card selected" onclick="selectTarget(2, this)">
+      <div class="multi-badge multi-2x">2X</div>
+      <div style="font-size:9px; color:#64748b;">45% Chance</div>
+    </div>
+    <div class="bet-card" onclick="selectTarget(5, this)">
+      <div class="multi-badge multi-5x">5X</div>
+      <div style="font-size:9px; color:#64748b;">25% Chance</div>
+    </div>
+    <div class="bet-card" onclick="selectTarget(10, this)">
+      <div class="multi-badge multi-10x">10X</div>
+      <div style="font-size:9px; color:#64748b;">15% Chance</div>
+    </div>
+    <div class="bet-card" onclick="selectTarget(20, this)">
+      <div class="multi-badge multi-20x">20X</div>
+      <div style="font-size:9px; color:#64748b;">10% Chance</div>
+    </div>
+    <div class="bet-card" onclick="selectTarget(50, this)">
+      <div class="multi-badge multi-50x">50X</div>
+      <div style="font-size:9px; color:#64748b;">4% Chance</div>
+    </div>
+    <div class="bet-card" onclick="selectTarget(0, this)">
+      <div class="multi-badge multi-0x">0X</div>
+      <div style="font-size:9px; color:#64748b;">1% Safe Trap</div>
+    </div>
+  </div>
+
+  <div class="controls-card">
+    <div class="chip-row">
+      <span class="chip active" onclick="setChip(100, this)">₹100</span>
+      <span class="chip" onclick="setChip(500, this)">₹500</span>
+      <span class="chip" onclick="setChip(1000, this)">₹1,000</span>
+    </div>
+
+    <button class="spin-btn" id="spinBtn" onclick="spinWheel()">SPIN VORTEX WHEEL 🌀</button>
+  </div>
+</div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'tick') {
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.04, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.02);
+      osc.start(now); osc.stop(now + 0.02);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    }
+  } catch(e) {}
+}
+
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let selectedTarget = 2;
+let chip = 100;
+let isSpinning = false;
+let currentRotation = 0;
+
+const sectors = [
+  { label: "2X", val: 2, color: "#00e5ff" },
+  { label: "5X", val: 5, color: "#10b981" },
+  { label: "2X", val: 2, color: "#00e5ff" },
+  { label: "10X", val: 10, color: "#f59e0b" },
+  { label: "2X", val: 2, color: "#00e5ff" },
+  { label: "20X", val: 20, color: "#a855f7" },
+  { label: "5X", val: 5, color: "#10b981" },
+  { label: "50X", val: 50, color: "#ec4899" },
+  { label: "2X", val: 2, color: "#00e5ff" },
+  { label: "0X", val: 0, color: "#ef4444" }
+];
+
+function sync() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+}
+
+function setChip(amt, el) {
+  if (isSpinning) return;
+  chip = amt;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectTarget(target, el) {
+  if (isSpinning) return;
+  playSound('tick');
+  selectedTarget = target;
+  document.querySelectorAll('.bet-card').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function drawWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const numSectors = sectors.length;
+  const arc = (Math.PI * 2) / numSectors;
+  const radius = canvas.width / 2;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  sectors.forEach((sec, i) => {
+    let angle = i * arc;
+    ctx.beginPath();
+    ctx.fillStyle = sec.color;
+    ctx.moveTo(radius, radius);
+    ctx.arc(radius, radius, radius - 8, angle, angle + arc);
+    ctx.lineTo(radius, radius);
+    ctx.fill();
+
+    ctx.strokeStyle = "#04060d";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Text
+    ctx.save();
+    ctx.translate(radius, radius);
+    ctx.rotate(angle + arc / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#000";
+    ctx.font = "900 14px Poppins";
+    ctx.fillText(sec.label, radius - 20, 5);
+    ctx.restore();
+  });
+
+  // Inner Pin Center
+  ctx.beginPath();
+  ctx.arc(radius, radius, 25, 0, Math.PI * 2);
+  ctx.fillStyle = "#04060d";
+  ctx.fill();
+  ctx.strokeStyle = "#f59e0b";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+function spinWheel() {
+  if (isSpinning) return;
+  if (bal < chip) return alert("Low balance!");
+
+  bal -= chip;
+  sync();
+  isSpinning = true;
+
+  const btn = document.getElementById('spinBtn');
+  btn.innerText = "SPINNING...";
+  btn.disabled = true;
+
+  const numSectors = sectors.length;
+  const arcDeg = 360 / numSectors;
+
+  // Pick random sector index
+  let winnerIndex = Math.floor(Math.random() * numSectors);
+  let targetAngle = 360 - (winnerIndex * arcDeg) - (arcDeg / 2);
+  let extraSpins = 5 * 360; // 5 Full spins
+
+  currentRotation += extraSpins + targetAngle - (currentRotation % 360);
+
+  const canvas = document.getElementById('wheelCanvas');
+  canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+  setTimeout(() => {
+    isSpinning = false;
+    btn.innerText = "SPIN VORTEX WHEEL 🌀";
+    btn.disabled = false;
+
+    let resultSector = sectors[winnerIndex];
+    let won = (resultSector.val === selectedTarget);
+    let winAmt = resultSector.val * chip;
+
+    if (won && resultSector.val > 0) {
+      bal += winAmt;
+      sync();
+      playSound('win');
+      alert(`🎉 WHEEL STOPPED ON ${resultSector.label}!\nYou Won ₹${winAmt}!`);
+    } else {
+      alert(`💔 Wheel stopped on ${resultSector.label}.\nBetter luck next spin!`);
+    }
+  }, 4000);
+}
+
+drawWheel();
+sync();
+</script>
+</body>
+</html>
