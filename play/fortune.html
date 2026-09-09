@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wheel of Fortune - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-purple: #a855f7;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+
+.wheel-card { position: relative; width: 100%; height: 310px; background: radial-gradient(circle, #1e1b4b, #02040a); border: 2px solid var(--neon-gold); border-radius: 20px; margin: 12px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); }
+#wheelCanvas { width: 270px; height: 270px; transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1); }
+
+.pointer { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 24px solid var(--neon-gold); z-index: 10; filter: drop-shadow(0 0 8px var(--neon-gold)); }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
+.chip-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.chip { padding: 6px 14px; background: #1e293b; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
+.chip.active { background: var(--neon-gold); color: #000; }
+
+.spin-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 900; font-size: 16px; cursor: pointer; background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; text-transform: uppercase; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="../game.html" class="back-btn">⬅️ Hub</a>
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+  </div>
+
+  <div class="wheel-card">
+    <div class="pointer"></div>
+    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+  </div>
+
+  <div class="controls-card">
+    <div style="font-size:11px; color:#94a3b8; margin-bottom:8px;">BET AMOUNT PER SPIN</div>
+    <div class="chip-row">
+      <span class="chip active" onclick="setChip(100, this)">₹100</span>
+      <span class="chip" onclick="setChip(500, this)">₹500</span>
+      <span class="chip" onclick="setChip(1000, this)">₹1,000</span>
+    </div>
+
+    <button class="spin-btn" id="spinBtn" onclick="spinFortune()">SPIN FORTUNE WHEEL 🎡</button>
+  </div>
+</div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'tick') {
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.04, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.02);
+      osc.start(now); osc.stop(now + 0.02);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    }
+  } catch(e) {}
+}
+
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let chip = 100;
+let isSpinning = false;
+let currentRotation = 0;
+
+const sectors = [
+  { label: "1.5X", val: 1.5, color: "#00e5ff" },
+  { label: "2.0X", val: 2.0, color: "#10b981" },
+  { label: "0.0X", val: 0.0, color: "#ef4444" },
+  { label: "3.0X", val: 3.0, color: "#f59e0b" },
+  { label: "1.2X", val: 1.2, color: "#a855f7" },
+  { label: "5.0X", val: 5.0, color: "#ec4899" },
+  { label: "0.5X", val: 0.5, color: "#64748b" },
+  { label: "10X", val: 10.0, color: "#eab308" }
+];
+
+function sync() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+}
+
+function setChip(amt, el) {
+  if (isSpinning) return;
+  chip = amt;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function drawWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const numSectors = sectors.length;
+  const arc = (Math.PI * 2) / numSectors;
+  const radius = canvas.width / 2;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  sectors.forEach((sec, i) => {
+    let angle = i * arc;
+    ctx.beginPath();
+    ctx.fillStyle = sec.color;
+    ctx.moveTo(radius, radius);
+    ctx.arc(radius, radius, radius - 8, angle, angle + arc);
+    ctx.lineTo(radius, radius);
+    ctx.fill();
+
+    ctx.strokeStyle = "#04060d";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(radius, radius);
+    ctx.rotate(angle + arc / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#000";
+    ctx.font = "900 14px Poppins";
+    ctx.fillText(sec.label, radius - 20, 5);
+    ctx.restore();
+  });
+
+  ctx.beginPath();
+  ctx.arc(radius, radius, 25, 0, Math.PI * 2);
+  ctx.fillStyle = "#04060d";
+  ctx.fill();
+  ctx.strokeStyle = "#f59e0b";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+function spinFortune() {
+  if (isSpinning) return;
+  if (bal < chip) return alert("Low balance!");
+
+  bal -= chip;
+  sync();
+  isSpinning = true;
+
+  const btn = document.getElementById('spinBtn');
+  btn.innerText = "SPINNING...";
+  btn.disabled = true;
+
+  const numSectors = sectors.length;
+  const arcDeg = 360 / numSectors;
+
+  let winnerIndex = Math.floor(Math.random() * numSectors);
+  let targetAngle = 360 - (winnerIndex * arcDeg) - (arcDeg / 2);
+  let extraSpins = 5 * 360;
+
+  currentRotation += extraSpins + targetAngle - (currentRotation % 360);
+
+  const canvas = document.getElementById('wheelCanvas');
+  canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+  setTimeout(() => {
+    isSpinning = false;
+    btn.innerText = "SPIN FORTUNE WHEEL 🎡";
+    btn.disabled = false;
+
+    let resultSector = sectors[winnerIndex];
+    let winAmt = Math.floor(resultSector.val * chip);
+
+    if (winAmt > 0) {
+      bal += winAmt;
+      sync();
+      playSound('win');
+      alert(`🎉 WHEEL STOPPED ON ${resultSector.label}!\nYou Won ₹${winAmt}!`);
+    } else {
+      alert(`💔 Wheel stopped on 0.0X.\nBetter luck next spin!`);
+    }
+  }, 4000);
+}
+
+drawWheel();
+sync();
+</script>
+</body>
+</html>
