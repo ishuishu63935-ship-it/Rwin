@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>WinGo 30s Color Trading - VIP Arena</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Color Trading Pro - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
   --neon-gold: #f59e0b;
@@ -19,32 +18,37 @@
 }
 
 * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
-body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
 .container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
 
-.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
 .back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
 .bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
 
-.timer-card { background: radial-gradient(circle, #1e1b4b, #04060d); border: 2px solid var(--neon-gold); border-radius: 16px; padding: 16px; text-align: center; margin: 12px 0; }
-.timer-num { font-size: 38px; font-weight: 900; color: var(--neon-gold); letter-spacing: 2px; margin: 6px 0; }
+.timer-card { background: radial-gradient(circle, #1e1b4b 0%, #02040a 100%); border: 2px solid var(--neon-blue); border-radius: 18px; padding: 14px; text-align: center; margin: 12px 0; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); }
+.period-tag { font-size: 11px; color: #94a3b8; font-weight: 800; }
+.timer-val { font-size: 36px; font-weight: 900; color: var(--neon-gold); letter-spacing: 2px; }
 
-.btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
-.color-btn { padding: 14px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; color: #fff; font-size: 13px; text-transform: uppercase; }
-.btn-green { background: linear-gradient(135deg, #10b981, #047857); }
-.btn-violet { background: linear-gradient(135deg, #a855f7, #6b21a8); }
-.btn-red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.color-btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.color-btn { padding: 14px 6px; border-radius: 14px; border: none; font-weight: 900; font-size: 13px; cursor: pointer; color: #fff; text-transform: uppercase; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.btn-green { background: linear-gradient(135deg, var(--neon-green), #047857); }
+.btn-violet { background: linear-gradient(135deg, var(--neon-purple), #6b21a8); }
+.btn-red { background: linear-gradient(135deg, var(--neon-red), #991b1b); }
 
 .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 14px; }
-.num-btn { padding: 10px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; font-weight: 800; color: #fff; cursor: pointer; text-align: center; }
+.num-btn { background: #04060d; border: 1.5px solid var(--border-color); border-radius: 12px; padding: 10px 0; font-size: 16px; font-weight: 900; color: #fff; cursor: pointer; text-align: center; }
+.num-btn.selected { border-color: var(--neon-gold); background: rgba(245, 158, 11, 0.2); }
 
-.controls { background: #04060d; border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; text-align: center; }
+.history-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; margin-top: 14px; }
+.history-title { font-size: 11px; font-weight: 800; color: #94a3b8; margin-bottom: 8px; }
+.history-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.hist-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; flex-shrink: 0; color: #fff; }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
 .chip-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
-.chip { padding: 6px 12px; background: #1e293b; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
+.chip { padding: 6px 14px; background: #1e293b; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
 .chip.active { background: var(--neon-gold); color: #000; }
-
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; align-items: center; justify-content: center; }
-.modal-box { background: var(--card-bg); border: 2px solid var(--neon-gold); border-radius: 18px; padding: 20px; text-align: center; width: 80%; max-width: 300px; }
 </style>
 </head>
 <body>
@@ -56,53 +60,66 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
   </div>
 
   <div class="timer-card">
-    <div style="font-size:11px; color:#94a3b8;">WINGO 30s COLOR DRAW</div>
-    <div class="timer-num" id="timerTxt">00:30</div>
-    <div style="font-size:10px; color:var(--neon-blue);" id="periodTxt">PERIOD: 2026091001</div>
+    <div class="period-tag">PERIOD: <span id="periodTxt">2026091001</span></div>
+    <div class="timer-val" id="timeTxt">00:30</div>
   </div>
 
-  <div class="btn-grid">
-    <button class="color-btn btn-green" onclick="betColor('GREEN')">GREEN (2X)</button>
-    <button class="color-btn btn-violet" onclick="betColor('VIOLET')">VIOLET (4.5X)</button>
-    <button class="color-btn btn-red" onclick="betColor('RED')">RED (2X)</button>
+  <div style="font-size:11px; color:#94a3b8; margin-bottom:6px;">SELECT COLOR (MULTIPLIER)</div>
+  <div class="color-btn-grid">
+    <button class="color-btn btn-green" onclick="placeBet('GREEN')">GREEN<br><small>2.0X</small></button>
+    <button class="color-btn btn-violet" onclick="placeBet('VIOLET')">VIOLET<br><small>4.5X</small></button>
+    <button class="color-btn btn-red" onclick="placeBet('RED')">RED<br><small>2.0X</small></button>
   </div>
 
-  <div class="num-grid">
-    <div class="num-btn" onclick="betNum(0)">0</div>
-    <div class="num-btn" onclick="betNum(1)">1</div>
-    <div class="num-btn" onclick="betNum(2)">2</div>
-    <div class="num-btn" onclick="betNum(3)">3</div>
-    <div class="num-btn" onclick="betNum(4)">4</div>
-    <div class="num-btn" onclick="betNum(5)">5</div>
-    <div class="num-btn" onclick="betNum(6)">6</div>
-    <div class="num-btn" onclick="betNum(7)">7</div>
-    <div class="num-btn" onclick="betNum(8)">8</div>
-    <div class="num-btn" onclick="betNum(9)">9</div>
-  </div>
+  <div style="font-size:11px; color:#94a3b8; margin-bottom:6px;">OR SELECT DIRECT NUMBER (9.0X)</div>
+  <div class="num-grid" id="numGrid"></div>
 
-  <div class="controls">
+  <div class="controls-card">
     <div class="chip-row">
       <span class="chip active" onclick="setChip(100, this)">₹100</span>
       <span class="chip" onclick="setChip(500, this)">₹500</span>
       <span class="chip" onclick="setChip(1000, this)">₹1,000</span>
     </div>
-    <div style="font-size:11px; color:#94a3b8;">ACTIVE BET: <b id="activeBetTxt" style="color:var(--neon-gold);">NONE</b></div>
   </div>
-</div>
 
-<div class="modal" id="resModal">
-  <div class="modal-box">
-    <h3 id="resTitle" style="margin:0; color:#fff;">DRAW RESULT</h3>
-    <p id="resMsg" style="font-size:12px; color:#94a3b8; margin:10px 0;"></p>
-    <button onclick="document.getElementById('resModal').style.display='none'" style="padding:8px 16px; background:var(--neon-gold); border:none; font-weight:800; border-radius:8px; cursor:pointer;">OK</button>
+  <div class="history-card">
+    <div class="history-title">RECENT PERIOD TRENDS</div>
+    <div class="history-row" id="historyRow"></div>
   </div>
 </div>
 
 <script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'click') {
+      osc.frequency.setValueAtTime(400, now); gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+    }
+  } catch(e) {}
+}
+
 let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
 let chip = 100;
-let currentBet = null;
-let timer = 30;
+let currentBet = null; // { type: 'COLOR'/'NUM', val: 'GREEN'/'7' }
+let timerSeconds = 30;
+let historyData = [
+  { num: 7, color: 'GREEN' }, { num: 2, color: 'RED' }, { num: 0, color: 'VIOLET' },
+  { num: 9, color: 'GREEN' }, { num: 4, color: 'RED' }
+];
 
 function sync() {
   localStorage.setItem('rwin_balance', bal.toString());
@@ -115,51 +132,98 @@ function setChip(amt, el) {
   el.classList.add('active');
 }
 
-function betColor(col) {
-  if (timer <= 5) return alert("Betting locked for draw!");
-  if (bal < chip) return alert("Low balance!");
-  bal -= chip;
-  currentBet = { type: 'COLOR', val: col, amt: chip };
-  document.getElementById('activeBetTxt').innerText = col + " (₹" + chip + ")";
-  sync();
+function renderNums() {
+  const container = document.getElementById('numGrid');
+  container.innerHTML = '';
+  for (let i = 0; i <= 9; i++) {
+    container.innerHTML += `<div class="num-btn" onclick="placeNumBet(${i}, this)">${i}</div>`;
+  }
 }
 
-function betNum(n) {
-  if (timer <= 5) return alert("Betting locked for draw!");
+function renderHistory() {
+  const container = document.getElementById('historyRow');
+  container.innerHTML = historyData.map(h => {
+    let bg = h.color === 'GREEN' ? '#10b981' : (h.color === 'RED' ? '#ef4444' : '#a855f7');
+    return `<div class="hist-dot" style="background:${bg}">${h.num}</div>`;
+  }).join('');
+}
+
+function placeBet(color) {
+  if (timerSeconds <= 5) return alert("Betting closed for this period!");
   if (bal < chip) return alert("Low balance!");
+
   bal -= chip;
-  currentBet = { type: 'NUM', val: n, amt: chip };
-  document.getElementById('activeBetTxt').innerText = "NUM " + n + " (₹" + chip + ")";
   sync();
+  playSound('click');
+
+  currentBet = { type: 'COLOR', val: color, amt: chip };
+  alert(`✅ Bet Placed: ${color} (₹${chip})`);
+}
+
+function placeNumBet(num, el) {
+  if (timerSeconds <= 5) return alert("Betting closed for this period!");
+  if (bal < chip) return alert("Low balance!");
+
+  document.querySelectorAll('.num-btn').forEach(n => n.classList.remove('selected'));
+  el.classList.add('selected');
+
+  bal -= chip;
+  sync();
+  playSound('click');
+
+  currentBet = { type: 'NUM', val: num, amt: chip };
+  alert(`✅ Bet Placed on Number ${num} (₹${chip})`);
 }
 
 setInterval(() => {
-  timer--;
-  document.getElementById('timerTxt').innerText = "00:" + (timer < 10 ? "0" + timer : timer);
-  if (timer === 0) {
-    let num = Math.floor(Math.random() * 10);
-    let col = (num === 0 || num === 5) ? 'VIOLET' : (num % 2 === 0 ? 'RED' : 'GREEN');
-    
-    let won = false;
-    let winAmt = 0;
+  timerSeconds--;
+  if (timerSeconds < 10) {
+    document.getElementById('timeTxt').innerText = `00:0${timerSeconds}`;
+  } else {
+    document.getElementById('timeTxt').innerText = `00:${timerSeconds}`;
+  }
+
+  if (timerSeconds <= 0) {
+    // Generate Result
+    let winningNum = Math.floor(Math.random() * 10);
+    let winningColor = (winningNum === 0 || winningNum === 5) ? 'VIOLET' : (winningNum % 2 === 0 ? 'RED' : 'GREEN');
+
+    historyData.unshift({ num: winningNum, color: winningColor });
+    if (historyData.length > 8) historyData.pop();
+    renderHistory();
+
     if (currentBet) {
-      if (currentBet.type === 'COLOR' && currentBet.val === col) { won = true; winAmt = currentBet.amt * 2; }
-      if (currentBet.type === 'NUM' && currentBet.val === num) { won = true; winAmt = currentBet.amt * 9; }
+      let won = false;
+      let winAmt = 0;
+
+      if (currentBet.type === 'COLOR' && currentBet.val === winningColor) {
+        won = true;
+        winAmt = Math.floor(currentBet.amt * (winningColor === 'VIOLET' ? 4.5 : 2.0));
+      } else if (currentBet.type === 'NUM' && currentBet.val === winningNum) {
+        won = true;
+        winAmt = Math.floor(currentBet.amt * 9.0);
+      }
+
+      if (won) {
+        bal += winAmt;
+        sync();
+        playSound('win');
+        alert(`🎉 WINNER! Result was ${winningNum} (${winningColor}).\nYou Won ₹${winAmt}!`);
+      } else {
+        alert(`💔 Better luck next period! Result was ${winningNum} (${winningColor}).`);
+      }
     }
 
-    if (won) { bal += winAmt; sync(); }
-    
-    document.getElementById('resTitle').innerText = won ? "🎉 YOU WON!" : "💔 DRAW RESULT";
-    document.getElementById('resMsg').innerText = `Winning Number: ${num} (${col})\n` + (won ? `Won ₹${winAmt}!` : 'Better luck next period!');
-    document.getElementById('resModal').style.display = 'flex';
-
     currentBet = null;
-    document.getElementById('activeBetTxt').innerText = "NONE";
-    timer = 30;
+    timerSeconds = 30;
+    document.querySelectorAll('.num-btn').forEach(n => n.classList.remove('selected'));
   }
 }, 1000);
 
+renderNums();
+renderHistory();
 sync();
 </script>
 </body>
-</html>
+      </html>
+      
