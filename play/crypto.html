@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Crypto 10s Trader - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+
+.chart-card { position: relative; width: 100%; height: 260px; background: #02040a; border: 2px solid var(--border-color); border-radius: 18px; margin: 12px 0; overflow: hidden; }
+#chartCanvas { width: 100%; height: 100%; display: block; }
+
+.price-overlay { position: absolute; top: 12px; left: 14px; font-size: 18px; font-weight: 900; color: var(--neon-green); }
+.timer-overlay { position: absolute; top: 12px; right: 14px; font-size: 13px; font-weight: 800; color: var(--neon-gold); }
+
+.trade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.trade-btn { padding: 14px; border-radius: 12px; border: none; font-weight: 900; font-size: 15px; cursor: pointer; color: #fff; text-transform: uppercase; }
+.btn-up { background: linear-gradient(135deg, var(--neon-green), #047857); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+.btn-down { background: linear-gradient(135deg, var(--neon-red), #b91c1c); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
+.chip-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
+.chip { padding: 6px 14px; background: #1e293b; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; color: #94a3b8; }
+.chip.active { background: var(--neon-gold); color: #000; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="../game.html" class="back-btn">⬅️ Hub</a>
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="price-overlay" id="priceTxt">$65,420.00</div>
+    <div class="timer-overlay" id="timeTxt">TIME: 10s</div>
+    <canvas id="chartCanvas" width="400" height="260"></canvas>
+  </div>
+
+  <div class="trade-grid">
+    <button class="trade-btn btn-up" id="upBtn" onclick="placeTrade('UP')">CALL UP 📈 (1.95X)</button>
+    <button class="trade-btn btn-down" id="downBtn" onclick="placeTrade('DOWN')">PUT DOWN 📉 (1.95X)</button>
+  </div>
+
+  <div class="controls-card">
+    <div class="chip-row">
+      <span class="chip active" onclick="setChip(100, this)">₹100</span>
+      <span class="chip" onclick="setChip(500, this)">₹500</span>
+      <span class="chip" onclick="setChip(1000, this)">₹1,000</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'tick') {
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.04, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.02);
+      osc.start(now); osc.stop(now + 0.02);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    }
+  } catch(e) {}
+}
+
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let chip = 100;
+let currentPrice = 65420;
+let priceHistory = Array(30).fill(65420);
+let isTrading = false;
+
+const canvas = document.getElementById('chartCanvas');
+const ctx = canvas.getContext('2d');
+
+function sync() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+}
+
+function setChip(amt, el) {
+  if (isTrading) return;
+  chip = amt;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function drawChart() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+  ctx.lineWidth = 1;
+  for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+
+  let minP = Math.min(...priceHistory) - 10;
+  let maxP = Math.max(...priceHistory) + 10;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#00e5ff";
+  ctx.lineWidth = 3;
+
+  priceHistory.forEach((p, i) => {
+    let x = (i / (priceHistory.length - 1)) * canvas.width;
+    let y = canvas.height - ((p - minP) / (maxP - minP)) * (canvas.height - 40) - 20;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+
+setInterval(() => {
+  let change = (Math.random() - 0.49) * 12;
+  currentPrice = parseFloat((currentPrice + change).toFixed(2));
+  priceHistory.shift();
+  priceHistory.push(currentPrice);
+
+  document.getElementById('priceTxt').innerText = "$" + currentPrice.toLocaleString();
+  drawChart();
+}, 250);
+
+function placeTrade(dir) {
+  if (isTrading) return;
+  if (bal < chip) return alert("Low balance!");
+
+  bal -= chip;
+  sync();
+  isTrading = true;
+
+  document.getElementById('upBtn').disabled = true;
+  document.getElementById('downBtn').disabled = true;
+
+  let entryPrice = currentPrice;
+  let timer = 10;
+
+  let countdown = setInterval(() => {
+    timer--;
+    playSound('tick');
+    document.getElementById('timeTxt').innerText = `TIME: ${timer}s`;
+
+    if (timer <= 0) {
+      clearInterval(countdown);
+      let exitPrice = currentPrice;
+      let won = (dir === 'UP' && exitPrice > entryPrice) || (dir === 'DOWN' && exitPrice < entryPrice);
+      let winAmt = Math.floor(chip * 1.95);
+
+      if (won) {
+        bal += winAmt;
+        sync();
+        playSound('win');
+        alert(`🎉 TRADE WIN!\nEntry: $${entryPrice} ➔ Exit: $${exitPrice}\nYou Won ₹${winAmt}!`);
+      } else {
+        alert(`💔 TRADE LOST!\nEntry: $${entryPrice} ➔ Exit: $${exitPrice}`);
+      }
+
+      isTrading = false;
+      document.getElementById('timeTxt').innerText = "TIME: 10s";
+      document.getElementById('upBtn').disabled = false;
+      document.getElementById('downBtn').disabled = false;
+    }
+  }, 1000);
+}
+
+sync();
+drawChart();
+</script>
+</body>
+</html>
