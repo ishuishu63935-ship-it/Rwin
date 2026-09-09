@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>3 Patti Deluxe - VIP Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-gold: #f59e0b;
+  --neon-blue: #00e5ff;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --bg-dark: #04060d;
+  --card-bg: #0b101d;
+  --border-color: #1e293b;
+}
+
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins', sans-serif; color: #fff; overflow-x: hidden; }
+
+.container { max-width: 480px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; padding: 12px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.back-btn { padding: 6px 12px; background: var(--border-color); color: var(--neon-blue); border: 1px solid var(--neon-blue); border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 700; }
+.bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 4px 12px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
+
+.table-area { background: radial-gradient(circle, #064e3b 0%, #022c22 100%); border: 3px solid var(--neon-gold); border-radius: 20px; margin: 12px 0; padding: 16px; text-align: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+
+.card-row { display: flex; justify-content: center; gap: 8px; margin: 10px 0; min-height: 75px; }
+.card-item { width: 52px; height: 74px; background: #fff; border-radius: 8px; color: #000; font-weight: 900; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+.card-item.red { color: var(--neon-red); }
+.card-hidden { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--neon-gold); color: var(--neon-gold); }
+
+.pot-badge { display: inline-block; background: rgba(0,0,0,0.6); border: 1px solid var(--neon-gold); color: var(--neon-gold); padding: 4px 14px; border-radius: 20px; font-weight: 800; font-size: 12px; margin-bottom: 8px; }
+
+.controls-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; text-align: center; }
+.action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.act-btn { padding: 12px 6px; border-radius: 10px; border: none; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; }
+.btn-pack { background: #334155; color: #94a3b8; }
+.btn-chaal { background: linear-gradient(135deg, var(--neon-blue), #0284c7); color: #000; }
+.btn-show { background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; }
+
+.status-lbl { font-size: 11px; font-weight: 800; color: #94a3b8; margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="../game.html" class="back-btn">⬅️ Hub</a>
+    <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
+  </div>
+
+  <div class="table-area">
+    <div class="pot-badge">POT AMOUNT: <span id="potTxt">₹0</span></div>
+
+    <div class="status-lbl">DEALER HAND</div>
+    <div class="card-row" id="dealerCards">
+      <div class="card-item card-hidden">🎴</div>
+      <div class="card-item card-hidden">🎴</div>
+      <div class="card-item card-hidden">🎴</div>
+    </div>
+
+    <div style="height:1px; background:rgba(255,255,255,0.1); margin:12px 0;"></div>
+
+    <div class="status-lbl">YOUR HAND (<span id="handRankTxt" style="color:var(--neon-gold);">PLAY BLIND</span>)</div>
+    <div class="card-row" id="playerCards">
+      <div class="card-item card-hidden">🎴</div>
+      <div class="card-item card-hidden">🎴</div>
+      <div class="card-item card-hidden">🎴</div>
+    </div>
+  </div>
+
+  <div class="controls-card">
+    <div style="font-size:11px; color:#94a3b8;">BET AMOUNT: <b style="color:var(--neon-gold);" id="betValTxt">₹100</b></div>
+
+    <div class="action-grid">
+      <button class="act-btn btn-pack" id="packBtn" onclick="packHand()" disabled>PACK 🏳️</button>
+      <button class="act-btn btn-chaal" id="chaalBtn" onclick="playChaal()">DEAL / CHAAL 💰</button>
+      <button class="act-btn btn-show" id="showBtn" onclick="showCards()" disabled>SHOW 🃏</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playSound(type) {
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+
+    if (type === 'deal') {
+      osc.frequency.setValueAtTime(400, now);
+      gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'win') {
+      osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    }
+  } catch(e) {}
+}
+
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+let pot = 0;
+let betAmt = 100;
+let gameState = 'IDLE'; // IDLE, PLAYING
+let playerHand = [], dealerHand = [];
+
+const suits = ['♠', '♥', '♦', '♣'];
+const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+function sync() {
+  localStorage.setItem('rwin_balance', bal.toString());
+  document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
+  document.getElementById('potTxt').innerText = "₹" + pot.toLocaleString();
+}
+
+function getRandomCard() {
+  let s = suits[Math.floor(Math.random() * suits.length)];
+  let v = values[Math.floor(Math.random() * values.length)];
+  return { suit: s, val: v, isRed: (s === '♥' || s === '♦') };
+}
+
+function renderHand(containerId, hand, isHidden) {
+  const container = document.getElementById(containerId);
+  if (isHidden) {
+    container.innerHTML = `<div class="card-item card-hidden">🎴</div><div class="card-item card-hidden">🎴</div><div class="card-item card-hidden">🎴</div>`;
+    return;
+  }
+  container.innerHTML = hand.map(c => `
+    <div class="card-item ${c.isRed ? 'red' : ''}">
+      <div>${c.val}</div>
+      <div style="font-size:12px;">${c.suit}</div>
+    </div>
+  `).join('');
+}
+
+function evaluateHand(hand) {
+  let vals = hand.map(c => values.indexOf(c.val)).sort((a,b) => b-a);
+  let isFlush = hand.every(c => c.suit === hand[0].suit);
+  let isStraight = (vals[0] - vals[1] === 1 && vals[1] - vals[2] === 1);
+  let isTrio = (vals[0] === vals[1] && vals[1] === vals[2]);
+  let isPair = (vals[0] === vals[1] || vals[1] === vals[2] || vals[0] === vals[2]);
+
+  if (isTrio) return { score: 6, name: "TRIO / TRAIL" };
+  if (isFlush && isStraight) return { score: 5, name: "PURE SEQUENCE" };
+  if (isStraight) return { score: 4, name: "SEQUENCE" };
+  if (isFlush) return { score: 3, name: "COLOR / FLUSH" };
+  if (isPair) return { score: 2, name: "PAIR" };
+  return { score: 1, name: "HIGH CARD" };
+}
+
+function playChaal() {
+  if (gameState === 'IDLE') {
+    if (bal < betAmt) return alert("Low balance!");
+    bal -= betAmt;
+    pot = betAmt * 2;
+    gameState = 'PLAYING';
+
+    playerHand = [getRandomCard(), getRandomCard(), getRandomCard()];
+    dealerHand = [getRandomCard(), getRandomCard(), getRandomCard()];
+
+    playSound('deal');
+    renderHand('playerCards', playerHand, false);
+    renderHand('dealerCards', dealerHand, true);
+
+    let pEval = evaluateHand(playerHand);
+    document.getElementById('handRankTxt').innerText = pEval.name;
+
+    document.getElementById('packBtn').disabled = false;
+    document.getElementById('showBtn').disabled = false;
+    document.getElementById('chaalBtn').innerText = "CHAAL (₹100)";
+    sync();
+  } else if (gameState === 'PLAYING') {
+    if (bal < betAmt) return alert("Low balance!");
+    bal -= betAmt;
+    pot += betAmt * 2;
+    playSound('deal');
+    sync();
+  }
+}
+
+function packHand() {
+  if (gameState !== 'PLAYING') return;
+  alert("🏳️ You Packed! Dealer takes the Pot.");
+  resetGame();
+}
+
+function showCards() {
+  if (gameState !== 'PLAYING') return;
+
+  renderHand('dealerCards', dealerHand, false);
+  let pEval = evaluateHand(playerHand);
+  let dEval = evaluateHand(dealerHand);
+
+  let pWon = pEval.score > dEval.score;
+  if (pEval.score === dEval.score) {
+    pWon = Math.random() > 0.5; // Tie breaker
+  }
+
+  if (pWon) {
+    bal += pot;
+    playSound('win');
+    alert(`🎉 YOU WON ₹${pot}!\nYour: ${pEval.name}\nDealer: ${dEval.name}`);
+  } else {
+    alert(`💔 DEALER WON!\nYour: ${pEval.name}\nDealer: ${dEval.name}`);
+  }
+
+  resetGame();
+}
+
+function resetGame() {
+  gameState = 'IDLE';
+  pot = 0;
+  document.getElementById('packBtn').disabled = true;
+  document.getElementById('showBtn').disabled = true;
+  document.getElementById('chaalBtn').innerText = "DEAL HAND (₹100)";
+  document.getElementById('handRankTxt').innerText = "PLAY BLIND";
+  renderHand('playerCards', [], true);
+  renderHand('dealerCards', [], true);
+  sync();
+}
+
+sync();
+</script>
+</body>
+</html>
