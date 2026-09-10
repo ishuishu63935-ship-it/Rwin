@@ -33,7 +33,11 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .plan-features { font-size: 11px; color: #94a3b8; margin-top: 6px; line-height: 1.5; }
 
 .qr-box { background: #04060d; border: 2px solid var(--neon-gold); border-radius: 18px; padding: 16px; text-align: center; margin: 16px 0; display: none; }
-.qr-img { width: 180px; height: 180px; border-radius: 12px; border: 2px solid #fff; margin: 10px auto; display: block; }
+.qr-img { width: 220px; height: 220px; border-radius: 12px; border: 3px solid #fff; margin: 12px auto; display: block; background: #fff; padding: 6px; }
+
+.upi-id-tag { font-size: 12px; font-weight: 800; color: var(--neon-blue); background: #0f172a; padding: 6px 12px; border-radius: 8px; display: inline-block; border: 1px solid var(--border-color); margin-top: 4px; }
+
+.direct-pay-btn { display: block; width: 100%; padding: 12px; background: linear-gradient(135deg, var(--neon-blue), #0284c7); color: #000; font-weight: 900; font-size: 13px; text-align: center; border-radius: 10px; text-decoration: none; margin: 10px 0; text-transform: uppercase; }
 
 .utr-input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 14px; font-weight: 700; text-align: center; margin-top: 8px; outline: none; }
 .utr-input:focus { border-color: var(--neon-gold); }
@@ -87,20 +91,26 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
     </div>
   </div>
 
-  <!-- QR & UTR SUBMIT AREA -->
+  <!-- PAYMENT QR & UTR SUBMIT AREA -->
   <div class="qr-box" id="paymentBox">
     <div style="font-size:13px; font-weight:900; color:var(--neon-gold);" id="selectedPlanTitle">VIP PAYMENT</div>
-    <div style="font-size:11px; color:#94a3b8; margin-top:2px;">Scan UPI QR & Submit 12-Digit Ref/UTR Number</div>
+    <div style="font-size:11px; color:#94a3b8; margin-top:2px;">Scan QR with PhonePe / GPay / Paytm</div>
 
-    <!-- FIX QR CODE PLACEHOLDER (Replace UPI URL in src if needed) -->
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=rwin@upi&pn=Rwin%20VIP" class="qr-img" alt="Payment QR">
+    <div class="upi-id-tag">UPI ID: 7415325460-2@ibl</div>
 
+    <!-- DYNAMIC QR CODE -->
+    <img id="qrImg" src="" class="qr-img" alt="UPI Payment QR">
+
+    <a id="directPayBtn" href="" class="direct-pay-btn">📱 PAY DIRECTLY VIA UPI APP</a>
+
+    <div style="font-size:10px; color:#94a3b8; margin-top:8px;">After payment, enter 12-Digit Ref/UTR Number:</div>
     <input type="number" class="utr-input" id="utrInput" placeholder="Enter 12-Digit UTR Number" maxlength="12">
     <button class="submit-btn" onclick="submitUTR()">VERIFY & ACTIVATE 🚀</button>
   </div>
 </div>
 
 <script>
+const FIXED_UPI_ID = "7415325460-2@ibl";
 let currentPlan = localStorage.getItem('rwin_plan') || 'FREE';
 let selectedPlan = null;
 let selectedPrice = 0;
@@ -119,6 +129,16 @@ function selectPlan(plan, price) {
   selectedPrice = price;
 
   document.getElementById('selectedPlanTitle').innerText = `PAYMENT FOR ${plan} (₹${price})`;
+
+  // Strict UPI URL String with locked amount (&am=) and currency (&cu=INR)
+  let rawUpiString = `upi://pay?pa=${FIXED_UPI_ID}&pn=Rwin%20VIP&am=${price}&cu=INR&tn=${plan}%20Membership`;
+
+  // Properly URL-encoded parameter for QR Generator
+  let qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(rawUpiString)}`;
+
+  document.getElementById('qrImg').src = qrApiUrl;
+  document.getElementById('directPayBtn').href = rawUpiString;
+
   document.getElementById('paymentBox').style.display = 'block';
   window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
@@ -129,7 +149,6 @@ function submitUTR() {
     return alert("Please enter a valid 12-Digit UTR / Reference Number!");
   }
 
-  // Activate Plan in LocalStorage
   localStorage.setItem('rwin_plan', selectedPlan);
   currentPlan = selectedPlan;
   updatePlanUI();
