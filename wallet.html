@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Rwin VIP Wallet & Membership</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Firebase Web SDK v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <style>
 :root {
   --neon-gold: #f59e0b;
@@ -105,11 +110,23 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 
     <div style="font-size:10px; color:#94a3b8; margin-top:8px;">After payment, enter 12-Digit Ref/UTR Number:</div>
     <input type="number" class="utr-input" id="utrInput" placeholder="Enter 12-Digit UTR Number" maxlength="12">
-    <button class="submit-btn" onclick="submitUTR()">VERIFY & ACTIVATE 🚀</button>
+    <button class="submit-btn" id="subBtn" onclick="submitUTR()">VERIFY & ACTIVATE 🚀</button>
   </div>
 </div>
 
 <script>
+// Firebase Config Updated with your Database Details
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY_HERE", // ⚠️ Firebase Console -> Project Settings me Web App se mil jayegi
+  authDomain: "rwin-e6021.firebaseapp.com",
+  databaseURL: "https://rwin-e6021-default-rtdb.firebaseio.com",
+  projectId: "rwin-e6021",
+  storageBucket: "rwin-e6021.appspot.com"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
 const FIXED_UPI_ID = "7415325460-2@ibl";
 let currentPlan = localStorage.getItem('rwin_plan') || 'FREE';
 let selectedPlan = null;
@@ -130,10 +147,7 @@ function selectPlan(plan, price) {
 
   document.getElementById('selectedPlanTitle').innerText = `PAYMENT FOR ${plan} (₹${price})`;
 
-  // Strict UPI URL String with locked amount (&am=) and currency (&cu=INR)
   let rawUpiString = `upi://pay?pa=${FIXED_UPI_ID}&pn=Rwin%20VIP&am=${price}&cu=INR&tn=${plan}%20Membership`;
-
-  // Properly URL-encoded parameter for QR Generator
   let qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(rawUpiString)}`;
 
   document.getElementById('qrImg').src = qrApiUrl;
@@ -149,13 +163,28 @@ function submitUTR() {
     return alert("Please enter a valid 12-Digit UTR / Reference Number!");
   }
 
-  localStorage.setItem('rwin_plan', selectedPlan);
-  currentPlan = selectedPlan;
-  updatePlanUI();
+  let btn = document.getElementById('subBtn');
+  btn.disabled = true;
+  btn.innerText = "VERIFYING...";
 
-  alert(`✅ UTR ${utr} Submitted Successfully!\nYour ${selectedPlan} Plan is now ACTIVE!`);
-  document.getElementById('utrInput').value = '';
-  document.getElementById('paymentBox').style.display = 'none';
+  // PENDING Status ke sath Database me data save hoga (Direct active nahi hoga)
+  database.ref('utr_requests/' + utr).set({
+    utr: utr,
+    plan: selectedPlan,
+    amount: selectedPrice,
+    status: 'PENDING',
+    timestamp: Date.now()
+  }).then(() => {
+    alert("⏳ UTR Submitted Successfully!\nAuto-verification ke baad membership active ho jayegi.");
+    document.getElementById('utrInput').value = '';
+    document.getElementById('paymentBox').style.display = 'none';
+    btn.disabled = false;
+    btn.innerText = "VERIFY & ACTIVATE 🚀";
+  }).catch((err) => {
+    alert("Error: " + err.message);
+    btn.disabled = false;
+    btn.innerText = "VERIFY & ACTIVATE 🚀";
+  });
 }
 
 updatePlanUI();
