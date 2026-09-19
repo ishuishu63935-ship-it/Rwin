@@ -115,9 +115,9 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 </div>
 
 <script>
-// Firebase Config Updated with your Database Details
+// Firebase Project Details Integrated
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE", // ⚠️ Firebase Console -> Project Settings me Web App se mil jayegi
+  apiKey: "YOUR_API_KEY_HERE", // 👈 Bas yahan apni Firebase API Key daal dena
   authDomain: "rwin-e6021.firebaseapp.com",
   databaseURL: "https://rwin-e6021-default-rtdb.firebaseio.com",
   projectId: "rwin-e6021",
@@ -167,7 +167,7 @@ function submitUTR() {
   btn.disabled = true;
   btn.innerText = "VERIFYING...";
 
-  // PENDING Status ke sath Database me data save hoga (Direct active nahi hoga)
+  // PENDING Status ke sath Database me UTR save hoga (Automated SMS Reader isse verify karega)
   database.ref('utr_requests/' + utr).set({
     utr: utr,
     plan: selectedPlan,
@@ -175,7 +175,7 @@ function submitUTR() {
     status: 'PENDING',
     timestamp: Date.now()
   }).then(() => {
-    alert("⏳ UTR Submitted Successfully!\nAuto-verification ke baad membership active ho jayegi.");
+    alert("⏳ UTR Submitted Successfully!\nSystem auto-verify karke 2 minute me aapka VIP Plan activate kar dega.");
     document.getElementById('utrInput').value = '';
     document.getElementById('paymentBox').style.display = 'none';
     btn.disabled = false;
@@ -190,4 +190,5 @@ function submitUTR() {
 updatePlanUI();
 </script>
 </body>
-</html>
+  </html>
+  
