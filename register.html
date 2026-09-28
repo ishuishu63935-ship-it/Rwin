@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<!-- Firebase App & Auth SDKs -->
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="firebase.js"></script>
@@ -22,7 +22,10 @@
     <input type="email" id="regEmail" class="input-field" placeholder="Enter Email Address">
     <input type="password" id="regPass" class="input-field" placeholder="Create Password (min 6 chars)">
 
-    <button onclick="processRegister()" class="btn-primary">CREATE ACCOUNT</button>
+    <!-- Screen par error dikhane ke liye -->
+    <p id="errorMsg" style="color:#ff4d4d; font-size:12px; margin-top:8px; min-height:18px; font-weight:600;"></p>
+
+    <button id="regBtn" onclick="processRegister()" class="btn-primary">CREATE ACCOUNT</button>
 
     <p style="margin-top:18px; font-size:12px; color:#94a3b8;">
       Already have an account? <a href="login.html" style="color:var(--neon-blue); text-decoration:none; font-weight:700;">Login Here</a>
@@ -34,27 +37,42 @@
 function processRegister() {
     const email = document.getElementById("regEmail").value.trim();
     const password = document.getElementById("regPass").value.trim();
+    const errBox = document.getElementById("errorMsg");
+    const regBtn = document.getElementById("regBtn");
+
+    errBox.innerText = "";
 
     if (!email || !password) {
-        return alert("Please enter both email and password!");
+        errBox.innerText = "Please enter both email and password!";
+        return;
     }
 
     if (password.length < 6) {
-        return alert("Password must be at least 6 characters long!");
+        errBox.innerText = "Password must be at least 6 characters!";
+        return;
     }
 
-    // Firebase Auth account creation
+    regBtn.innerText = "Creating Account...";
+    regBtn.disabled = true;
+
+    if (typeof firebase === 'undefined' || !firebase.auth) {
+        errBox.innerText = "Firebase not loaded properly. Check firebase.js";
+        regBtn.innerText = "CREATE ACCOUNT";
+        regBtn.disabled = false;
+        return;
+    }
+
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-            alert("Account successfully created!");
             localStorage.setItem("rwin_user_email", email);
             window.location.href = "game.html";
         })
         .catch((error) => {
-            alert("Registration Error: " + error.message);
+            regBtn.innerText = "CREATE ACCOUNT";
+            regBtn.disabled = false;
+            errBox.innerText = error.message;
         });
 }
 </script>
 </body>
-      </html>
-      
+</html>
