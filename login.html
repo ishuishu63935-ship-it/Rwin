@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<!-- Firebase App & Auth SDKs -->
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="firebase.js"></script>
@@ -22,7 +23,10 @@
     <input type="email" id="loginEmail" class="input-field" placeholder="Enter Email Address">
     <input type="password" id="loginPass" class="input-field" placeholder="Enter Password">
 
-    <button onclick="processLogin()" class="btn-primary">LOGIN TO PLAY</button>
+    <!-- Screen par error dikhane ke liye -->
+    <p id="errorMsg" style="color:#ff4d4d; font-size:12px; margin-top:8px; min-height:18px; font-weight:600;"></p>
+
+    <button id="loginBtn" onclick="processLogin()" class="btn-primary">LOGIN TO PLAY</button>
 
     <p style="margin-top:18px; font-size:12px; color:#94a3b8;">
       Don't have an account? <a href="register.html" style="color:var(--neon-blue); text-decoration:none; font-weight:700;">Create Account</a>
@@ -34,17 +38,35 @@
 function processLogin() {
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPass").value.trim();
+    const errBox = document.getElementById("errorMsg");
+    const loginBtn = document.getElementById("loginBtn");
 
-    if (!email || !password) return alert("Please enter email and password!");
+    errBox.innerText = "";
 
-    // Firebase Auth Login
+    if (!email || !password) {
+        errBox.innerText = "Please enter email and password!";
+        return;
+    }
+
+    loginBtn.innerText = "Logging in...";
+    loginBtn.disabled = true;
+
+    if (typeof firebase === 'undefined' || !firebase.auth) {
+        errBox.innerText = "Firebase not loaded properly. Check firebase.js";
+        loginBtn.innerText = "LOGIN TO PLAY";
+        loginBtn.disabled = false;
+        return;
+    }
+
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             localStorage.setItem("rwin_user_email", email);
             window.location.href = "game.html";
         })
         .catch((error) => {
-            alert("Login Error: " + error.message);
+            loginBtn.innerText = "LOGIN TO PLAY";
+            loginBtn.disabled = false;
+            errBox.innerText = error.message;
         });
 }
 </script>
