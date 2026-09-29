@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +6,6 @@
 <title>RWIN - Login</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="firebase.js"></script>
 </head>
 
 <body>
@@ -20,13 +14,13 @@
     <h1 style="color:var(--neon-blue); font-size:28px; font-weight:800; margin-bottom:6px;">RWIN VIP</h1>
     <p style="color:#94a3b8; font-size:12px; margin-bottom:20px;">Sign in to access 70+ Cyber Arena Games</p>
 
-    <input type="email" id="loginEmail" class="input-field" placeholder="Enter Email Address">
-    <input type="password" id="loginPass" class="input-field" placeholder="Enter Password">
+    <input type="email" id="email" class="input-field" placeholder="Enter Email Address">
+    <input type="password" id="password" class="input-field" placeholder="Enter Password">
 
-    <!-- Screen par error dikhane ke liye -->
-    <p id="errorMsg" style="color:#ff4d4d; font-size:12px; margin-top:8px; min-height:18px; font-weight:600;"></p>
+    <!-- Status/Error Message -->
+    <p id="loginStatus" style="color:#ff4d4d; font-size:12px; margin-top:8px; min-height:18px; font-weight:600;"></p>
 
-    <button id="loginBtn" onclick="processLogin()" class="btn-primary">LOGIN TO PLAY</button>
+    <button id="loginBtn" class="btn-primary">LOGIN TO PLAY</button>
 
     <p style="margin-top:18px; font-size:12px; color:#94a3b8;">
       Don't have an account? <a href="register.html" style="color:var(--neon-blue); text-decoration:none; font-weight:700;">Create Account</a>
@@ -34,42 +28,7 @@
   </div>
 </div>
 
-<script>
-function processLogin() {
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPass").value.trim();
-    const errBox = document.getElementById("errorMsg");
-    const loginBtn = document.getElementById("loginBtn");
-
-    errBox.innerText = "";
-
-    if (!email || !password) {
-        errBox.innerText = "Please enter email and password!";
-        return;
-    }
-
-    loginBtn.innerText = "Logging in...";
-    loginBtn.disabled = true;
-
-    if (typeof firebase === 'undefined' || !firebase.auth) {
-        errBox.innerText = "Firebase not loaded properly. Check firebase.js";
-        loginBtn.innerText = "LOGIN TO PLAY";
-        loginBtn.disabled = false;
-        return;
-    }
-
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            localStorage.setItem("rwin_user_email", email);
-            window.location.href = "game.html";
-        })
-        .catch((error) => {
-            loginBtn.innerText = "LOGIN TO PLAY";
-            loginBtn.disabled = false;
-            errBox.innerText = error.message;
-        });
-}
-</script>
+<!-- Modern Firebase V10 Module Load -->
+<script type="module" src="firebase.js"></script>
 </body>
 </html>
-
