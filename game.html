@@ -22,7 +22,10 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 
 .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
 .bal-pill { background: #1e1b4b; border: 1px solid var(--neon-gold); border-radius: 20px; padding: 6px 14px; font-weight: 800; color: var(--neon-gold); font-size: 13px; }
-.wallet-btn { padding: 6px 12px; background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; border-radius: 10px; text-decoration: none; font-size: 11px; font-weight: 900; }
+.auth-nav { display: flex; gap: 6px; align-items: center; }
+.wallet-btn { padding: 6px 10px; background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #000; border-radius: 10px; text-decoration: none; font-size: 10px; font-weight: 900; }
+.login-btn { padding: 6px 10px; background: linear-gradient(135deg, var(--neon-blue), #0284c7); color: #000; border-radius: 10px; text-decoration: none; font-size: 10px; font-weight: 900; }
+.logout-btn { padding: 6px 10px; background: #ef4444; color: #fff; border: none; border-radius: 10px; font-size: 10px; font-weight: 900; cursor: pointer; }
 
 .profile-strip { display: flex; justify-content: space-between; align-items: center; background: #04060d; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 14px; margin: 12px 0; }
 .reset-btn { padding: 6px 12px; background: #1e293b; border: 1px solid var(--neon-blue); color: var(--neon-blue); border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; }
@@ -43,12 +46,14 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <div class="container">
   <div class="header">
     <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
-    <a href="wallet.html" class="wallet-btn">💳 VIP WALLET</a>
+    <div class="auth-nav" id="headerAuthNav">
+      <!-- Dynamic Buttons (Login / Logout / Wallet) -->
+    </div>
   </div>
 
   <div class="profile-strip">
     <div>
-      <div style="font-size:10px; color:#94a3b8;">ACTIVE PLAN</div>
+      <div style="font-size:10px; color:#94a3b8;" id="userLabelTxt">GUEST SESSION</div>
       <div style="font-size:12px; font-weight:900; color:var(--neon-gold);" id="planTxt">FREE</div>
     </div>
     <div>
@@ -62,9 +67,16 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 </div>
 
 <script>
+// --- AUTH & USER DATA SETUP ---
+let userEmail = localStorage.getItem('rwin_user_email') || null;
 let plan = localStorage.getItem('rwin_plan') || 'FREE';
-let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
 let level = parseInt(localStorage.getItem('rwin_level') || '1');
+
+// 1 Time 10,000 Coins Setup for Guests & Users
+let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+if (!localStorage.getItem('rwin_balance')) {
+  localStorage.setItem('rwin_balance', '10000');
+}
 
 const gamesList = [
   { name: "Color Trading", icon: "🎨", file: "color.html", lvl: 1, free: true },
@@ -94,13 +106,34 @@ function syncUI() {
   document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
   document.getElementById('planTxt').innerText = plan;
   document.getElementById('levelTxt').innerText = "LVL " + level;
+
+  // Header & Profile Nav Logic
+  const authNav = document.getElementById('headerAuthNav');
+  const userLabel = document.getElementById('userLabelTxt');
+
+  if (userEmail) {
+    // Logged In User
+    userLabel.innerText = userEmail.split('@')[0].toUpperCase();
+    authNav.innerHTML = `
+      <a href="wallet.html" class="wallet-btn">💳 VIP WALLET</a>
+      <button class="logout-btn" onclick="logoutUser()">LOGOUT</button>
+    `;
+  } else {
+    // Guest User
+    userLabel.innerText = "GUEST SESSION";
+    authNav.innerHTML = `
+      <a href="register.html" class="login-btn">🔑 LOGIN / SIGNUP</a>
+      <a href="javascript:void(0)" onclick="handleWalletClick()" class="wallet-btn">💳 VIP WALLET</a>
+    `;
+  }
+
   renderGames();
 }
 
 function isGameUnlocked(g) {
   if (plan === 'VIP_499') return true;
   if (plan === 'VIP_199') return level >= g.lvl;
-  return g.free; // Free Plan
+  return g.free; // Color Trading & Aviator are free
 }
 
 function renderGames() {
@@ -120,17 +153,31 @@ function renderGames() {
 
 function launchGame(file, isUnlocked) {
   if (!isUnlocked) {
-    alert("🔒 Game Locked! Upgrade Plan or Level up in Wallet to play.");
-    window.location.href = "wallet.html";
+    if (!userEmail) {
+      alert("🔒 Ye game aur VIP features unlock karne ke liye pehle Account Banao ya Login Karo!");
+      window.location.href = "register.html";
+    } else {
+      alert("🔒 Game Locked! Upgrade Plan or Level up in Wallet to play.");
+      window.location.href = "wallet.html";
+    }
   } else {
     window.location.href = "./play/" + file;
+  }
+}
+
+function handleWalletClick() {
+  if (!userEmail) {
+    alert("🔑 VIP Membership & Wallet ke liye pehle Account Create/Login Karein!");
+    window.location.href = "register.html";
+  } else {
+    window.location.href = "wallet.html";
   }
 }
 
 function resetBalance() {
   if (plan === 'FREE') {
     alert("⚠️ Reset Coin Feature is Locked in FREE Plan.\nUpgrade to VIP 199 or VIP 499 in Wallet for unlimited resets!");
-    window.location.href = "wallet.html";
+    handleWalletClick();
   } else {
     bal = 10000;
     syncUI();
@@ -138,8 +185,13 @@ function resetBalance() {
   }
 }
 
+function logoutUser() {
+  localStorage.removeItem('rwin_user_email');
+  alert("Logged out successfully!");
+  window.location.reload();
+}
+
 syncUI();
 </script>
 </body>
-  </html>
-  
+</html>
