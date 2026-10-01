@@ -63,6 +63,114 @@
     </div>
     <p style="color:#666; font-size:0.8rem; margin-top:10px;">&copy; 2026 RWIN. All rights reserved.</p>
 </footer>
+  <!-- RWIN Main Controller Script -->
+<script>
+function initUserSession() {
+    const loggedInEmail = localStorage.getItem("rwin_user_email");
+    const profileArea = document.getElementById("authProfileArea");
+    const coinDisplay = document.getElementById("userCoins");
 
+    if (loggedInEmail) {
+        // --- LOGGED IN USER ---
+        const gameData = JSON.parse(localStorage.getItem("rwinGame")) || { balance: 10000, membership: "Free" };
+        if (coinDisplay) coinDisplay.innerText = gameData.balance.toLocaleString();
+
+        if (profileArea) {
+            profileArea.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="color:#94a3b8; font-size:12px;">👤 ${loggedInEmail}</span>
+                    <button onclick="openMembershipModal()" style="background:#00c853; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">
+                        💎 Membership
+                    </button>
+                    <button onclick="logoutUser()" style="background:#ff4d4d; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">
+                        Logout
+                    </button>
+                </div>
+            `;
+        }
+    } else {
+        // --- GUEST USER (First Time Visitor) ---
+        let guestCoins = localStorage.getItem("rwin_guest_coins");
+        if (!guestCoins) {
+            guestCoins = "10000";
+            localStorage.setItem("rwin_guest_coins", guestCoins);
+        }
+        if (coinDisplay) coinDisplay.innerText = parseInt(guestCoins).toLocaleString();
+
+        if (profileArea) {
+            profileArea.innerHTML = `
+                <div style="display:flex; gap:10px;">
+                    <button onclick="openMembershipModal()" style="background:#00c853; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">
+                        💎 Buy Membership
+                    </button>
+                    <a href="login.html" style="background:#00f2fe; color:#000; text-decoration:none; padding:6px 14px; border-radius:6px; font-weight:bold; font-size:13px;">
+                        Login / Register
+                    </a>
+                </div>
+            `;
+        }
+    }
+}
+
+// 20 Games Controller (2 Free + 18 Locked)
+function playGame(gameName) {
+    // 1. FREE GAMES (Colour Trading & Aviator)
+    if (gameName === 'color' || gameName === 'aviator') {
+        window.location.href = gameName + ".html"; 
+        return;
+    }
+
+    // 2. BAAKI 18 PREMIUM GAMES
+    const loggedInEmail = localStorage.getItem("rwin_user_email");
+    if (!loggedInEmail) {
+        alert("🔒 Ye game khelne ke liye pehle Account Banao ya Login Karo!");
+        window.location.href = "register.html";
+    } else {
+        const gameData = JSON.parse(localStorage.getItem("rwinGame")) || {};
+        if (gameData.membership && gameData.membership !== 'Free') {
+            window.location.href = gameName + ".html";
+        } else {
+            alert("💎 Ye game sirf VIP Members ke liye hai. Pehle Membership Unlock karein!");
+            openMembershipModal();
+        }
+    }
+}
+
+// Membership Button Click Logic
+function openMembershipModal() {
+    const loggedInEmail = localStorage.getItem("rwin_user_email");
+    if (!loggedInEmail) {
+        alert("🔑 Membership lene ke liye pehle Register ya Login karein!");
+        window.location.href = "register.html";
+    } else {
+        // Logged in user ko membership page par bhejega
+        alert("Redirecting to VIP Membership Plans...");
+    }
+}
+
+// Logout Function
+function logoutUser() {
+    localStorage.removeItem("rwin_user_email");
+    localStorage.removeItem("rwinGame");
+    alert("Logged out successfully!");
+    window.location.reload();
+}
+
+// Auto Initialize
+document.addEventListener("DOMContentLoaded", initUserSession);
+</script>
+    
 </body>
+    <!-- Top Profile & Balance Bar -->
+<div class="top-nav" style="display:flex; justify-content:space-between; align-items:center; padding:12px 20px; background:#111827; border-bottom:1px solid #1f2937;">
+    <div style="display:flex; align-items:center; gap:15px;">
+        <h2 style="color:#00f2fe; margin:0; font-size:22px;">RWIN VIP</h2>
+        <div style="background:#1e293b; padding:6px 14px; border-radius:20px; color:#ffd700; font-weight:bold; font-size:14px;">
+            💰 Balance: <span id="userCoins">10,000</span> Coins
+        </div>
+    </div>
+    <!-- Profile & Login/Logout Auto-Load Area -->
+    <div id="authProfileArea"></div>
+</div>
+    
 </html>
