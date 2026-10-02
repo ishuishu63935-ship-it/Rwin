@@ -1,34 +1,54 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RWIN - Login</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>RWIN VIP - Login / Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { margin: 0; background: #04060d; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 14px; }
+.card { background: #0b101d; border: 1.5px solid #1e293b; border-radius: 20px; padding: 24px; width: 100%; max-width: 380px; text-align: center; }
+.title { font-size: 22px; font-weight: 800; color: #00e5ff; margin-bottom: 6px; }
+.input-field { width: 100%; padding: 12px; margin: 8px 0; background: #04060d; border: 1px solid #1e293b; border-radius: 10px; color: #fff; font-size: 13px; outline: none; }
+.submit-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #00e5ff, #0284c7); border: none; border-radius: 10px; color: #000; font-weight: 800; font-size: 14px; margin-top: 10px; cursor: pointer; }
+.switch-text { font-size: 11px; color: #94a3b8; margin-top: 14px; cursor: pointer; }
+</style>
 </head>
-
 <body>
-<div class="auth-container">
-  <div class="auth-card">
-    <h1 style="color:var(--neon-blue); font-size:28px; font-weight:800; margin-bottom:6px;">RWIN VIP</h1>
-    <p style="color:#94a3b8; font-size:12px; margin-bottom:20px;">Sign in to access 70+ Cyber Arena Games</p>
 
-    <input type="email" id="email" class="input-field" placeholder="Enter Email Address">
-    <input type="password" id="password" class="input-field" placeholder="Enter Password">
+<div class="card">
+  <div class="title">RWIN VIP</div>
+  <div style="font-size:11px; color:#94a3b8; margin-bottom:16px;">Sign in or create account to play 20+ Cyber Games</div>
 
-    <!-- Status/Error Message -->
-    <p id="loginStatus" style="color:#ff4d4d; font-size:12px; margin-top:8px; min-height:18px; font-weight:600;"></p>
+  <input type="email" id="emailInput" class="input-field" placeholder="Enter Email Address" required>
+  <input type="password" id="passInput" class="input-field" placeholder="Enter Password (min 6 chars)" required>
 
-    <button id="loginBtn" class="btn-primary">LOGIN TO PLAY</button>
+  <button class="submit-btn" onclick="handleAuth()">CONTINUE TO ARENA 🚀</button>
 
-    <p style="margin-top:18px; font-size:12px; color:#94a3b8;">
-      Don't have an account? <a href="register.html" style="color:var(--neon-blue); text-decoration:none; font-weight:700;">Create Account</a>
-    </p>
-  </div>
+  <div class="switch-text" onclick="window.location.href='game.html'">⬅ Back to Free Games Arena</div>
 </div>
 
-<!-- Modern Firebase V10 Module Load -->
-<script type="module" src="firebase.js"></script>
+<script>
+function handleAuth() {
+  const email = document.getElementById('emailInput').value.trim();
+  const pass = document.getElementById('passInput').value.trim();
+
+  if (!email || pass.length < 6) {
+    alert("Please enter a valid email and minimum 6 character password!");
+    return;
+  }
+
+  // Save session to LocalStorage (Kills the Login Loop)
+  localStorage.setItem('rwin_user_email', email);
+  if (!localStorage.getItem('rwin_plan')) {
+    localStorage.setItem('rwin_plan', 'FREE');
+  }
+
+  alert("Welcome to RWIN VIP Arena! 🎯");
+  window.location.href = "game.html"; // Immediate Sync Redirection
+}
+</script>
 </body>
 </html>
