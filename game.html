@@ -27,6 +27,10 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 .login-btn { padding: 6px 10px; background: linear-gradient(135deg, var(--neon-blue), #0284c7); color: #000; border-radius: 10px; text-decoration: none; font-size: 10px; font-weight: 900; }
 .logout-btn { padding: 6px 10px; background: #ef4444; color: #fff; border: none; border-radius: 10px; font-size: 10px; font-weight: 900; cursor: pointer; }
 
+/* 30 Sec Engagement Hook Banner */
+.engagement-banner { background: linear-gradient(135deg, #1e1b4b, #311b92); border: 1px solid var(--neon-blue); border-radius: 12px; padding: 10px; margin: 10px 0; text-align: center; font-size: 11px; }
+.engagement-timer { font-size: 14px; font-weight: 900; color: var(--neon-gold); margin-top: 4px; }
+
 .profile-strip { display: flex; justify-content: space-between; align-items: center; background: #04060d; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 14px; margin: 12px 0; }
 .reset-btn { padding: 6px 12px; background: #1e293b; border: 1px solid var(--neon-blue); color: var(--neon-blue); border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; }
 
@@ -46,19 +50,19 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 <div class="container">
   <div class="header">
     <div class="bal-pill">💰 <span id="balTxt">₹10,000</span></div>
-    <div class="auth-nav" id="headerAuthNav">
-      <!-- Dynamic Buttons (Login / Logout / Wallet) -->
-    </div>
+    <div class="auth-nav" id="headerAuthNav"></div>
+  </div>
+
+  <!-- PopAds Visitor 30 Sec Engagement Hook -->
+  <div class="engagement-banner" id="bonusBanner">
+    🎁 Stay on site for <b>30 seconds</b> to claim <b>+₹5,000 Free Bonus Coins!</b>
+    <div class="engagement-timer" id="hookTimer">⏱️ Time Left: 30s</div>
   </div>
 
   <div class="profile-strip">
     <div>
       <div style="font-size:10px; color:#94a3b8;" id="userLabelTxt">GUEST SESSION</div>
       <div style="font-size:12px; font-weight:900; color:var(--neon-gold);" id="planTxt">FREE</div>
-    </div>
-    <div>
-      <div style="font-size:10px; color:#94a3b8;">LEVEL</div>
-      <div style="font-size:12px; font-weight:900; color:var(--neon-blue);" id="levelTxt">LVL 1</div>
     </div>
     <button class="reset-btn" onclick="resetBalance()">RESET COINS 🔄</button>
   </div>
@@ -67,62 +71,55 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Poppins'
 </div>
 
 <script>
-// --- AUTH & USER DATA SETUP ---
 let userEmail = localStorage.getItem('rwin_user_email') || null;
 let plan = localStorage.getItem('rwin_plan') || 'FREE';
-let level = parseInt(localStorage.getItem('rwin_level') || '1');
-
-// 1 Time 10,000 Coins Setup for Guests & Users
 let bal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+
 if (!localStorage.getItem('rwin_balance')) {
   localStorage.setItem('rwin_balance', '10000');
 }
 
 const gamesList = [
-  { name: "Color Trading", icon: "🎨", file: "color.html", lvl: 1, free: true },
-  { name: "Aviator Rocket", icon: "🚀", file: "aviator.html", lvl: 1, free: true },
-  { name: "Vortex Wheel", icon: "🌀", file: "vortex.html", lvl: 2, free: false },
-  { name: "3 Patti Deluxe", icon: "🃏", file: "teenpatti.html", lvl: 3, free: false },
-  { name: "Dragon vs Tiger", icon: "🐉", file: "dragon.html", lvl: 4, free: false },
-  { name: "Cyber Mines", icon: "💣", file: "mines.html", lvl: 5, free: false },
-  { name: "Rummy Pro", icon: "🎴", file: "rummy.html", lvl: 6, free: false },
-  { name: "Roulette", icon: "🎡", file: "roulette.html", lvl: 7, free: false },
-  { name: "Blackjack 21", icon: "♠️", file: "blackjack.html", lvl: 8, free: false },
-  { name: "Mega Slots", icon: "🎰", file: "slots.html", lvl: 9, free: false },
-  { name: "Baccarat", icon: "👑", file: "baccarat.html", lvl: 10, free: false },
-  { name: "Andar Bahar", icon: "🅰️", file: "andarbahar.html", lvl: 11, free: false },
-  { name: "7 Up 7 Down", icon: "🎲", file: "sevenup.html", lvl: 12, free: false },
-  { name: "Hi-Lo Trader", icon: "📈", file: "hilow.html", lvl: 13, free: false },
-  { name: "Sic Bo", icon: "🎯", file: "sicbo.html", lvl: 14, free: false },
-  { name: "Coin Flip", icon: "🪙", file: "coinflip.html", lvl: 15, free: false },
-  { name: "Fortune Wheel", icon: "🔮", file: "fortune.html", lvl: 16, free: false },
-  { name: "Penalty Kick", icon: "⚽", file: "penalty.html", lvl: 17, free: false },
-  { name: "Chicken Road", icon: "🐔", file: "chicken.html", lvl: 18, free: false },
-  { name: "Crypto Trader", icon: "📊", file: "crypto.html", lvl: 19, free: false }
+  { name: "Color Trading", icon: "🎨", file: "color.html", free: true },
+  { name: "Aviator Rocket", icon: "🚀", file: "aviator.html", free: true },
+  { name: "Vortex Wheel", icon: "🌀", file: "vortex.html", free: false },
+  { name: "3 Patti Deluxe", icon: "🃏", file: "teenpatti.html", free: false },
+  { name: "Dragon vs Tiger", icon: "🐉", file: "dragon.html", free: false },
+  { name: "Cyber Mines", icon: "💣", file: "mines.html", free: false },
+  { name: "Rummy Pro", icon: "🎴", file: "rummy.html", free: false },
+  { name: "Roulette", icon: "🎡", file: "roulette.html", free: false },
+  { name: "Blackjack 21", icon: "♠️", file: "blackjack.html", free: false },
+  { name: "Mega Slots", icon: "🎰", file: "slots.html", free: false },
+  { name: "Baccarat", icon: "👑", file: "baccarat.html", free: false },
+  { name: "Andar Bahar", icon: "🅰️", file: "andarbahar.html", free: false },
+  { name: "7 Up 7 Down", icon: "🎲", file: "sevenup.html", free: false },
+  { name: "Hi-Lo Trader", icon: "📈", file: "hilow.html", free: false },
+  { name: "Sic Bo", icon: "🎯", file: "sicbo.html", free: false },
+  { name: "Coin Flip", icon: "🪙", file: "coinflip.html", free: false },
+  { name: "Fortune Wheel", icon: "🔮", file: "fortune.html", free: false },
+  { name: "Penalty Kick", icon: "⚽", file: "penalty.html", free: false },
+  { name: "Chicken Road", icon: "🐔", file: "chicken.html", free: false },
+  { name: "Crypto Trader", icon: "📊", file: "crypto.html", free: false }
 ];
 
 function syncUI() {
   localStorage.setItem('rwin_balance', bal.toString());
   document.getElementById('balTxt').innerText = "₹" + bal.toLocaleString();
   document.getElementById('planTxt').innerText = plan;
-  document.getElementById('levelTxt').innerText = "LVL " + level;
 
-  // Header & Profile Nav Logic
   const authNav = document.getElementById('headerAuthNav');
   const userLabel = document.getElementById('userLabelTxt');
 
   if (userEmail) {
-    // Logged In User
     userLabel.innerText = userEmail.split('@')[0].toUpperCase();
     authNav.innerHTML = `
       <a href="wallet.html" class="wallet-btn">💳 VIP WALLET</a>
       <button class="logout-btn" onclick="logoutUser()">LOGOUT</button>
     `;
   } else {
-    // Guest User
     userLabel.innerText = "GUEST SESSION";
     authNav.innerHTML = `
-      <a href="register.html" class="login-btn">🔑 LOGIN / SIGNUP</a>
+      <a href="login.html" class="login-btn">🔑 LOGIN / SIGNUP</a>
       <a href="javascript:void(0)" onclick="handleWalletClick()" class="wallet-btn">💳 VIP WALLET</a>
     `;
   }
@@ -131,9 +128,8 @@ function syncUI() {
 }
 
 function isGameUnlocked(g) {
-  if (plan === 'VIP_499') return true;
-  if (plan === 'VIP_199') return level >= g.lvl;
-  return g.free; // Color Trading & Aviator are free
+  if (plan !== 'FREE') return true; // Any VIP plan unlocks all games
+  return g.free;
 }
 
 function renderGames() {
@@ -145,7 +141,7 @@ function renderGames() {
         <div class="lock-badge">${unlocked ? '🔓' : '🔒'}</div>
         <div class="game-icon">${g.icon}</div>
         <div class="game-title">${g.name}</div>
-        <div class="game-sub">${unlocked ? 'PLAY NOW' : (plan === 'FREE' ? 'VIP ONLY' : 'UNLOCK AT LVL ' + g.lvl)}</div>
+        <div class="game-sub">${unlocked ? 'PLAY NOW' : 'VIP ONLY'}</div>
       </div>
     `;
   }).join('');
@@ -155,9 +151,9 @@ function launchGame(file, isUnlocked) {
   if (!isUnlocked) {
     if (!userEmail) {
       alert("🔒 Ye game aur VIP features unlock karne ke liye pehle Account Banao ya Login Karo!");
-      window.location.href = "register.html";
+      window.location.href = "login.html";
     } else {
-      alert("🔒 Game Locked! Upgrade Plan or Level up in Wallet to play.");
+      alert("🔒 Game Locked! VIP Membership Plan khareed kar saare games unlock karein.");
       window.location.href = "wallet.html";
     }
   } else {
@@ -168,7 +164,7 @@ function launchGame(file, isUnlocked) {
 function handleWalletClick() {
   if (!userEmail) {
     alert("🔑 VIP Membership & Wallet ke liye pehle Account Create/Login Karein!");
-    window.location.href = "register.html";
+    window.location.href = "login.html";
   } else {
     window.location.href = "wallet.html";
   }
@@ -176,7 +172,7 @@ function handleWalletClick() {
 
 function resetBalance() {
   if (plan === 'FREE') {
-    alert("⚠️ Reset Coin Feature is Locked in FREE Plan.\nUpgrade to VIP 199 or VIP 499 in Wallet for unlimited resets!");
+    alert("⚠️ Reset Coin Feature is Locked in FREE Plan.\nVIP Plan me upgrade karein unlimited resets ke liye!");
     handleWalletClick();
   } else {
     bal = 10000;
@@ -189,6 +185,26 @@ function logoutUser() {
   localStorage.removeItem('rwin_user_email');
   alert("Logged out successfully!");
   window.location.reload();
+}
+
+// PopAds 30-Sec Retention Timer
+let timeLeft = 30;
+let bonusClaimed = localStorage.getItem('rwin_hook_bonus');
+
+if (bonusClaimed) {
+  document.getElementById('bonusBanner').style.display = 'none';
+} else {
+  let timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById('hookTimer').innerText = `⏱️ Time Left: ${timeLeft}s`;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      bal += 5000;
+      localStorage.setItem('rwin_hook_bonus', 'true');
+      syncUI();
+      document.getElementById('bonusBanner').innerHTML = "🎉 <b>+₹5,000 Bonus Coins Added to Your Balance!</b>";
+    }
+  }, 1000);
 }
 
 syncUI();
