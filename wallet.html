@@ -28,9 +28,19 @@ body { margin: 0; padding: 0; background: var(--bg-dark); color: #fff; }
 
 .profile-card { background: #04060d; border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; margin-bottom: 14px; font-size: 12px; }
 
+.qr-container { background: #04060d; border: 2px dashed var(--neon-gold); border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 16px; }
+.qr-title { font-size: 13px; font-weight: 800; color: var(--neon-gold); margin-bottom: 8px; text-transform: uppercase; }
+.qr-img { width: 170px; height: 170px; background: #fff; padding: 8px; border-radius: 12px; margin: 8px auto; display: block; }
+
+.utr-box { background: #04060d; border: 1.5px solid var(--neon-blue); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
+.utr-input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); background: #0b101d; color: #fff; font-size: 13px; text-align: center; margin: 8px 0; font-weight: 700; outline: none; }
+
 .plan-card { background: #04060d; border: 1.5px solid var(--border-color); border-radius: 16px; padding: 14px; margin-bottom: 12px; position: relative; }
 .plan-card.hot { border-color: var(--neon-gold); background: linear-gradient(180deg, #1e1b4b, #04060d); }
+.plan-card.elite { border-color: var(--neon-blue); background: linear-gradient(180deg, #0284c715, #04060d); }
+
 .badge { position: absolute; top: -10px; right: 14px; background: var(--neon-gold); color: #000; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 900; }
+.badge-blue { background: var(--neon-blue); color: #000; }
 
 .price-box { font-size: 20px; font-weight: 900; color: var(--neon-green); margin: 6px 0; }
 .old-price { text-decoration: line-through; color: #94a3b8; font-size: 14px; margin-right: 6px; }
@@ -65,22 +75,38 @@ body { margin: 0; padding: 0; background: var(--bg-dark); color: #fff; }
     </div>
   </div>
 
-  <!-- PLAN 1: ₹9 TRIAL PLAN -->
+  <!-- 🎯 SCAN & PAY QR CODE BOX -->
+  <div class="qr-container">
+    <div class="qr-title">📲 SCAN QR CODE TO PAY</div>
+    <div style="font-size:11px; color:#94a3b8;">Selected Plan Amount: <b style="color:var(--neon-green)" id="selectedPlanPrice">₹99</b></div>
+    <img id="qrCodeImg" class="qr-img" src="" alt="UPI QR Code">
+    <div style="font-size:10px; color:var(--neon-gold); font-weight:700;">UPI ID: 7415325460-2@ibl</div>
+  </div>
+
+  <!-- 📝 UTR VERIFICATION INPUT BOX -->
+  <div class="utr-box">
+    <div style="font-size:12px; font-weight:800; color:var(--neon-blue);">🔑 ENTER 12-DIGIT UTR NUMBER TO UNLOCK</div>
+    <div style="font-size:10px; color:#94a3b8; margin-top:2px;">Payment complete hone ke baad UPI app se 12-digit UTR / Ref No. yahan daalein:</div>
+    <input type="text" id="utrInput" class="utr-input" placeholder="Enter 12-Digit UTR (e.g. 428109876543)" maxlength="12">
+    <button onclick="submitUTR()" class="pay-btn" style="background: linear-gradient(135deg, var(--neon-gold), #d97706); color:#000;">VERIFY & UNLOCK VIP 🚀</button>
+  </div>
+
+  <!-- PLAN 1: ₹9 STARTER TRIAL -->
   <div class="plan-card">
     <div style="font-weight:800; font-size:14px; color:#fff;">⚡ STARTER TRIAL PLAN</div>
     <div style="font-size:10px; color:#94a3b8;">2 Days Full VIP Access + 25,000 Extra Coins</div>
     <div class="price-box">₹9 <span style="font-size:10px; color:#94a3b8;">/ 2 Days</span></div>
-    <button onclick="payUPI(9, 'STARTER_9')" class="pay-btn">BUY FOR ₹9 (INSTANT UNLOCK)</button>
+    <button onclick="selectAndPay(9, 'STARTER_9')" class="pay-btn">PAY ₹9 VIA UPI APP</button>
     <div class="upi-group">
-      <a href="javascript:void(0)" onclick="payUPI(9, 'STARTER_9')" class="upi-btn">📱 PhonePe</a>
-      <a href="javascript:void(0)" onclick="payUPI(9, 'STARTER_9')" class="upi-btn">💙 Paytm</a>
-      <a href="javascript:void(0)" onclick="payUPI(9, 'STARTER_9')" class="upi-btn">🟢 GPay</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(9, 'STARTER_9')" class="upi-btn">📱 PhonePe</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(9, 'STARTER_9')" class="upi-btn">💙 Paytm</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(9, 'STARTER_9')" class="upi-btn">🟢 GPay</a>
     </div>
   </div>
 
-  <!-- PLAN 2: SPECIAL ₹99 DISCOUNT PLAN (15 MIN OFFER) -->
+  <!-- PLAN 2: ₹99 / ₹199 - 2 MONTHS VIP PASS -->
   <div class="plan-card hot">
-    <div class="badge">BEST VALUE (50% OFF)</div>
+    <div class="badge">POPULAR (50% OFF)</div>
     <div style="font-weight:800; font-size:14px; color:var(--neon-gold);">💎 2 MONTHS VIP PASS</div>
     <div style="font-size:10px; color:#94a3b8;">60 Days Unlimited Play + All 20 Games Unlocked</div>
     <div class="price-box">
@@ -88,18 +114,37 @@ body { margin: 0; padding: 0; background: var(--bg-dark); color: #fff; }
       <span id="newPriceTxt">₹99</span>
       <span style="font-size:10px; color:#94a3b8;">/ 60 Days</span>
     </div>
-    <button onclick="payUPI(currentOfferPrice, 'VIP_2MONTHS')" class="pay-btn">CLAIM DISCOUNT & PAY</button>
+    <button onclick="selectAndPay(currentOfferPrice, 'VIP_2MONTHS')" class="pay-btn">PAY DISCOUNTED PRICE</button>
     <div class="upi-group">
-      <a href="javascript:void(0)" onclick="payUPI(currentOfferPrice, 'VIP_2MONTHS')" class="upi-btn">📱 PhonePe</a>
-      <a href="javascript:void(0)" onclick="payUPI(currentOfferPrice, 'VIP_2MONTHS')" class="upi-btn">💙 Paytm</a>
-      <a href="javascript:void(0)" onclick="payUPI(currentOfferPrice, 'VIP_2MONTHS')" class="upi-btn">🟢 GPay</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(currentOfferPrice, 'VIP_2MONTHS')" class="upi-btn">📱 PhonePe</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(currentOfferPrice, 'VIP_2MONTHS')" class="upi-btn">💙 Paytm</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(currentOfferPrice, 'VIP_2MONTHS')" class="upi-btn">🟢 GPay</a>
+    </div>
+  </div>
+
+  <!-- PLAN 3: ₹499 - 6 MONTHS VIP ELITE PASS -->
+  <div class="plan-card elite">
+    <div class="badge badge-blue">6 MONTHS ULTIMATE</div>
+    <div style="font-weight:800; font-size:14px; color:var(--neon-blue);">👑 6 MONTHS VIP ELITE</div>
+    <div style="font-size:10px; color:#94a3b8;">180 Days Full VIP Access + 2,00,000 Coins + Unlimited Resets</div>
+    <div class="price-box">₹499 <span style="font-size:10px; color:#94a3b8;">/ 180 Days</span></div>
+    <button onclick="selectAndPay(499, 'VIP_6MONTHS')" class="pay-btn" style="background: linear-gradient(135deg, var(--neon-blue), #0284c7); color:#000;">PAY ₹499 FOR 6 MONTHS</button>
+    <div class="upi-group">
+      <a href="javascript:void(0)" onclick="selectAndPay(499, 'VIP_6MONTHS')" class="upi-btn">📱 PhonePe</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(499, 'VIP_6MONTHS')" class="upi-btn">💙 Paytm</a>
+      <a href="javascript:void(0)" onclick="selectAndPay(499, 'VIP_6MONTHS')" class="upi-btn">🟢 GPay</a>
     </div>
   </div>
 
 </div>
 
 <script>
+// YOUR OFFICIAL UPI ID
+const YOUR_UPI_ID = "7415325460-2@ibl";
+
 let userEmail = localStorage.getItem('rwin_user_email');
+let selectedPlan = 'VIP_2MONTHS';
+
 if (!userEmail) {
   alert("🔑 Wallet access karne ke liye pehle Login ya Register Karein!");
   window.location.href = "login.html";
@@ -109,10 +154,10 @@ if (!userEmail) {
   document.getElementById('userCoinsTxt').innerText = "₹" + parseInt(localStorage.getItem('rwin_balance') || '10000').toLocaleString();
 }
 
-// 15-Minute Countdown Timer Logic
+// 15-Minute Countdown Timer
 let offerEndTime = localStorage.getItem('rwin_offer_time');
 if (!offerEndTime) {
-  offerEndTime = Date.now() + (15 * 60 * 1000); // 15 Minutes
+  offerEndTime = Date.now() + (15 * 60 * 1000);
   localStorage.setItem('rwin_offer_time', offerEndTime);
 }
 
@@ -123,7 +168,7 @@ function updateTimer() {
   let diff = Math.floor((offerEndTime - now) / 1000);
 
   if (diff <= 0) {
-    document.getElementById('offerTimer').innerText = "⏱️️ OFFER EXPIRED";
+    document.getElementById('offerTimer').innerText = "⏱ OFFER EXPIRED";
     document.getElementById('oldPriceTxt').style.display = 'none';
     document.getElementById('newPriceTxt').innerText = "₹199";
     currentOfferPrice = 199;
@@ -136,15 +181,51 @@ function updateTimer() {
 setInterval(updateTimer, 1000);
 updateTimer();
 
-// 1-Tap Direct UPI Deep Link Trigger
-const YOUR_UPI_ID = "rwin@upi"; // Yahan apni asli UPI ID daal dena
+// Dynamic QR Code & UPI Deep Link
+function updateQRCode(amount) {
+  document.getElementById('selectedPlanPrice').innerText = "₹" + amount;
+  let upiString = `upi://pay?pa=${YOUR_UPI_ID}&pn=RWIN_VIP&am=${amount}&cu=INR`;
+  let qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`;
+  document.getElementById('qrCodeImg').src = qrApiUrl;
+}
 
-function payUPI(amount, planName) {
-  let upiUrl = `upi://pay?pa=${YOUR_UPI_ID}&pn=RWIN_VIP_ARENA&am=${amount}&cu=INR&tn=Membership_${planName}`;
+function selectAndPay(amount, planName) {
+  selectedPlan = planName;
+  updateQRCode(amount);
+  let upiUrl = `upi://pay?pa=${YOUR_UPI_ID}&pn=RWIN_VIP&am=${amount}&cu=INR&tn=Membership_${planName}`;
   window.location.href = upiUrl;
 }
+
+// UTR Submission & VIP Unlock Logic
+function submitUTR() {
+  const utr = document.getElementById('utrInput').value.trim();
+
+  if (!utr || utr.length !== 12 || isNaN(utr)) {
+    alert("❌ Please enter a valid 12-Digit UTR / Transaction Number!");
+    return;
+  }
+
+  // Save UTR & Activate Membership
+  localStorage.setItem('rwin_plan', selectedPlan);
+  localStorage.setItem('rwin_last_utr', utr);
+
+  // Add Bonus Coins based on Plan
+  let currentBal = parseInt(localStorage.getItem('rwin_balance') || '10000');
+  if (selectedPlan === 'STARTER_9') currentBal += 25000;
+  else if (selectedPlan === 'VIP_2MONTHS') currentBal += 50000;
+  else if (selectedPlan === 'VIP_6MONTHS') currentBal += 200000;
+  
+  localStorage.setItem('rwin_balance', currentBal.toString());
+
+  alert(`✅ UTR ${utr} Submitted Successfully!\nYour ${selectedPlan} Membership is Now ACTIVE! 🎉`);
+  window.location.href = "game.html";
+}
+
+// Default QR Code Set on Load
+updateQRCode(99);
 </script>
 </body>
-</html>
+      </html>
+
 
         
