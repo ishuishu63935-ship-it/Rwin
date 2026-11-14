@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIP Checkout - RWIN</title>
+<title>VIP Checkout - RWIN Space</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -12,141 +11,220 @@
     background-color: #0d1117;
     color: #c9d1d9;
     font-family: 'Poppins', sans-serif;
-    margin: 0; padding: 20px;
+    margin: 0; padding: 15px;
   }
   .container {
-    max-width: 400px; margin: 0 auto;
+    max-width: 420px; margin: 0 auto;
   }
   .header {
-    display: flex; justify-content: space-between; margin-bottom: 20px; color: #58a6ff;
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: #58a6ff; font-weight: 600;
   }
-  .discount-banner {
-    background: linear-gradient(90deg, #d73a49, #b31d28); padding: 15px; border-radius: 8px; text-align: center; color: white; font-weight: bold; margin-bottom: 20px;
+  .plans-container {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px;
   }
+  .plan-card {
+    background: #161b22; border: 2px solid #30363d; border-radius: 8px; padding: 12px 5px; text-align: center; cursor: pointer; transition: 0.2s;
+  }
+  .plan-card.active {
+    border-color: #58a6ff; background: #1f242c;
+  }
+  .plan-card h4 { margin: 0 0 5px 0; color: #f0f6fc; font-size: 14px; }
+  .plan-card p { margin: 0; font-size: 13px; color: #d29922; font-weight: bold; }
+  .plan-card span { font-size: 10px; color: #8b949e; }
+
   .payment-box {
-    border: 2px dashed #d29922; border-radius: 10px; padding: 20px; text-align: center; background-color: #161b22; margin-bottom: 20px;
+    border: 2px dashed #d29922; border-radius: 10px; padding: 15px; text-align: center; background-color: #161b22; margin-bottom: 15px;
   }
-  /* Bulletproof QR Image Styling */
   #qrImg {
-    background: white; padding: 10px; border-radius: 10px; display: inline-block; margin: 15px 0; width: 150px; height: 150px;
+    background: white; padding: 8px; border-radius: 8px; display: inline-block; margin: 10px 0; width: 140px; height: 140px;
+  }
+  .btn-direct-pay {
+    background-color: #238636; color: white; width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; margin-bottom: 15px; text-decoration: none; display: block; text-align: center; box-sizing: border-box;
   }
   .utr-box {
-    border: 1px solid #388bfd; border-radius: 10px; padding: 20px; text-align: center; background-color: #161b22; margin-bottom: 20px;
+    border: 1px solid #388bfd; border-radius: 10px; padding: 15px; text-align: center; background-color: #161b22; margin-bottom: 20px;
   }
   .utr-input {
-    width: 100%; padding: 12px; margin: 15px 0; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; text-align: center; font-size: 16px; letter-spacing: 2px;
+    width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; text-align: center; font-size: 16px; letter-spacing: 2px;
   }
   .btn-verify {
     background-color: #d29922; color: #0d1117; width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer;
   }
-  .btn-direct-pay {
-    background-color: #238636; color: white; width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; margin-bottom: 15px; text-decoration: none; display: block; text-align: center;
-  }
-  .plans-box {
-    display: flex; justify-content: space-between; margin-bottom: 20px;
-  }
-  .plan-btn {
-    flex: 1; padding: 10px; margin: 0 5px; background: #21262d; border: 1px solid #30363d; color: white; border-radius: 6px; cursor: pointer; font-weight: bold;
-  }
-  .plan-btn.active { background: #58a6ff; color: #0d1117; border-color: #58a6ff; }
-  .error-msg { color: #f85149; font-size: 14px; margin-top: 10px; display: none; }
-  .success-msg { color: #3fb950; font-size: 14px; margin-top: 10px; display: none; }
+  .msg { font-size: 13px; margin-top: 10px; display: none; }
+  .error { color: #f85149; }
+  .success { color: #3fb950; }
+  .warning { color: #d29922; }
 </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header">
-    <a href="home.html" style="color:#58a6ff; text-decoration:none;">⬅ BACK TO ARENA</a>
-    <span>VIP MEMBERSHIP</span>
+    <a href="home.html" style="color:#58a6ff; text-decoration:none;">⬅ BACK</a>
+    <span>VIP MEMBERSHIP PLANS</span>
   </div>
 
-  <div class="discount-banner">
-    🔥 LIMITED TIME WELCOME DISCOUNT!<br>
-    Unlock All 20 Games @ 50% OFF<br>
-    ⏱ <span id="timer">08:41</span>
+  <!-- 3 Exact Membership Cards -->
+  <div class="plans-container">
+    <div class="plan-card active" onclick="selectPlan(9, 12, this)">
+      <h4>Starter</h4>
+      <p>₹9</p>
+      <span>12 Days</span>
+    </div>
+    <div class="plan-card" onclick="selectPlan(99, 30, this)">
+      <h4>Monthly</h4>
+      <p>₹99</p>
+      <span>1 Month</span>
+    </div>
+    <div class="plan-card" onclick="selectPlan(499, 365, this)">
+      <h4>Elite</h4>
+      <p>₹499</p>
+      <span>1 Year</span>
+    </div>
   </div>
 
-  <!-- Plan Selection -->
-  <div class="plans-box">
-    <button class="plan-btn active" onclick="selectPlan(9)">Starter (₹9)</button>
-    <button class="plan-btn" onclick="selectPlan(99)">Monthly (₹99)</button>
-  </div>
-
-  <!-- Dynamic QR Code Box -->
+  <!-- QR Code Section -->
   <div class="payment-box">
-    <p style="margin:0; font-weight:600; color:#d29922;">📲 SCAN QR CODE TO PAY</p>
-    <p style="font-size: 14px; margin-top:5px;">Selected Plan Amount: <strong id="displayAmount">₹9</strong></p>
+    <p style="margin:0; font-weight:600; color:#d29922; font-size:13px;">📲 SCAN & PAY VIA UPI</p>
+    <p style="font-size: 13px; margin:5px 0;">Amount: <strong id="displayAmount" style="color:#fff;">₹9</strong> (<span id="displayDays">12 Days Access</span>)</p>
     
-    <!-- Yahan ab direct API se image load hogi, no JS library dependency -->
     <div>
-      <img id="qrImg" src="" alt="Scan QR">
+      <img id="qrImg" src="" alt="UPI QR">
     </div>
     
-    <p style="font-size: 12px; color: #8b949e; margin-bottom:0;">UPI ID: 7415325460-2@ibl</p>
+    <p style="font-size: 11px; color: #8b949e; margin:5px 0 0 0;">UPI ID: 7415325460-2@ibl</p>
   </div>
 
-  <!-- Direct UPI Button -->
+  <!-- Direct UPI App Button -->
   <a href="#" id="directPayBtn" class="btn-direct-pay">PAY ₹9 VIA UPI APP</a>
 
   <!-- UTR Verification Box -->
   <div class="utr-box">
-    <p style="margin:0; font-weight:600; color:#58a6ff;">🔑 ENTER 12-DIGIT UTR NUMBER</p>
-    <p style="font-size: 12px; color: #8b949e; margin-top:5px;">Payment complete hone ke baad UPI app se 12-digit UTR yahan daalein:</p>
+    <p style="margin:0; font-weight:600; color:#58a6ff; font-size:13px;">🔑 ENTER 12-DIGIT UTR NUMBER</p>
+    <p style="font-size: 11px; color: #8b949e; margin-top:3px;">Payment ke baad app se 12-digit UTR yahan daalein:</p>
     
-    <input type="number" id="utrInput" class="utr-input" placeholder="e.g. 428109876543">
+    <input type="number" id="utrInput" class="utr-input" placeholder="e.g. 624623292059">
     
-    <button class="btn-verify" onclick="verifyUTR()">VERIFY & UNLOCK VIP 🚀</button>
-    <div id="utrError" class="error-msg"></div>
-    <div id="utrProcessing" class="error-msg" style="color:#d29922; display:none;">⏳ Verifying with bank server...</div>
-    <div id="utrSuccess" class="success-msg"></div>
+    <button class="btn-verify" onclick="verifyRealUTR()">VERIFY & UNLOCK 18 GAMES 🚀</button>
+    
+    <div id="utrMsg" class="msg"></div>
   </div>
 </div>
 
-<script>
-  const myUPI_ID = "7415325460-2@ibl";
-  const merchantName = "RWIN Space";
-  let currentAmount = 9;
+<!-- Firebase Module Scripts -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  window.onload = () => {
-    updatePaymentUI(currentAmount);
+  // Tera Firebase Config (Agar index.js ya dusri file mein already init hai, toh wahi use kar lena)
+  const firebaseConfig = {
+    databaseURL: "https://rwin-space-default-rtdb.firebaseio.com/" // Tera database URL agar alag ho toh update kar lena
   };
+  
+  // Initialize Firebase safely if not already initialized
+  let db;
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+  } catch(e) {
+    // Agar already initialized hai
+    db = getDatabase();
+  }
 
-  function selectPlan(amount) {
+  let currentAmount = 9;
+  let selectedDays = 12;
+
+  window.selectPlan = function(amount, days, element) {
     currentAmount = amount;
+    selectedDays = days;
     document.getElementById('displayAmount').innerText = `₹${amount}`;
+    document.getElementById('displayDays').innerText = `${days} Days Access`;
     document.getElementById('directPayBtn').innerText = `PAY ₹${amount} VIA UPI APP`;
     
-    let btns = document.getElementsByClassName('plan-btn');
-    for(let i=0; i<btns.length; i++) {
-        btns[i].classList.remove('active');
-        if(btns[i].innerText.includes(`₹${amount}`)) {
-            btns[i].classList.add('active');
-        }
-    }
-    updatePaymentUI(amount);
+    let cards = document.getElementsByClassName('plan-card');
+    for(let card of cards) { card.classList.remove('active'); }
+    element.classList.add('active');
+
+    updatePaymentQR(amount);
   }
 
-  function updatePaymentUI(amount) {
-    let upiString = `upi://pay?pa=${myUPI_ID}&pn=${encodeURIComponent(merchantName)}&cu=INR&am=${amount}`;
+  function updatePaymentQR(amount) {
+    let upiString = `upi://pay?pa=7415325460-2@ibl&pn=RWIN%20Space&cu=INR&am=${amount}`;
     document.getElementById('directPayBtn').href = upiString;
-
-    // Bulletproof QR Generator API URL
-    let qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiString)}`;
-    document.getElementById('qrImg').src = qrApiUrl;
+    document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiString)}`;
   }
 
-  // Teri Automate App wali Firebase UTR verification function yahan jaisi thi waise hi rahegi
-  function verifyUTR() {
+  // Page Load par default QR set karo
+  updatePaymentQR(9);
+
+  // Real UTR Verification Function connected with Automate Firebase Node
+  window.verifyRealUTR = async function() {
     let utr = document.getElementById('utrInput').value.trim();
-    let errorMsg = document.getElementById('utrError');
+    let msgBox = document.getElementById('utrMsg');
+    
+    msgBox.style.display = 'block';
+
     if (utr.length !== 12 || isNaN(utr)) {
-        errorMsg.innerText = "❌ Invalid UTR. Must be exactly 12 numbers.";
-        errorMsg.style.display = 'block';
-        return;
+      msgBox.className = "msg error";
+      msgBox.innerText = "❌ Invalid UTR. Must be exactly 12 numbers.";
+      return;
     }
-    // Baaki tera Firebase checking code yahan connect kar le
-    alert("Checking UTR: " + utr);
+
+    msgBox.className = "msg warning";
+    msgBox.innerText = "⏳ Verifying UTR with bank server...";
+
+    try {
+      // Automate app wale node se UTR check kar rahe hain ('received_payments' ya 'payments' jo bhi tera node ho)
+      const paymentRef = ref(db, `received_payments/${utr}`);
+      const snapshot = await get(paymentRef);
+
+      if (snapshot.exists()) {
+        const pData = snapshot.val();
+
+        if (pData.status === "used") {
+          msgBox.className = "msg error";
+          msgBox.innerText = "⚠️ Yeh UTR pehle hi use ho chuka hai!";
+          return;
+        }
+
+        if (pData.amount >= currentAmount) {
+          // UTR Valid & Amount Matches!
+          // 1. Mark UTR as used
+          await update(paymentRef, { status: "used" });
+
+          // 2. Unlock 18 games, set VIP & Reset/Add Coins to 10,000
+          // NOTE: Yahan apne logged-in user ki UID ya email ki node laga dena (Jaise localStorage se leke)
+          let userEmail = localStorage.getItem("rwin_user_email") || "guest";
+          let cleanEmailKey = userEmail.replace(/\./g, '_');
+          
+          const userRef = ref(db, `users/${cleanEmailKey}`);
+          await update(userRef, {
+            isVIP: true,
+            membershipDays: selectedDays,
+            coins: 10000, // Coins reset to 10,000
+            vipExpiry: Date.now() + (selectedDays * 24 * 60 * 60 * 1000)
+          });
+
+          msgBox.className = "msg success";
+          msgBox.innerText = "✅ Payment Verified! 18 Games Unlocked & Coins Reset to 10,000! 🚀";
+
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 2000);
+
+        } else {
+          msgBox.className = "msg error";
+          msgBox.innerText = `❌ Amount Mismatch! Aapne ₹${pData.amount} bheje hain, plan ₹${currentAmount} ka hai.`;
+        }
+      } else {
+        msgBox.className = "msg error";
+        msgBox.innerText = "❌ UTR Not Found! Agar abhi pay kiya hai, toh 10 second wait karke fir se dabayein.";
+      }
+    } catch (err) {
+      console.error(err);
+      msgBox.className = "msg error";
+      msgBox.innerText = "⚠️ Connection Error. Firebase check karein.";
+    }
   }
 </script>
 
