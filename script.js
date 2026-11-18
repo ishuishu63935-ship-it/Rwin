@@ -1,5 +1,4 @@
-
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
   var gameBalance = 10000;
   var userXP = parseInt(localStorage.getItem('rwin_xp') || '0');
   var flying = false, m = 1.00, timer = null;
@@ -68,7 +67,6 @@
     });
   }
 
-  // GUARANTEED TOUCH EVENT LISTENERS FOR ALL 20 GAMES
   var cardButtons = document.querySelectorAll(".game-card-btn");
   cardButtons.forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -87,20 +85,23 @@
     container.style.display = 'block';
 
     if (gameId === 'color') {
+      // ROYAL COLOR TRADING UI (Luxurious Gold & Neon Theme)
       container.innerHTML = `
-        <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
-          <div style="display:flex; justify-content:space-between; background:#050811; padding:6px; border-radius:8px; margin-bottom:10px; font-size:10px; font-weight:700;">
-            <span style="color:var(--neon-pink); border-bottom:2px solid var(--neon-pink);">WinGo 30s</span>
-            <span style="color:#94a3b8;">WinGo 1Min</span>
+        <div style="background: linear-gradient(135deg, #0d111a 0%, #161b22 100%); border: 1.5px solid rgba(210, 153, 34, 0.4); border-radius: 18px; padding: 16px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
+          <div style="display:flex; justify-content:space-between; background:#080b11; padding:8px 12px; border-radius:10px; margin-bottom:14px; font-size:11px; font-weight:700; border: 1px solid rgba(255,255,255,0.05);">
+            <span style="color:#d29922; border-bottom:2px solid #d29922; padding-bottom:2px;">👑 WinGo 30s Elite</span>
+            <span style="color:#8b949e;">WinGo 1Min</span>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;">
-            <button class="wg-btn" data-sel="GREEN" data-m="2" style="padding:12px; background:#10b981; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Green (2X)</button>
-            <button class="wg-btn" data-sel="VIOLET" data-m="4.5" style="padding:12px; background:#8b5cf6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Violet (4.5X)</button>
-            <button class="wg-btn" data-sel="RED" data-m="2" style="padding:12px; background:#ef4444; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Red (2X)</button>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+            <button class="wg-btn" data-sel="GREEN" data-m="2" style="padding:14px 8px; background: linear-gradient(135deg, #10b981, #059669); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.3); transition: transform 0.1s;">🟢 Green (2X)</button>
+            <button class="wg-btn" data-sel="VIOLET" data-m="4.5" style="padding:14px 8px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow: 0 4px 12px rgba(139,92,246,0.3); transition: transform 0.1s;">🟣 Violet (4.5X)</button>
+            <button class="wg-btn" data-sel="RED" data-m="2" style="padding:14px 8px; background: linear-gradient(135deg, #ef4444, #dc2626); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow: 0 4px 12px rgba(239,68,68,0.3); transition: transform 0.1s;">🔴 Red (2X)</button>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button class="wg-btn" data-sel="BIG" data-m="2" style="padding:12px; background:#f59e0b; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Big (2X)</button>
-            <button class="wg-btn" data-sel="SMALL" data-m="2" style="padding:12px; background:#3b82f6; color:#fff; font-weight:800; border-radius:8px; border:none; cursor:pointer;">Small (2X)</button>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;">
+            <button class="wg-btn" data-sel="BIG" data-m="2" style="padding:14px; background: linear-gradient(135deg, #f59e0b, #d97706); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow: 0 4px 12px rgba(245,158,11,0.3);">⚡ Big 5-9 (2X)</button>
+            <button class="wg-btn" data-sel="SMALL" data-m="2" style="padding:14px; background: linear-gradient(135deg, #3b82f6, #2563eb); color:#fff; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow: 0 4px 12px rgba(59,130,246,0.3);">💧 Small 0-4 (2X)</button>
           </div>
         </div>
       `;
@@ -112,25 +113,29 @@
         });
       });
     } else if (gameId === 'aviator') {
+      // ROYAL AVIATOR UI (High-Tech Radar & Gold Accent)
       container.innerHTML = `
-        <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:12px; text-align:center;">
-          <div class="aviator-canvas">
-            <div id="jetMulti" style="font-size:38px; font-weight:800; color:#fff;">1.00x</div>
+        <div style="background: linear-gradient(135deg, #0d111a 0%, #161b22 100%); border: 1.5px solid rgba(0, 229, 255, 0.4); border-radius: 18px; padding: 16px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
+          <div class="aviator-canvas" style="background: radial-gradient(circle, #111827 0%, #030712 100%); border: 1px solid rgba(0,229,255,0.2); border-radius: 14px; padding: 30px 10px; margin-bottom: 14px; position:relative; overflow:hidden;">
+            <div style="position:absolute; top:8px; left:12px; font-size:10px; color:#00e5ff; font-weight:700; letter-spacing:1px;">✈️ RWIN RADAR v2.4</div>
+            <div id="jetMulti" style="font-size:44px; font-weight:900; color:#fff; text-shadow: 0 0 25px rgba(0,229,255,0.6); margin-top:10px;">1.00x</div>
+            <div style="font-size:11px; color:#94a3b8; margin-top:4px; font-weight:600;">READY FOR TAKEOFF</div>
           </div>
-          <button id="jetBtn" style="width:100%; margin-top:10px; padding:12px; background:#10b981; color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">BET 100 & LAUNCH</button>
+          <button id="jetBtn" style="width:100%; padding:14px; background: linear-gradient(135deg, #10b981, #059669); color:#fff; font-weight:800; font-size:15px; border-radius:12px; border:none; cursor:pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.4); transition: transform 0.1s;">BET ₹100 & LAUNCH 🚀</button>
         </div>
       `;
       document.getElementById("jetBtn").addEventListener("click", launchJet);
     } else {
+      // ROYAL GENERIC GAMES UI (Slot / Table Style)
       var nameUpper = gameId.replace(/_/g, ' ').toUpperCase();
       container.innerHTML = `
-        <div style="background:#0b101d; border:1px solid #1e293b; border-radius:14px; padding:16px; text-align:center;">
-          <div style="font-size:40px; margin-bottom:6px;">🎰</div>
-          <div style="font-size:16px; font-weight:800; color:var(--neon-blue);">${nameUpper}</div>
-          <div style="font-size:11px; color:#94a3b8; margin:6px 0 14px 0;">Multiplier: <b style="color:var(--neon-green);">2.20X</b></div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-            <button class="gen-btn" data-opt="OPTION A" style="padding:12px; background:var(--neon-blue); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">OPTION A</button>
-            <button class="gen-btn" data-opt="OPTION B" style="padding:12px; background:var(--neon-gold); color:#000; font-weight:800; border-radius:8px; border:none; cursor:pointer;">OPTION B</button>
+        <div style="background: linear-gradient(135deg, #0d111a 0%, #161b22 100%); border: 1.5px solid rgba(210, 153, 34, 0.4); border-radius: 18px; padding: 20px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
+          <div style="font-size:48px; margin-bottom:8px; filter: drop-shadow(0 0 10px rgba(210,153,34,0.4));">💎</div>
+          <div style="font-size:18px; font-weight:900; color:#00e5ff; letter-spacing:1px;">${nameUpper}</div>
+          <div style="font-size:12px; color:#94a3b8; margin:8px 0 16px 0;">Elite Multiplier: <b style="color:#10b981;">2.20X</b></div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button class="gen-btn" data-opt="OPTION A" style="padding:14px; background: linear-gradient(135deg, #00e5ff, #0088ff); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow: 0 4px 15px rgba(0,229,255,0.3);">OPTION A</button>
+            <button class="gen-btn" data-opt="OPTION B" style="padding:14px; background: linear-gradient(135deg, #ffd700, #ff8c00); color:#000; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.3);">OPTION B</button>
           </div>
         </div>
       `;
@@ -161,7 +166,7 @@
       if (gameBalance < 100) return showModal("Low Balance", "Reset coins to play!", "⚠️", false);
       gameBalance -= 100; addXP(50);
       flying = true; m = 1.00;
-      btn.innerText = "CASHOUT"; btn.style.background = "#f59e0b";
+      btn.innerText = "CASHOUT 💰"; btn.style.background = "linear-gradient(135deg, #f59e0b, #d97706)";
       var crashAt = (Math.random() * 3 + 1.1).toFixed(2);
       timer = setInterval(function () {
         m += 0.05;
@@ -169,7 +174,7 @@
         if (m >= crashAt) {
           clearInterval(timer); flying = false;
           if (el) el.innerText = "FLEW AWAY!";
-          btn.innerText = "BET 100 & LAUNCH"; btn.style.background = "#10b981";
+          btn.innerText = "BET ₹100 & LAUNCH 🚀"; btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
           showModal("FLEW AWAY", "Crashed @ " + m.toFixed(2) + "x (+50 XP)", "✈️", false);
         }
       }, 100);
@@ -177,7 +182,7 @@
       clearInterval(timer); flying = false;
       var won = Math.floor(100 * m); gameBalance += won; updateUIState();
       showModal("CASHED OUT!", "Cashed out @ " + m.toFixed(2) + "x\nWon ₹" + won + " (+50 XP)", "✈️", true);
-      btn.innerText = "BET 100 & LAUNCH"; btn.style.background = "#10b981";
+      btn.innerText = "BET ₹100 & LAUNCH 🚀"; btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
     }
   }
 
@@ -194,4 +199,4 @@
 
   updateUIState();
 });
-    
+          
