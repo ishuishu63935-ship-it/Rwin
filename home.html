@@ -45,6 +45,15 @@
     <p>Practice • Learn • Improve</p>
   </div>
 
+  <!-- Ad Banner Card (Sirf Free Users ke liye dikhega) -->
+  <div class="card" id="adBannerCard" style="display: none; text-align: center; padding: 12px;">
+    <p style="font-size: 10px; color: #64748b; margin-bottom: 6px;">Sponsored Advertisement</p>
+    <!-- Yahan Adsterra ya Ad Network ka banner script code aayega -->
+    <div id="adsterraSlot" style="min-height: 50px; display: flex; align-items: center; justify-content: center; background: #080b11; border-radius: 8px; border: 1px dashed #1e293b;">
+      <span style="font-size: 12px; color: #94a3b8;">Ad Space (Free User View)</span>
+    </div>
+  </div>
+
   <div class="card">
     <div class="card-header"><span>👑</span> Your Progress</div>
     <div class="info-row"><span class="label">Level</span><span class="value" id="homeLevel">Level 1</span></div>
@@ -82,7 +91,14 @@
 <script>
   function syncHomeUI() {
     const raw = localStorage.getItem("rwinGame");
-    if (!raw) return;
+    const adCard = document.getElementById("adBannerCard");
+
+    if (!raw) {
+      // Agar data nahi hai toh Free plan maan kar ad dikhao
+      if (adCard) adCard.style.display = "block";
+      return;
+    }
+
     try {
       const g = JSON.parse(raw);
       if (document.getElementById("homeLevel")) document.getElementById("homeLevel").innerText = "Level " + (g.level || 1);
@@ -96,12 +112,18 @@
         document.getElementById("homePlanStatus").className = "status-badge-active";
         document.getElementById("homeMembershipBadge").innerText = "VIP";
         document.getElementById("homeDaysLeft").innerText = "Active";
+        
+        // VIP users ke liye ad card hide kar do
+        if (adCard) adCard.style.display = "none";
       } else {
         document.getElementById("homePlanName").innerText = "Free Plan";
         document.getElementById("homePlanStatus").innerText = "INACTIVE";
         document.getElementById("homePlanStatus").className = "status-badge-inactive";
         document.getElementById("homeMembershipBadge").innerText = "FREE";
         document.getElementById("homeDaysLeft").innerText = "0 Days";
+        
+        // Free users ke liye ad card show karo
+        if (adCard) adCard.style.display = "block";
       }
     } catch(e) {}
   }
