@@ -85,12 +85,11 @@ document.addEventListener("DOMContentLoaded", function () {
     container.style.display = 'block';
 
     if (gameId === 'color') {
-      // ROYAL COLOR TRADING UI (Luxurious Gold & Neon Theme)
       container.innerHTML = `
         <div style="background: linear-gradient(135deg, #0d111a 0%, #161b22 100%); border: 1.5px solid rgba(210, 153, 34, 0.4); border-radius: 18px; padding: 16px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
           <div style="display:flex; justify-content:space-between; background:#080b11; padding:8px 12px; border-radius:10px; margin-bottom:14px; font-size:11px; font-weight:700; border: 1px solid rgba(255,255,255,0.05);">
             <span style="color:#d29922; border-bottom:2px solid #d29922; padding-bottom:2px;">👑 WinGo 30s Elite</span>
-            <span style="color:#8b949e;">WinGo 1Min</span>
+            <span style="color:#94a3b8;">WinGo 1Min</span>
           </div>
           
           <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
@@ -113,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
     } else if (gameId === 'aviator') {
-      // ROYAL AVIATOR UI (High-Tech Radar & Gold Accent)
       container.innerHTML = `
         <div style="background: linear-gradient(135deg, #0d111a 0%, #161b22 100%); border: 1.5px solid rgba(0, 229, 255, 0.4); border-radius: 18px; padding: 16px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
           <div class="aviator-canvas" style="background: radial-gradient(circle, #111827 0%, #030712 100%); border: 1px solid rgba(0,229,255,0.2); border-radius: 14px; padding: 30px 10px; margin-bottom: 14px; position:relative; overflow:hidden;">
@@ -126,7 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       document.getElementById("jetBtn").addEventListener("click", launchJet);
     } else {
-      // ROYAL GENERIC GAMES UI (Slot / Table Style)
       var nameUpper = gameId.replace(/_/g, ' ').toUpperCase();
       container.innerHTML = `
         <div style="background: linear-gradient(135deg, #0d111a 0%, #161b22 100%); border: 1.5px solid rgba(210, 153, 34, 0.4); border-radius: 18px; padding: 20px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
@@ -199,4 +196,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
   updateUIState();
 });
+                    
           
