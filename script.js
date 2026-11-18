@@ -1,5 +1,5 @@
 
-       document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
   var gameBalance = 10000;
   var userXP = parseInt(localStorage.getItem('rwin_xp') || '0');
   var flying = false, m = 1.00, timer = null;
