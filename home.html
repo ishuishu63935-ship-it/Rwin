@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RWIN - Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/rwin-logo.png">
+
+<!-- Adsterra Social Bar Script (Ye background mein active rahega) -->
+<script data-cfasync="false" src="https://bicea.org/14/bd5b072ee8f470473a6ccb8004d444c1"></script>
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
   body { background-color: #080b11; color: #ffffff; display: flex; justify-content: center; min-height: 100vh; }
@@ -45,12 +50,22 @@
     <p>Practice • Learn • Improve</p>
   </div>
 
-  <!-- Ad Banner Card (Sirf Free Users ke liye dikhega) -->
+  <!-- Ad Banner Card (Sirf Free Users ke liye dikhega - VIP hone par hide ho jayega) -->
   <div class="card" id="adBannerCard" style="display: none; text-align: center; padding: 12px;">
     <p style="font-size: 10px; color: #64748b; margin-bottom: 6px;">Sponsored Advertisement</p>
-    <!-- Yahan Adsterra ya Ad Network ka banner script code aayega -->
-    <div id="adsterraSlot" style="min-height: 50px; display: flex; align-items: center; justify-content: center; background: #080b11; border-radius: 8px; border: 1px dashed #1e293b;">
-      <span style="font-size: 12px; color: #94a3b8;">Ad Space (Free User View)</span>
+    
+    <!-- Adsterra 320x50 Banner Code -->
+    <div id="adsterraSlot" style="min-height: 50px; display: flex; align-items: center; justify-content: center;">
+      <script>
+        atOptions = {
+          'key' : '139f71cb123e906385876b2b729184c5',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+        };
+      </script>
+      <script src="https://bicea.org/22/139f71cb123e906385876b2b729184c5"></script>
     </div>
   </div>
 
@@ -94,7 +109,6 @@
     const adCard = document.getElementById("adBannerCard");
 
     if (!raw) {
-      // Agar data nahi hai toh Free plan maan kar ad dikhao
       if (adCard) adCard.style.display = "block";
       return;
     }
@@ -113,7 +127,7 @@
         document.getElementById("homeMembershipBadge").innerText = "VIP";
         document.getElementById("homeDaysLeft").innerText = "Active";
         
-        // VIP users ke liye ad card hide kar do
+        // VIP users ke liye ads hide kar do
         if (adCard) adCard.style.display = "none";
       } else {
         document.getElementById("homePlanName").innerText = "Free Plan";
@@ -122,7 +136,7 @@
         document.getElementById("homeMembershipBadge").innerText = "FREE";
         document.getElementById("homeDaysLeft").innerText = "0 Days";
         
-        // Free users ke liye ad card show karo
+        // Free users ke liye ads show karo
         if (adCard) adCard.style.display = "block";
       }
     } catch(e) {}
@@ -132,3 +146,4 @@
 </script>
 </body>
 </html>
+
