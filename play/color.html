@@ -3,160 +3,368 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>WinGo 30s - RWIN Elite</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>WinGo 30s - RWIN Royal Casino</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
   body { background-color: #080b11; color: #ffffff; display: flex; justify-content: center; min-height: 100vh; }
-  .game-container { width: 100%; max-width: 480px; padding: 16px; background: #0d111a; min-height: 100vh; }
+  .game-container { width: 100%; max-width: 480px; padding: 14px; background: #0d111a; min-height: 100vh; padding-bottom: 40px; }
 
-  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-  .hub-btn { background: #161f30; border: 1px solid #00e5ff; color: #00e5ff; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 13px; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px; }
+  .nav-pill { background: #161f30; border: 1px solid #00e5ff; color: #00e5ff; padding: 7px 12px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 12px; }
+  .game-title { font-weight: 800; color: #ffd700; font-size: 14px; letter-spacing: 0.5px; }
 
-  .wallet-card { background: linear-gradient(135deg, #141a26, #1e293b); border: 1.5px solid rgba(210, 153, 34, 0.45); border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 16px; }
-  .wallet-title { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-  .wallet-amount { font-size: 30px; font-weight: 900; color: #ffd700; margin-bottom: 10px; }
-  .reset-btn { background: #161f30; border: 1px solid rgba(255,215,0,0.45); color: #ffd700; padding: 6px 14px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
+  .wallet-card { background: linear-gradient(135deg, #141a26, #1e293b); border: 1.5px solid rgba(255, 215, 0, 0.45); border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .wallet-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+  .wallet-amount { font-size: 24px; font-weight: 900; color: #ffd700; }
+  .reset-btn { background: rgba(255, 215, 0, 0.12); border: 1px solid #ffd700; color: #ffd700; padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
 
-  .game-arena { background: linear-gradient(135deg, #0d111a, #161b22); border: 1.5px solid rgba(210, 153, 34, 0.35); border-radius: 18px; padding: 16px; text-align: center; }
+  .round-card { background: linear-gradient(135deg, #182032, #0f1522); border: 1.5px solid #ffd700; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .period-tag { font-size: 11px; color: #94a3b8; }
+  .period-val { font-size: 15px; font-weight: 800; color: #00e5ff; margin-top: 2px; }
+  .timer-box { text-align: right; }
+  .timer-digits { font-size: 26px; font-weight: 900; color: #ffd700; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+  .timer-digits.locked { color: #ef4444; animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-  .round-bar { display: flex; justify-content: space-between; align-items: center; background: #080b11; padding: 12px 14px; border-radius: 12px; margin-bottom: 14px; border: 1px solid #1e293b; }
-  .period-label { font-size: 11px; color: #94a3b8; text-align: left; }
-  .period-num { font-size: 14px; font-weight: 800; color: #00e5ff; }
-  .timer-label { font-size: 11px; color: #94a3b8; text-align: right; }
-  .timer-val { font-size: 20px; font-weight: 900; color: #ffd700; font-variant-numeric: tabular-nums; }
+  .board-card { background: #141a26; border: 1px solid #1e293b; border-radius: 16px; padding: 14px; margin-bottom: 14px; position: relative; }
+  .lock-banner { display: none; background: rgba(239, 68, 68, 0.18); border: 1px solid #ef4444; color: #fca5a5; text-align: center; padding: 6px; border-radius: 8px; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
 
-  .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
-  .wg-btn { padding: 14px 6px; color: #fff; font-weight: 800; border-radius: 10px; border: none; cursor: pointer; font-size: 12px; }
-  .btn-green { background: linear-gradient(135deg, #10b981, #059669); }
-  .btn-violet { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-  .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .c-btn { padding: 12px 6px; border: none; border-radius: 10px; color: #fff; font-weight: 800; font-size: 12px; cursor: pointer; }
+  .c-green { background: linear-gradient(135deg, #10b981, #059669); }
+  .c-violet { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+  .c-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+  .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; background: #0d111a; padding: 10px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #1e293b; }
+  .num-ball { aspect-ratio: 1; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); font-size: 16px; font-weight: 900; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.4); }
+  .n-green { background: radial-gradient(circle at 30% 30%, #34d399, #059669); }
+  .n-red { background: radial-gradient(circle at 30% 30%, #f87171, #dc2626); }
+  .n-0 { background: linear-gradient(135deg, #ef4444 50%, #8b5cf6 50%); }
+  .n-5 { background: linear-gradient(135deg, #10b981 50%, #8b5cf6 50%); }
 
   .size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .btn-big { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; padding: 14px; font-weight: 800; border-radius: 10px; border: none; cursor: pointer; font-size: 13px; }
-  .btn-small { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; padding: 14px; font-weight: 800; border-radius: 10px; border: none; cursor: pointer; font-size: 13px; }
+  .s-btn { padding: 11px; border: none; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; }
+  .s-big { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; }
+  .s-small { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
 
-  .last-result { margin-top: 8px; font-size: 12px; color: #94a3b8; background: #080b11; padding: 10px; border-radius: 10px; border: 1px solid #1e293b; }
+  .stake-row { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
+  .chip-btn { flex: 1; background: #0d111a; border: 1px solid #334155; color: #cbd5e1; padding: 7px 4px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
+  .chip-btn.active { background: #ffd700; color: #000; border-color: #ffd700; }
 
-  .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.82); display: none; justify-content: center; align-items: center; z-index: 1000; }
-  .modal-box { background: #161b22; border: 2px solid #ffd700; border-radius: 18px; padding: 22px; width: 85%; max-width: 320px; text-align: center; }
+  .section-card { background: #141a26; border: 1px solid #1e293b; border-radius: 14px; padding: 12px; margin-bottom: 14px; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #00e5ff; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .bet-item { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 8px; background: #0d111a; border-radius: 8px; margin-bottom: 5px; border-left: 3px solid #ffd700; }
+
+  .hist-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
+  .hist-table th { color: #94a3b8; font-weight: 600; padding-bottom: 6px; border-bottom: 1px solid #1e293b; }
+  .hist-table td { padding: 7px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); font-weight: 700; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin: 0 2px; }
+
+  .toast { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 1.5px solid #ffd700; color: #fff; padding: 10px 18px; border-radius: 12px; font-size: 12px; font-weight: 700; z-index: 2000; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
+
+  .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.82); display: none; justify-content: center; align-items: center; z-index: 1500; }
+  .modal-box { background: #141a26; border: 2px solid #ffd700; border-radius: 18px; padding: 22px; width: 85%; max-width: 320px; text-align: center; }
 </style>
 </head>
 <body>
 
+<div class="toast" id="toastMsg">Bet Placed!</div>
+
 <div class="game-container">
   <div class="top-bar">
-    <a href="../home.html" class="hub-btn">⬅ Hub</a>
-    <div style="font-weight: 700; color: #ffd700; font-size: 14px;">👑 WinGo 30s Color Trading</div>
+    <a href="../home.html" class="nav-pill">⬅ Hub</a>
+    <div class="game-title">👑 WinGo 30s Royal</div>
+    <a href="../game.html" class="nav-pill">🎮 Games</a>
   </div>
 
   <div class="wallet-card">
-    <div class="wallet-title">VIP Practice Wallet Balance</div>
-    <div class="wallet-amount" id="balanceText">₹10,000</div>
-    <button class="reset-btn" id="resetCoinsBtn">🔄 Reset ₹10,000</button>
+    <div>
+      <div class="wallet-label">Practice Balance</div>
+      <div class="wallet-amount" id="balanceText">₹10,000</div>
+    </div>
+    <button class="reset-btn" onclick="resetBalance()">🔄 Reset ₹10K</button>
   </div>
 
-  <div class="game-arena">
-    <div class="round-bar">
-      <div>
-        <div class="period-label">Period Number</div>
-        <div class="period-num" id="periodText">20261120001</div>
-      </div>
-      <div>
-        <div class="timer-label">Time Remaining</div>
-        <div class="timer-val" id="timerDisplay">00:30</div>
-      </div>
+  <div class="round-card">
+    <div>
+      <div class="period-tag">Current Period</div>
+      <div class="period-val" id="periodText">20261123001</div>
+    </div>
+    <div class="timer-box">
+      <div class="period-tag">Round Ends In</div>
+      <div class="timer-digits" id="timerDisplay">00:30</div>
+    </div>
+  </div>
+
+  <div class="board-card">
+    <div class="lock-banner" id="lockBanner">🔒 Last 5s — Bets Locked! Drawing Result...</div>
+
+    <!-- Base Amount & Multiplier Selector -->
+    <div class="stake-row" id="amtRow">
+      <button class="chip-btn active" onclick="setAmt(10, this)">₹10</button>
+      <button class="chip-btn" onclick="setAmt(50, this)">₹50</button>
+      <button class="chip-btn" onclick="setAmt(100, this)">₹100</button>
+      <button class="chip-btn" onclick="setAmt(500, this)">₹500</button>
+    </div>
+    <div class="stake-row" id="multRow" style="margin-bottom: 12px;">
+      <button class="chip-btn active" onclick="setMult(1, this)">x1</button>
+      <button class="chip-btn" onclick="setMult(2, this)">x2</button>
+      <button class="chip-btn" onclick="setMult(5, this)">x5</button>
+      <button class="chip-btn" onclick="setMult(10, this)">x10</button>
     </div>
 
+    <!-- Colors -->
     <div class="color-grid">
-      <button class="wg-btn btn-green" onclick="playWinGo('GREEN', 2)">🟢 Green (2X)</button>
-      <button class="wg-btn btn-violet" onclick="playWinGo('VIOLET', 4.5)">🟣 Violet (4.5X)</button>
-      <button class="wg-btn btn-red" onclick="playWinGo('RED', 2)">🔴 Red (2X)</button>
+      <button class="c-btn c-green" onclick="placeBet('COLOR', 'GREEN', 2)">Green (2x)</button>
+      <button class="c-btn c-violet" onclick="placeBet('COLOR', 'VIOLET', 4.5)">Violet (4.5x)</button>
+      <button class="c-btn c-red" onclick="placeBet('COLOR', 'RED', 2)">Red (2x)</button>
     </div>
 
+    <!-- Numbers 0-9 -->
+    <div class="num-grid">
+      <button class="num-ball n-0" onclick="placeBet('NUM', 0, 9)">0</button>
+      <button class="num-ball n-green" onclick="placeBet('NUM', 1, 9)">1</button>
+      <button class="num-ball n-red" onclick="placeBet('NUM', 2, 9)">2</button>
+      <button class="num-ball n-green" onclick="placeBet('NUM', 3, 9)">3</button>
+      <button class="num-ball n-red" onclick="placeBet('NUM', 4, 9)">4</button>
+      <button class="num-ball n-5" onclick="placeBet('NUM', 5, 9)">5</button>
+      <button class="num-ball n-red" onclick="placeBet('NUM', 6, 9)">6</button>
+      <button class="num-ball n-green" onclick="placeBet('NUM', 7, 9)">7</button>
+      <button class="num-ball n-red" onclick="placeBet('NUM', 8, 9)">8</button>
+      <button class="num-ball n-green" onclick="placeBet('NUM', 9, 9)">9</button>
+    </div>
+
+    <!-- Big / Small -->
     <div class="size-grid">
-      <button class="btn-big" onclick="playWinGo('BIG', 2)">⚡ Big 5-9 (2X)</button>
-      <button class="btn-small" onclick="playWinGo('SMALL', 2)">💧 Small 0-4 (2X)</button>
+      <button class="s-btn s-big" onclick="placeBet('SIZE', 'BIG', 2)">Big 5–9 (2x)</button>
+      <button class="s-btn s-small" onclick="placeBet('SIZE', 'SMALL', 2)">Small 0–4 (2x)</button>
     </div>
+  </div>
 
-    <div class="last-result" id="lastDrawText">Last Draw: Waiting for round completion...</div>
+  <!-- Active Round Bets -->
+  <div class="section-card">
+    <div class="sec-title">
+      <span>🎯 Your Bets This Round</span>
+      <span id="totalStakeTag" style="color: #ffd700;">Total: ₹0</span>
+    </div>
+    <div id="activeBetsList" style="font-size: 12px; color: #64748b;">No bets placed yet. Tap any Color, Number (9x) or Big/Small!</div>
+  </div>
+
+  <!-- Live Draw History -->
+  <div class="section-card">
+    <div class="sec-title"><span>📜 Live Draw History</span><span style="font-size: 11px; color: #94a3b8;">Last 10 Rounds</span></div>
+    <table class="hist-table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Number</th>
+          <th>Size</th>
+          <th>Color</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
   </div>
 </div>
 
-<div class="modal-overlay" id="customModal">
+<!-- Round Settlement Result Modal -->
+<div class="modal-overlay" id="resultModal">
   <div class="modal-box">
-    <div id="modalIcon" style="font-size: 40px; margin-bottom: 8px;">🎉</div>
-    <h3 id="modalTitle" style="color: #fff; margin-bottom: 6px; font-size: 18px;">WIN!</h3>
-    <p id="modalMsg" style="color: #94a3b8; font-size: 13px; margin-bottom: 18px; line-height: 1.5;"></p>
-    <button onclick="closeModal()" style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; border: none; padding: 10px 20px; font-weight: 800; border-radius: 10px; width: 100%; cursor: pointer;">OKAY 🚀</button>
+    <div id="resBall" style="width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; background: #10b981;">7</div>
+    <h3 id="resTitle" style="font-size: 18px; margin-bottom: 6px; color: #ffd700;">ROUND RESULT</h3>
+    <p id="resSub" style="font-size: 13px; color: #cbd5e1; margin-bottom: 16px; line-height: 1.5;"></p>
+    <button onclick="document.getElementById('resultModal').style.display='none'" style="background: linear-gradient(90deg, #ffd700, #ff8c00); color: #000; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 800; cursor: pointer;">CONTINUE 🚀</button>
   </div>
 </div>
 
 <script>
-  let gameBalance = parseInt(localStorage.getItem('rwin_balance') || '10000');
+  function getUnifiedBalance() {
+    const raw = localStorage.getItem("rwinGame");
+    if (raw) {
+      try {
+        const g = JSON.parse(raw);
+        if (typeof g.balance === "number") return g.balance;
+      } catch(e) {}
+    }
+    return parseInt(localStorage.getItem("rwin_balance") || "10000");
+  }
+
+  function saveUnifiedBalance(newBal) {
+    localStorage.setItem("rwin_balance", newBal);
+    const raw = localStorage.getItem("rwinGame");
+    let g = raw ? JSON.parse(raw) : { level: 1, xp: 0, balance: newBal };
+    g.balance = newBal;
+    localStorage.setItem("rwinGame", JSON.stringify(g));
+    document.getElementById("balanceText").innerText = "₹" + newBal.toLocaleString();
+  }
+
+  let balance = getUnifiedBalance();
+  let baseAmt = 10;
+  let mult = 1;
   let timeLeft = 30;
-  let periodCount = 1;
+  let periodNum = 1;
+  let activeBets = [];
+  let history = [
+    { period: "20261123000", num: 7, size: "BIG", colors: ["#10b981"] },
+    { period: "20261122999", num: 0, size: "SMALL", colors: ["#ef4444", "#8b5cf6"] },
+    { period: "20261122998", num: 4, size: "SMALL", colors: ["#ef4444"] }
+  ];
 
-  function formatPeriod(num) {
-    return "20261120" + String(num).padStart(3, "0");
+  function formatPeriod(n) {
+    return "20261123" + String(n).padStart(3, "0");
   }
 
-  function updateUI() {
-    document.getElementById('balanceText').innerText = "₹" + gameBalance.toLocaleString();
-    document.getElementById('periodText').innerText = formatPeriod(periodCount);
-    document.getElementById('timerDisplay').innerText = "00:" + String(timeLeft).padStart(2, "0");
-    localStorage.setItem('rwin_balance', gameBalance);
+  function showToast(txt) {
+    const t = document.getElementById("toastMsg");
+    t.innerText = txt;
+    t.style.display = "block";
+    setTimeout(() => { t.style.display = "none"; }, 1600);
   }
 
-  function generateDrawOutcome() {
-    const num = Math.floor(Math.random() * 10);
-    const color = (num === 0 || num === 5) ? "VIOLET" : (num % 2 === 1 ? "GREEN" : "RED");
-    const size = num >= 5 ? "BIG" : "SMALL";
-    document.getElementById('lastDrawText').innerText = `Last Draw: ${num} (${color} / ${size})`;
+  function setAmt(val, btn) {
+    baseAmt = val;
+    document.querySelectorAll("#amtRow .chip-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+
+  function setMult(val, btn) {
+    mult = val;
+    document.querySelectorAll("#multRow .chip-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+
+  function placeBet(type, choice, odds) {
+    if (timeLeft <= 5) {
+      showToast("🔒 Bets locked for last 5 seconds!");
+      return;
+    }
+    const stake = baseAmt * mult;
+    if (balance < stake) {
+      showToast("⚠️ Low balance! Reset ₹10K.");
+      return;
+    }
+    balance -= stake;
+    saveUnifiedBalance(balance);
+    activeBets.push({ type, choice, odds, stake });
+    renderActiveBets();
+    showToast(`✅ Bet ₹${stake} on ${choice}`);
+  }
+
+  function renderActiveBets() {
+    const box = document.getElementById("activeBetsList");
+    const tag = document.getElementById("totalStakeTag");
+    const total = activeBets.reduce((s, b) => s + b.stake, 0);
+    tag.innerText = "Total: ₹" + total.toLocaleString();
+
+    if (activeBets.length === 0) {
+      box.innerHTML = "No bets placed yet. Tap any Color, Number (9x) or Big/Small!";
+      return;
+    }
+    box.innerHTML = activeBets.map(b => `
+      <div class="bet-item">
+        <span><b>${b.choice}</b> (${b.odds}x)</span>
+        <span style="color: #ffd700;">₹${b.stake}</span>
+      </div>
+    `).join("");
+  }
+
+  function renderHistory() {
+    const tbody = document.getElementById("historyBody");
+    tbody.innerHTML = history.slice(0, 10).map(h => `
+      <tr>
+        <td style="color: #94a3b8;">${h.period}</td>
+        <td style="color: #ffd700; font-size: 14px;">${h.num}</td>
+        <td>${h.size}</td>
+        <td>${h.colors.map(c => `<span class="dot" style="background:${c}"></span>`).join("")}</td>
+      </tr>
+    `).join("");
+  }
+
+  function settleRound() {
+    const winNum = Math.floor(Math.random() * 10);
+    const winSize = winNum >= 5 ? "BIG" : "SMALL";
+    const isGreen = [1, 3, 5, 7, 9].includes(winNum);
+    const isRed = [0, 2, 4, 6, 8].includes(winNum);
+    const isViolet = (winNum === 0 || winNum === 5);
+
+    let colors = [];
+    if (isGreen) colors.push("#10b981");
+    if (isRed) colors.push("#ef4444");
+    if (isViolet) colors.push("#8b5cf6");
+
+    history.unshift({ period: formatPeriod(periodNum), num: winNum, size: winSize, colors });
+    renderHistory();
+
+    if (activeBets.length > 0) {
+      let totalWon = 0;
+      activeBets.forEach(b => {
+        let hit = false;
+        if (b.type === "NUM" && b.choice === winNum) hit = true;
+        if (b.type === "SIZE" && b.choice === winSize) hit = true;
+        if (b.type === "COLOR") {
+          if (b.choice === "GREEN" && isGreen) hit = true;
+          if (b.choice === "RED" && isRed) hit = true;
+          if (b.choice === "VIOLET" && isViolet) hit = true;
+        }
+        if (hit) {
+          // Half payout on 0/5 for Red/Green like standard WinGo rules
+          let effectiveOdds = (b.type === "COLOR" && isViolet && b.choice !== "VIOLET") ? 1.5 : b.odds;
+          totalWon += Math.floor(b.stake * effectiveOdds);
+        }
+      });
+
+      if (totalWon > 0) {
+        balance += totalWon;
+        saveUnifiedBalance(balance);
+      }
+
+      const ball = document.getElementById("resBall");
+      ball.innerText = winNum;
+      ball.style.background = colors[0];
+      document.getElementById("resTitle").innerText = totalWon > 0 ? `🎉 YOU WON ₹${totalWon}!` : `RESULT: ${winNum} (${winSize})`;
+      document.getElementById("resSub").innerText = totalWon > 0
+        ? `Winning Number: ${winNum} • ${winSize}. Payout credited to your wallet!`
+        : `Winning Number: ${winNum} • ${winSize}. Better luck in the next 30s round!`;
+      document.getElementById("resultModal").style.display = "flex";
+    }
+
+    activeBets = [];
+    renderActiveBets();
+  }
+
+  function resetBalance() {
+    balance = 10000;
+    saveUnifiedBalance(balance);
+    showToast("💰 Wallet reset to ₹10,000");
   }
 
   setInterval(() => {
     if (timeLeft > 1) {
       timeLeft -= 1;
     } else {
-      generateDrawOutcome();
-      periodCount += 1;
+      settleRound();
+      periodNum += 1;
       timeLeft = 30;
     }
-    updateUI();
+
+    const tEl = document.getElementById("timerDisplay");
+    const lBanner = document.getElementById("lockBanner");
+    tEl.innerText = "00:" + String(timeLeft).padStart(2, "0");
+    document.getElementById("periodText").innerText = formatPeriod(periodNum);
+
+    if (timeLeft <= 5) {
+      tEl.classList.add("locked");
+      lBanner.style.display = "block";
+    } else {
+      tEl.classList.remove("locked");
+      lBanner.style.display = "none";
+    }
   }, 1000);
 
-  updateUI();
-
-  document.getElementById('resetCoinsBtn').addEventListener('click', () => {
-    gameBalance = 10000;
-    updateUI();
-    showModal("🔄 BALANCE RESET", "VIP practice coins restored to ₹10,000!", "💰");
-  });
-
-  function playWinGo(sel, multi) {
-    if (gameBalance < 100) return showModal("Low Balance", "Reset coins to play!", "⚠️");
-    gameBalance -= 100;
-    if (Math.random() < 0.5) {
-      let won = Math.floor(100 * multi);
-      gameBalance += won;
-      showModal("WIN!", `Selected ${sel}! Won ₹${won} 🎉`, "🎨");
-    } else {
-      showModal("LOST", `Selected ${sel}! Try again next round.`, "💥");
-    }
-    updateUI();
-  }
-
-  function showModal(title, msg, icon) {
-    document.getElementById('modalTitle').innerText = title;
-    document.getElementById('modalMsg').innerText = msg;
-    document.getElementById('modalIcon').innerText = icon;
-    document.getElementById('customModal').style.display = 'flex';
-  }
-
-  function closeModal() {
-    document.getElementById('customModal').style.display = 'none';
-  }
+  saveUnifiedBalance(balance);
+  renderHistory();
 </script>
 </body>
-</html>
+                                                            </html>
+                                                            
